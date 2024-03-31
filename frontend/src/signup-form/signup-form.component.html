@@ -1,35 +1,83 @@
 <form [formGroup]="signupFormGroup" ngSubmit="submitForm()" (reset)="resetForm()" >
     <div class="field">
-        <label class="label">Name</label>
-        <div class="control">
-            <input class="input" type="text" formControlName="name">
-        </div>
+      <label class="label">Name</label>
+      <div class="control">
+          <input class="input" type="text" formControlName="name">
+      </div>
+      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("name").length > 0) 
+      {
+        <ul class="message is-danger">
+          <div class="message-body">
+            Os seguintes erros ocorreram:
+            @for (err of this.getErrorMessagesForControl("name"); track $index) 
+            {
+              <li>{{ err }}</li>
+            }
+          </div>
+        </ul>
+      }
     </div>
 
     <div class="field">
-        <label class="label">Email</label>
-        <div class="control">
-            <input class="input" type="text" formControlName="email">
-        </div>
+      <label class="label">Email</label>
+      <div class="control">
+          <input class="input" type="text" formControlName="email">
+      </div>
+      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("email").length > 0) 
+      {
+        <ul class="message is-danger">
+          <div class="message-body">
+            Os seguintes erros ocorreram:
+            @for (err of this.getErrorMessagesForControl("email"); track $index) 
+            {
+              <li>{{ err }}</li>
+            }
+          </div>
+        </ul>
+      }
     </div>
     
     <div class="field">
-        <label class="label">Sector</label>
-        <div class="control">
-          <div class="select">
-            <select formControlName="sector">
-              <option>Select dropdown</option>
-              <option>With options</option>
-            </select>
-          </div>
+      <label class="label">Sector</label>
+      <div class="control">
+        <div class="select">
+          <select formControlName="sector">
+            <option>Select dropdown</option>
+            <option>With options</option>
+          </select>
         </div>
       </div>
+      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("sector").length > 0) 
+      {
+        <ul class="message is-danger">
+          <div class="message-body">
+            Os seguintes erros ocorreram:
+            @for (err of this.getErrorMessagesForControl("sector"); track $index) 
+            {
+              <li>{{ err }}</li>
+            }
+          </div>
+        </ul>
+      }
+    </div>
 
     <div class="field">
-        <label class="label">Password</label>
-        <div class="control">
-            <input class="input" type="text" formControlName="password">
-        </div>
+      <label class="label">Password</label>
+      <div class="control">
+          <input class="input" type="text" formControlName="password">
+      </div>
+      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("password").length > 0) 
+      {
+        <ul class="message is-danger">
+          <div class="message-body">
+            Os seguintes erros ocorreram:
+            @for (err of this.getErrorMessagesForControl("password"); track $index) 
+            {
+              <li>{{ err }}</li>
+            }
+          </div>
+        </ul>
+      }
     </div>
 
     <input class="button" type="submit" value="Submit input" />
