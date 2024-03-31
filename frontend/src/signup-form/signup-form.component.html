@@ -1,0 +1,37 @@
+<form [formGroup]="signupFormGroup" ngSubmit="submitForm()" (reset)="resetForm()" >
+    <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+            <input class="input" type="text" formControlName="name">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+            <input class="input" type="text" formControlName="email">
+        </div>
+    </div>
+    
+    <div class="field">
+        <label class="label">Sector</label>
+        <div class="control">
+          <div class="select">
+            <select formControlName="sector">
+              <option>Select dropdown</option>
+              <option>With options</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input" type="text" formControlName="password">
+        </div>
+    </div>
+
+    <input class="button" type="submit" value="Submit input" />
+    <input class="button" type="reset" value="Reset input" />
+</form>
