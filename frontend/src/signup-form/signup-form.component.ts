@@ -1,5 +1,15 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormControl, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, FormControlStatus } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { 
+  FormGroup, 
+  FormControl, 
+  FormsModule, 
+  ReactiveFormsModule, 
+  Validators, 
+  AbstractControl, 
+  ValidationErrors, 
+  FormControlStatus,
+  FormBuilder 
+} from '@angular/forms';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -10,38 +20,72 @@ import { Subject } from 'rxjs';
   imports: [ FormsModule, ReactiveFormsModule ]
 })
 export class SignupFormComponent {
-  signupFormGroup : FormGroup = new FormGroup(
-    {
-      name : new FormControl('', {  
-        validators: [
-          Validators.required, 
-          Validators.minLength(3), 
-          Validators.maxLength(50)
-        ],
-        updateOn: 'submit'
-      }),
-      email : new FormControl('', {  
-        validators: [
-          Validators.required, 
-          Validators.email
-        ],
-        updateOn: 'submit'
-      }),
-      sector : new FormControl('', {  
-        validators: [
-          Validators.required
-        ],
-        updateOn: 'submit'
-      }),
-      password : new FormControl('', {  
-        validators: [
-          Validators.minLength(8), 
-          Validators.maxLength(30),
-        ],
-        updateOn: 'submit'
-      })
-    }
-  )
+
+  private formBuilderService = inject(FormBuilder)
+
+  signupFormGroup : FormGroup = this.formBuilderService.group({
+    name : ['', 
+      [ 
+        Validators.required, 
+        Validators.minLength(3), 
+        Validators.maxLength(50)
+      ],
+      'submit'
+    ],
+    email : ['', 
+      [
+        Validators.required, 
+        Validators.email
+      ],
+      'submit'
+    ],
+    sector : ['', // TODO: Check how to declare standard value for this control in Angular. 
+      [
+        Validators.required
+      ],
+      'submit'
+    ],
+    password : ['',
+      [
+        Validators.minLength(8), 
+        Validators.maxLength(30),
+      ],
+      'submit'
+    ]
+  })
+
+  // signupFormGroup : FormGroup = new FormGroup(
+  //   {
+  //     name : new FormControl('', {  
+  //       validators: [
+  //         Validators.required, 
+  //         Validators.minLength(3), 
+  //         Validators.maxLength(50)
+  //       ],
+  //       updateOn: 'submit'
+  //     }),
+  //     email : new FormControl('', {  
+  //       validators: [
+  //         Validators.required, 
+  //         Validators.email
+  //       ],
+  //       updateOn: 'submit'
+  //     }),
+  //     sector : new FormControl('', {  
+  //       validators: [
+  //         Validators.required
+  //       ],
+  //       updateOn: 'submit'
+  //     }),
+  //     password : new FormControl('', {  
+  //       validators: [
+  //         Validators.minLength(8), 
+  //         Validators.maxLength(30),
+  //       ],
+  //       updateOn: 'submit'
+  //     })
+  //   }
+  // )
 
   nameIsValid : boolean = false
   emailIsValid : boolean = false
@@ -58,14 +102,14 @@ export class SignupFormComponent {
   //   })
   // }
 
-  getErrorMessagesForControl(controlName : String) : string[]
+  getErrorMessagesForControl(controlName : FormControl) : string[]
   {
 
-    let nameErrors : ValidationErrors | null | undefined = this.signupFormGroup.controls[`${controlName}`]?.errors;
-    return nameErrors != null ? this.formatValidationMessage(controlName, nameErrors) : []
+    // let nameErrors : ValidationErrors | null | undefined = this.signupFormGroup.controls.controlName[`${controlName}`]?.errors;
+    return controlName.errors != null ? this.formatValidationMessage(controlName, controlName.errors) : []
   }
 
-  formatValidationMessage(controlName :  String, errors : ValidationErrors) : string[]
+  formatValidationMessage(controlName : FormControl, errors : ValidationErrors) : string[]
   {
     let messages: string[] = []
     for(let error in errors)

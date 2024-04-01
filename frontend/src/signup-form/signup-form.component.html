@@ -47,7 +47,7 @@
           </select>
         </div>
       </div>
-      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("sector").length > 0) 
+      @if (!this.signupFormGroup.pristine && this.signupFormGroup.controls.sector?.errors.length > 0) 
       {
         <ul class="message is-danger">
           <div class="message-body">
