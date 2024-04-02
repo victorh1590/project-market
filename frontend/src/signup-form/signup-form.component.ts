@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { 
   FormGroup, 
@@ -17,7 +18,7 @@ import { Subject } from 'rxjs';
   templateUrl: './signup-form.component.html',
   styleUrl: './signup-form.component.scss',
   standalone : true,
-  imports: [ FormsModule, ReactiveFormsModule ]
+  imports: [ ReactiveFormsModule, CommonModule ]
 })
 export class SignupFormComponent {
 
@@ -56,7 +57,7 @@ export class SignupFormComponent {
 
   // signupFormGroup : FormGroup = new FormGroup(
   //   {
-  //     name : new FormControl('', {  
+  //     name : new FormControl<string | null>('', {  
   //       validators: [
   //         Validators.required, 
   //         Validators.minLength(3), 
@@ -64,20 +65,20 @@ export class SignupFormComponent {
   //       ],
   //       updateOn: 'submit'
   //     }),
-  //     email : new FormControl('', {  
+  //     email : new FormControl<string | null>('', {  
   //       validators: [
   //         Validators.required, 
   //         Validators.email
   //       ],
   //       updateOn: 'submit'
   //     }),
-  //     sector : new FormControl('', {  
+  //     sector : new FormControl<string | null>('', {  
   //       validators: [
   //         Validators.required
   //       ],
   //       updateOn: 'submit'
   //     }),
-  //     password : new FormControl('', {  
+  //     password : new FormControl<string | null>('', {  
   //       validators: [
   //         Validators.minLength(8), 
   //         Validators.maxLength(30),
@@ -91,6 +92,26 @@ export class SignupFormComponent {
   emailIsValid : boolean = false
   sectorIsValid : boolean = false
   passwordIsValid : boolean = false
+  nameContainsErrors : boolean = false
+  emailContainsErrors : boolean = false
+  sectorContainsErrors : boolean = false
+  passwordContainsErrors : boolean = false
+
+  updateContainsErrors() 
+  {
+    this.nameContainsErrors = this.signupFormGroup.controls["name"].errors != null
+    this.sectorContainsErrors = this.signupFormGroup.controls["sector"].errors != null
+    this.emailContainsErrors = this.signupFormGroup.controls["email"].errors != null
+    this.passwordContainsErrors = this.signupFormGroup.controls["password"].errors != null
+  }
+
+  updateValidStatus()
+  {
+    this.nameIsValid = this.signupFormGroup.controls["name"].valid
+    this.sectorIsValid = this.signupFormGroup.controls["sector"].valid
+    this.emailIsValid = this.signupFormGroup.controls["email"].valid
+    this.passwordIsValid = this.signupFormGroup.controls["password"].valid
+  }
 
   // ngOnInit() 
   // {

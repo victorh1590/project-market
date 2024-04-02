@@ -41,24 +41,21 @@
       <label class="label">Sector</label>
       <div class="control">
         <div class="select">
-          <select formControlName="sector">
+          <select formControlName="sector" name="sector">
             <option>Select dropdown</option>
             <option>With options</option>
           </select>
         </div>
       </div>
-      @if (!this.signupFormGroup.pristine && this.signupFormGroup.controls.sector?.errors.length > 0) 
-      {
-        <ul class="message is-danger">
+        <ul *ngIf="!this.signupFormGroup.pristine && this.signupFormGroup.controls.sector.length > 0" class="message is-danger">
           <div class="message-body">
             Os seguintes erros ocorreram:
             @for (err of this.getErrorMessagesForControl("sector"); track $index) 
             {
-              <li>{{ err }}</li>
+              <li *ngFor="let err of getErrorMessagesForControl(signupFormGroup.controls.sector)">{{ err }}</li>
             }
           </div>
         </ul>
-      }
     </div>
 
     <div class="field">
