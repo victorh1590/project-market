@@ -4,18 +4,19 @@
       <div class="control">
           <input class="input" type="text" formControlName="name">
       </div>
-      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("name").length > 0) 
-      {
+      <div *ngIf="!this.signupFormGroup.pristine && this.getErrorMessagesForControl('name', this.signupFormGroup.controls['name']?.errors).length > 0">
         <ul class="message is-danger">
           <div class="message-body">
             Os seguintes erros ocorreram:
-            @for (err of this.getErrorMessagesForControl("name"); track $index) 
-            {
-              <li>{{ err }}</li>
-            }
+            <div class="message-body">
+              Os seguintes erros ocorreram:
+              <div *ngFor="let err of this.getErrorMessagesForControl('name', this.signupFormGroup.controls['name']?.errors); track $index">
+                <li>{{ err }}</li>
+              </div>
+            </div>
           </div>
         </ul>
-      }
+      </div>
     </div>
 
     <div class="field">
@@ -23,18 +24,16 @@
       <div class="control">
           <input class="input" type="text" formControlName="email">
       </div>
-      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("email").length > 0) 
-      {
+      <div *ngIf="!this.signupFormGroup.pristine && this.getErrorMessagesForControl('email', this.signupFormGroup.controls['email']?.errors).length > 0">
         <ul class="message is-danger">
           <div class="message-body">
             Os seguintes erros ocorreram:
-            @for (err of this.getErrorMessagesForControl("email"); track $index) 
-            {
+            <div *ngFor="let err of this.getErrorMessagesForControl('email', this.signupFormGroup.controls['email']?.errors); track $index">
               <li>{{ err }}</li>
-            }
+            </div>
           </div>
         </ul>
-      }
+      </div>
     </div>
     
     <div class="field">
@@ -47,13 +46,12 @@
           </select>
         </div>
       </div>
-        <ul *ngIf="!this.signupFormGroup.pristine && this.signupFormGroup.controls.sector.length > 0" class="message is-danger">
+        <ul *ngIf="!this.signupFormGroup.pristine && this.getErrorMessagesForControl('sector', this.signupFormGroup.controls['sector']?.errors).length > 0" class="message is-danger">
           <div class="message-body">
             Os seguintes erros ocorreram:
-            @for (err of this.getErrorMessagesForControl("sector"); track $index) 
-            {
-              <li *ngFor="let err of getErrorMessagesForControl(signupFormGroup.controls.sector)">{{ err }}</li>
-            }
+            <div *ngFor="let err of this.getErrorMessagesForControl('email', this.signupFormGroup.controls['email']?.errors); track $index">
+              <li>{{ err }}</li>
+            </div>
           </div>
         </ul>
     </div>
@@ -63,18 +61,16 @@
       <div class="control">
           <input class="input" type="text" formControlName="password">
       </div>
-      @if (!this.signupFormGroup.pristine && this.getErrorMessagesForControl("password").length > 0) 
-      {
+      <div *ngIf="!this.signupFormGroup.pristine && this.getErrorMessagesForControl('password', this.signupFormGroup.controls['password'].errors).length > 0">
         <ul class="message is-danger">
           <div class="message-body">
             Os seguintes erros ocorreram:
-            @for (err of this.getErrorMessagesForControl("password"); track $index) 
-            {
+            <div *ngFor="let err of this.getErrorMessagesForControl('password', this.signupFormGroup.controls['password'].errors); track $index">
               <li>{{ err }}</li>
-            }
+            </div>
           </div>
         </ul>
-      }
+      </div>
     </div>
 
     <input class="button" type="submit" value="Submit input" />
