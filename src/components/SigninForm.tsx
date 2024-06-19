@@ -1,13 +1,11 @@
-import './SigninForm.css'
-import { useForm } from 'react-hook-form'
+import React from 'react';
+import './SigninForm.css';
+import { useForm } from 'react-hook-form';
 
 function SigninForm() {
-    const nomeField : string = "Nome";
-    const loginField : string = "Login";
-    const senhaField : string = "Senha";
-    const setorField : { fieldName : string, values : string[] } = { fieldName: "Setor", values: [] };
-
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        mode: "onSubmit",
+        reValidateMode: "onSubmit",
         defaultValues: {
             Nome: "",
             Login: "example@example.com",
@@ -16,27 +14,28 @@ function SigninForm() {
         }
     });
 
+    const onSubmit = (data : any) => {
+        console.log(data);
+    };
 
-    return <>
-            <form onSubmit={handleSubmit((data) => {
-                console.log(data);
-            })}>
+    return (
+        <>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <label>Nome: </label>
-                <input type="text" {...register("Nome", { required: `${"Nome"} é um campo requerido.` })}/>
-                <p>{errors.Nome?.message?.toString()}</p>
+                <input type="text" {...register("Nome", { required: `${"Nome"} é um campo requerido.` })} />
+                <p>{errors.Nome?.message}</p>
 
                 <label>Login: </label>
-                <input type="email" {...register("Login", { required: `${"Login"} é um campo requerido.` })}/>
-                <p>{errors.Login?.message?.toString()}</p>
+                <input type="email" {...register("Login", { required: `${"Login"} é um campo requerido.` })} />
+                <p>{errors.Login?.message}</p>
 
                 <label>Senha: </label>
-                <input type="password" {...register("Senha", { required: `${"Senha"} é um campo requerido.` })}/>
-                <p>{errors.Senha?.message?.toString()}</p>
+                <input type="password" {...register("Senha", { required: `${"Senha"} é um campo requerido.` })} />
+                <p>{errors.Senha?.message}</p>
                 
                 <label>Setor: </label>
                 <select {...register("Setor", { required: `${"Setor"} é um campo requerido.` })}>
                     <option value="">Selecione uma opção.</option>
-                    // TODO: Setores têm que ser alimentados via API.
                     <option value="RH">RH</option>
                     <option value="TI">TI</option>
                     <option value="Contabilidade">Contabilidade</option>
@@ -46,12 +45,13 @@ function SigninForm() {
                     <option value="Vendas">Vendas</option>
                     <option value="Oficina">Oficina</option>
                 </select>
-                <p>{errors.Setor?.message?.toString()}</p>
+                <p>{errors.Setor?.message}</p>
                 <br/><br/>
                 
                 <button type="submit">Submit</button>
             </form>
         </>
+    );
 }
 
 export default SigninForm;
