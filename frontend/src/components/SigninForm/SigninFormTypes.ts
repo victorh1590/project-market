@@ -10,7 +10,7 @@ export type SigninFormData = {
 export type FormFieldProps = {
   label: string;
   type: string;
-  placeholder: string;
+  defaultValue: string;
   name: ValidFieldNames;
   register: UseFormRegister<SigninFormData>;
   error: FieldError | undefined;

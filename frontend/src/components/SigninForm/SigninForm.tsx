@@ -18,24 +18,31 @@ const setorOptions = [
     "Oficina",
 ];
 
+const defaultValues: SigninFormData = {
+    nome: "",
+    email: "example@example.com",
+    senha: "",
+    setor: setorOptions[0]
+}
+
 const signinFormInputFields: Record<string, FormFieldProps> = {
     nome: {
         name: "nome",
         label: "Nome",
         type: "text",
-        placeholder: "Digite seu nome",
+        defaultValue: defaultValues.nome,
     } as FormFieldProps,
     email: {
         name: "email",
         label: "Email",
         type: "email",
-        placeholder: "Digite seu email",
+        defaultValue: defaultValues.email,
     } as FormFieldProps,
     senha: {
         name: "senha",
         label: "Senha",
         type: "password",
-        placeholder: "Digite sua senha",
+        defaultValue: defaultValues.senha,
     } as FormFieldProps
 };
 
@@ -45,19 +52,11 @@ const signinFormSelectionFields: Record<string, FormSelectionProps> = {
         label: "Setor",
         multiple: false,
         options: setorOptions,
-        defaultValue: setorOptions[0],
+        defaultValue: defaultValues.setor,
     } as FormSelectionProps
 }
 
 export const SigninForm = () => {
-    const defaultValues : SigninFormData = {
-        nome : "",
-        email : "example@example.com",
-        senha : "",
-        setor : "Selecione uma opção."
-    }
-
-
     const { register, handleSubmit, formState: { errors } } = useForm<SigninFormData>({
         mode: "onSubmit",
         reValidateMode: "onSubmit",
@@ -74,7 +73,7 @@ export const SigninForm = () => {
                 <FormField 
                     label={signinFormInputFields.nome.label}
                     type={signinFormInputFields.nome.type}
-                    placeholder={defaultValues.nome}
+                    defaultValue={signinFormInputFields.nome.defaultValue}
                     name={signinFormInputFields.nome.name}
                     register={register}
                     error={errors.nome}
@@ -83,7 +82,7 @@ export const SigninForm = () => {
                 <FormField 
                     label={signinFormInputFields.email.label}
                     type={signinFormInputFields.email.type}
-                    placeholder={defaultValues.email}
+                    defaultValue={signinFormInputFields.email.defaultValue}
                     name={signinFormInputFields.email.name}
                     register={register}
                     error={errors.email}
@@ -92,7 +91,7 @@ export const SigninForm = () => {
                 <FormField 
                     label={signinFormInputFields.senha.label}
                     type={signinFormInputFields.senha.type}
-                    placeholder={defaultValues.senha}
+                    defaultValue={signinFormInputFields.senha.defaultValue}
                     name={signinFormInputFields.senha.name}
                     register={register}
                     error={errors.senha}

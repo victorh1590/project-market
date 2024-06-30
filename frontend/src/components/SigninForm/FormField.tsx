@@ -3,7 +3,7 @@ import { FormFieldProps } from "./SigninFormTypes.ts";
 export const FormField = ({
   label,
   type,
-  placeholder,
+  defaultValue,
   name,
   register,
   error,
@@ -13,7 +13,7 @@ export const FormField = ({
     <label key={`${label}-label`}>{`${label}: `}</label>
     <input
       type={type}
-      placeholder={placeholder}
+      placeholder={defaultValue}
       {...register(name, { valueAsNumber })}
     />
     {error && <><br/><span className="error-message">{error.message}</span></>}
