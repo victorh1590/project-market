@@ -1,52 +1,81 @@
 import './SigninForm.css';
 import { useForm } from 'react-hook-form';
+import { FormData } from "./SigninFormTypes";
+import FormField from "./FormField";
+import FormSelection from './FormSelection';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createUserSchema } from './FormSchema';
 
 function SigninForm() {
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const defaultValues : FormData = {
+        nome : "",
+        email : "example@example.com",
+        senha : "",
+        setor : "Selecione uma opção."
+    }
+
+    const setorOptions = [
+        defaultValues.setor, 
+        "RH",
+        "TI", 
+        "Contabilidade", 
+        "Logística",
+        "Compras",
+        "Diretoria",
+        "Vendas",
+        "Oficina"
+    ]
+
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         mode: "onSubmit",
         reValidateMode: "onSubmit",
-        defaultValues: {
-            Nome: "",
-            Login: "example@example.com",
-            Senha: "",
-            Setor: ""
-        }
+        resolver: zodResolver(createUserSchema(defaultValues))
     });
 
     const onSubmit = (data : any) => {
-        console.log(data);
+        console.log("SUCCESS", data);
     };
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <label>Nome: </label>
-                <input type="text" {...register("Nome", { required: `${"Nome"} é um campo requerido.`, maxLength: 32 })} />
-                <p>{errors.Nome?.message}</p>
-
-                <label>Login: </label>
-                <input type="email" {...register("Login", { required: `${"Login"} é um campo requerido.`, pattern:  })} />
-                <p>{errors.Login?.message}</p>
-
-                <label>Senha: </label>
-                <input type="password" {...register("Senha", { required: `${"Senha"} é um campo requerido.` })} />
-                <p>{errors.Senha?.message}</p>
-                
-                <label>Setor: </label>
-                <select {...register("Setor", { required: `${"Setor"} é um campo requerido.` })}>
-                    <option value="">Selecione uma opção.</option>
-                    <option value="RH">RH</option>
-                    <option value="TI">TI</option>
-                    <option value="Contabilidade">Contabilidade</option>
-                    <option value="Logística">Logística</option>
-                    <option value="Compras">Compras</option>
-                    <option value="Diretoria">Diretoria</option>
-                    <option value="Vendas">Vendas</option>
-                    <option value="Oficina">Oficina</option>
-                </select>
-                <p>{errors.Setor?.message}</p>
-                <br/><br/>
-                
+                <FormField 
+                    label="Nome"
+                    type="text" 
+                    placeholder={defaultValues.nome}
+                    name="nome"
+                    register={register}
+                    error={errors.nome}
+                />
+                <br/>
+                <FormField 
+                    label="Email"
+                    type="email" 
+                    placeholder={defaultValues.email}
+                    name="email"
+                    register={register}
+                    error={errors.email}
+                />
+                <br/>
+                <FormField 
+                    label="Senha"
+                    type="text" 
+                    placeholder={defaultValues.senha}
+                    name="senha"
+                    register={register}
+                    error={errors.senha}
+                />
+                <br/>
+                <FormSelection
+                    label="Setor"
+                    multiple={false}
+                    options={setorOptions}
+                    defaultValue={defaultValues.setor}
+                    name="setor"
+                    register={register}
+                    error={errors.setor}
+                />
+                <br/>
                 <button type="submit">Submit</button>
             </form>
         </>
