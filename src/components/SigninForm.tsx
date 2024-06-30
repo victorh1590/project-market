@@ -1,4 +1,3 @@
-import React from 'react';
 import './SigninForm.css';
 import { useForm } from 'react-hook-form';
 
@@ -22,11 +21,11 @@ function SigninForm() {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <label>Nome: </label>
-                <input type="text" {...register("Nome", { required: `${"Nome"} é um campo requerido.` })} />
+                <input type="text" {...register("Nome", { required: `${"Nome"} é um campo requerido.`, maxLength: 32 })} />
                 <p>{errors.Nome?.message}</p>
 
                 <label>Login: </label>
-                <input type="email" {...register("Login", { required: `${"Login"} é um campo requerido.` })} />
+                <input type="email" {...register("Login", { required: `${"Login"} é um campo requerido.`, pattern:  })} />
                 <p>{errors.Login?.message}</p>
 
                 <label>Senha: </label>
