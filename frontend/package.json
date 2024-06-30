@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.6.0",
+    "@tanstack/eslint-plugin-query": "^5.49.1",
+    "@tanstack/react-query": "^5.49.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

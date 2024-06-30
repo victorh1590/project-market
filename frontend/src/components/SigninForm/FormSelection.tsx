@@ -1,6 +1,6 @@
 import { FormSelectionProps } from "./SigninFormTypes.ts";
 
-const FormSelection = ({
+export const FormSelection = ({
         label,
         multiple,
         options,
@@ -23,4 +23,3 @@ const FormSelection = ({
         </>
         )
     };
-export default FormSelection;

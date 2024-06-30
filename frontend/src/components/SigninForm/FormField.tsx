@@ -1,6 +1,6 @@
 import { FormFieldProps } from "./SigninFormTypes.ts";
 
-const FormField = ({
+export const FormField = ({
   label,
   type,
   placeholder,
@@ -19,4 +19,3 @@ const FormField = ({
     {error && <><br/><span className="error-message">{error.message}</span></>}
   </>
 );
-export default FormField;
