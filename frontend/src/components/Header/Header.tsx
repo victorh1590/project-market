@@ -1,6 +1,7 @@
+import { HeaderMenu } from "./HeaderMenu"
 
 
 export const Header = () => {
-    
-    return <></>
+
+    return <header><HeaderMenu></HeaderMenu></header>
 }
