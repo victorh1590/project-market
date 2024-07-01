@@ -69,8 +69,11 @@ export const SigninForm = () => {
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <FormField 
+            <form 
+                className="col-start-2 col-span-1 row-start-2 row-span-1 bg-red-200 flex flex-col justify-center items-center h-full w-full bg-gray-400" 
+                onSubmit={handleSubmit(onSubmit)}
+            >
+                <FormField
                     label={signinFormInputFields.nome.label}
                     type={signinFormInputFields.nome.type}
                     defaultValue={signinFormInputFields.nome.defaultValue}
@@ -78,7 +81,6 @@ export const SigninForm = () => {
                     register={register}
                     error={errors.nome}
                 />
-                <br/>
                 <FormField 
                     label={signinFormInputFields.email.label}
                     type={signinFormInputFields.email.type}
@@ -87,7 +89,6 @@ export const SigninForm = () => {
                     register={register}
                     error={errors.email}
                 />
-                <br/>
                 <FormField 
                     label={signinFormInputFields.senha.label}
                     type={signinFormInputFields.senha.type}
@@ -96,7 +97,6 @@ export const SigninForm = () => {
                     register={register}
                     error={errors.senha}
                 />
-                <br/>
                 <FormSelection
                     label={signinFormSelectionFields.setor.label}
                     multiple={signinFormSelectionFields.setor.multiple}
@@ -107,7 +107,9 @@ export const SigninForm = () => {
                     error={errors.setor}
                 />
                 <br/>
-                <button type="submit">Submit</button>
+                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Submit
+                </button>
             </form>
         </>
     );

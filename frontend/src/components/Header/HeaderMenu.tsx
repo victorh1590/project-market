@@ -9,11 +9,23 @@ const headerMenuEntries: HeaderMenuEntries = {
 
 export const HeaderMenu = () => {
     const links = Object.entries(headerMenuEntries).map(([key, value]) => (
-        <a key={`${key}-menu-entry`} href={value.href}>{value.name}</a>
+        <a 
+            className="
+                flex
+            "
+            key={`${key}-menu-entry`} href={value.href}
+        >{value.name}</a>
     ));
 
     return (
-        <div>
+        <div 
+            className="
+            col-start-1 col-span-2
+            row-start-1 row-span-1
+            flex flex-row
+            ml-10 items-center
+            h-full w-full"
+        >
             {links}
         </div>
     );
