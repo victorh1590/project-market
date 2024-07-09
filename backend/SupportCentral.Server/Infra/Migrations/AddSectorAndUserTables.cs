@@ -3,7 +3,7 @@ using FluentMigrator;
 namespace SupportCentral.Server.Infra.Migrations;
 
 [Migration(1)]
-public class AddSectorAndUserTables : Migration{
+public class AddSectorAndUserTables : Migration {
     public override void Up()
 	{
         Create.Table("Sector")
@@ -15,7 +15,7 @@ public class AddSectorAndUserTables : Migration{
             .WithColumn("Name").AsString(64).Unique().NotNullable()
             .WithColumn("Email").AsString(128).NotNullable()
             .WithColumn("Password").AsString(72).NotNullable()
-            .WithColumn("SectorId").AsInt32().ForeignKey("fk_user_sector", "Sector", "Id").Nullable();
+            .WithColumn("Sector").AsInt32().ForeignKey("fk_user_sector", "Sector", "Id").Nullable();
 	}
 
 	public override void Down()
