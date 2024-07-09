@@ -1,7 +1,7 @@
 using Npgsql;
 using System.Data;
 
-namespace SupportCentral.Server.Infra.Db;
+namespace ProjectMarket.Server.Infra.Db;
 
 public sealed class UnitOfWork : IUnitOfWork, IDisposable
 {

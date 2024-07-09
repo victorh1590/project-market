@@ -1,7 +1,7 @@
 using FluentMigrator;
-using SupportCentral.Server.Data.Model;
+using ProjectMarket.Server.Data.Model;
 
-namespace SupportCentral.Server.Infra.Migrations;
+namespace ProjectMarket.Server.Infra.Migrations;
 
 [Migration(3)]
 public class AddTicketTable : Migration {

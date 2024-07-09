@@ -1,4 +1,4 @@
-namespace SupportCentral.Server.Data.Model;
+namespace ProjectMarket.Server.Data.Model;
 
 public class ProjectAdvertisement {
     public int Id { get; set; }
@@ -6,9 +6,9 @@ public class ProjectAdvertisement {
     public string? Description { get; set; }
     public DateTime OpenedOn { get; set; }
     public DateTime Deadline { get; set; }
-    public AdvertisementStatus Status { get; set; }
     public PaymentOffer PaymentOffer { get; set; }
     public Costumer Costumer { get; set; }
-    public List<KnowledgeArea> Subjects { get; set; }
-    public List<JobRequirement>? Requirements { get; set; }
+    public AdvertisementStatusVO Status { get; set; }
+    public List<KnowledgeAreaVO> Subjects { get; set; }
+    public List<JobRequirementVO>? Requirements { get; set; }
 }

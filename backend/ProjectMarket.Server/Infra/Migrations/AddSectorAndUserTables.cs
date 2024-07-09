@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace SupportCentral.Server.Infra.Migrations;
+namespace ProjectMarket.Server.Infra.Migrations;
 
 [Migration(1)]
 public class AddSectorAndUserTables : Migration {

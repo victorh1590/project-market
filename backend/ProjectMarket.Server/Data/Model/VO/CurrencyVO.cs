@@ -1,6 +1,6 @@
-namespace SupportCentral.Server.Data.Model;
+namespace ProjectMarket.Server.Data.Model;
 
-public class Currency {
+public struct CurrencyVO {
     public int Id { get; set; }
     public decimal Name { get; set; }
     public string Prefix { get; set; }

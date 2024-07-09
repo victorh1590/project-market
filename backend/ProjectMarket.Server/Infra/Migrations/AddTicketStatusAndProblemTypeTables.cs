@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace SupportCentral.Server.Infra.Migrations;
+namespace ProjectMarket.Server.Infra.Migrations;
 
 [Migration(2)]
 public class AddTicketStatusAndProblemTypeTables : Migration {

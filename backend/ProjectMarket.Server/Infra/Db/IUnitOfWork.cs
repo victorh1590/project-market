@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace SupportCentral.Server;
+namespace ProjectMarket.Server;
 
 public interface IUnitOfWork
 {

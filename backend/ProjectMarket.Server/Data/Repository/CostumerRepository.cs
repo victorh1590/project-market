@@ -1,6 +1,6 @@
-namespace SupportCentral.Server.Data.Repository;
+namespace ProjectMarket.Server.Data.Repository;
 
-using SupportCentral.Server.Data.Model;
+using ProjectMarket.Server.Data.Model;
 using Dapper;
 
 public class CostumerRepository(IUnitOfWork uow)

@@ -1,6 +1,6 @@
-namespace SupportCentral.Server.Data.Model;
+namespace ProjectMarket.Server.Data.Model;
 
-public class JobRequirement {
+public class JobRequirementVO {
     public int Id { get; set; }
     public string Requirement { get; set; }
     public List<ProjectAdvertisement>? Advertisements { get; set; }
