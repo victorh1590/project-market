@@ -1,4 +1,4 @@
-﻿namespace ProjectMarket.Server;
+﻿namespace ProjectMarket.Server.Infra.Repository;
 
 public class PaymentOfferRepository
 {

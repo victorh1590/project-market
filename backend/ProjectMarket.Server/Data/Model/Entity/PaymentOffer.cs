@@ -3,8 +3,8 @@ using ProjectMarket.Server.Data.Model.VO;
 namespace ProjectMarket.Server.Data.Model.Entity;
 
 public class PaymentOffer {
-    public int Id { get; set; }
-    public decimal Value { get; set; }
-    public PaymentFrequencyVO PaymentFrequency { get; set; }
-    public CurrencyVO Currency { get; set; }
+    required public int Id { get; set; }
+    required public decimal Value { get; set; }
+    required public PaymentFrequencyVO PaymentFrequency { get; set; }
+    required public CurrencyVO Currency { get; set; }
 }
