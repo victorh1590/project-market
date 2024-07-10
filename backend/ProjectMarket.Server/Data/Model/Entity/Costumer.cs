@@ -1,4 +1,4 @@
-namespace ProjectMarket.Server.Data.Model;
+namespace ProjectMarket.Server.Data.Model.Entity;
 
 public class Costumer {
     public int Id { get; set; }
@@ -6,5 +6,6 @@ public class Costumer {
     public string Email { get; set; }
     public string Password { get; set; }
     public DateTime RegistrationDate { get; set; }
+    
     public List<ProjectAdvertisement>? Advertisements { get; set; }
 }

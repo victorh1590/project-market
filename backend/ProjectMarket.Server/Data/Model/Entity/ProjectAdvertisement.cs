@@ -1,4 +1,6 @@
-namespace ProjectMarket.Server.Data.Model;
+using ProjectMarket.Server.Data.Model.VO;
+
+namespace ProjectMarket.Server.Data.Model.Entity;
 
 public class ProjectAdvertisement {
     public int Id { get; set; }

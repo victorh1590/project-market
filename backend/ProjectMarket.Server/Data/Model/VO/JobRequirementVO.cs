@@ -1,7 +1,10 @@
-namespace ProjectMarket.Server.Data.Model;
+using ProjectMarket.Server.Data.Model.Entity;
 
-public class JobRequirementVO {
+namespace ProjectMarket.Server.Data.Model.VO;
+
+public struct JobRequirementVO {
     public int Id { get; set; }
     public string Requirement { get; set; }
+
     public List<ProjectAdvertisement>? Advertisements { get; set; }
 }
