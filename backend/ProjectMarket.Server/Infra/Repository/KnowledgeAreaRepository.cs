@@ -1,7 +1,7 @@
-namespace ProjectMarket.Server.Data.Repository;
-
 using Dapper;
 using ProjectMarket.Server.Data.Model.VO;
+
+namespace ProjectMarket.Server.Infra.Repository;
 
 public class KnowledgeAreaRepository(IUnitOfWork uow)
 {

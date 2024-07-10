@@ -1,7 +1,7 @@
-namespace ProjectMarket.Server.Data.Repository;
-
 using Dapper;
 using ProjectMarket.Server.Data.Model.Entity;
+
+namespace ProjectMarket.Server.Infra.Repository;
 
 public class CostumerRepository(IUnitOfWork uow)
 {
@@ -22,11 +22,11 @@ public class CostumerRepository(IUnitOfWork uow)
 
     public void Insert(Costumer Costumer)
     {
-        string insertCostumer = 
+        string query = 
             "INSERT INTO Costumer (Name, Email, Password, RegistrationDate) " +
             "VALUES (@Name, @Email, @Password, @RegistrationDate)";
 
-        _uow.Connection.Execute(insertCostumer,Costumer);
+        _uow.Connection.Execute(query,Costumer);
 
         // if(Costumer.Advertisements?.Count > 0) {
         //   // delegate to Advertisements Repo and pass _uow as dependency.
