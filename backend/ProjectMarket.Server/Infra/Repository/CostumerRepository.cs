@@ -1,7 +1,7 @@
 namespace ProjectMarket.Server.Data.Repository;
 
-using ProjectMarket.Server.Data.Model;
 using Dapper;
+using ProjectMarket.Server.Data.Model.Entity;
 
 public class CostumerRepository(IUnitOfWork uow)
 {
