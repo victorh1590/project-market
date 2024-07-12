@@ -7,7 +7,7 @@ public class _4_CreateProjectAdvertisementTable : Migration {
     public override void Up()
 	{
         Create.Table("ProjectAdvertisement")
-            .WithColumn("Id").AsInt32().NotNullable().Unique().PrimaryKey("pk_ticket").Identity()
+            .WithColumn("Id").AsInt32().NotNullable().Unique().PrimaryKey("pk_project_advertisement").Identity()
             .WithColumn("Title").AsString(128).NotNullable()
             .WithColumn("Description").AsString(512).Nullable()
             .WithColumn("OpenedOn").AsDateTime().NotNullable()
@@ -26,17 +26,17 @@ public class _4_CreateProjectAdvertisementTable : Migration {
             .FromTable("ProjectAdvertisement").ForeignColumn("CostumerId")
             .ToTable("Costumer").PrimaryColumn("Id");
 
-        Create.ForeignKey("fk_project_advertisement_status")
+        Create.ForeignKey("fk_project_advertisement_advertisement_status")
             .FromTable("ProjectAdvertisement").ForeignColumn("StatusId")
-            .ToTable("Status").PrimaryColumn("Id");
+            .ToTable("AdvertisementStatus").PrimaryColumn("Id");
 
-        Create.ForeignKey("fk_project_advertisement_subject")
+        Create.ForeignKey("fk_project_advertisement_knowledge_area")
             .FromTable("ProjectAdvertisement").ForeignColumn("SubjectId")
-            .ToTable("Subject").PrimaryColumn("Id");
+            .ToTable("KnowledgeArea").PrimaryColumn("Id");
 
-        Create.ForeignKey("fk_project_advertisement_requirements")
-            .FromTable("ProjectAdvertisement").ForeignColumn("RequirementsId")
-            .ToTable("Requirements").PrimaryColumn("Id");
+        Create.ForeignKey("fk_project_advertisement_job_requirement")
+            .FromTable("ProjectAdvertisement").ForeignColumn("RequirementId")
+            .ToTable("JobRequirement").PrimaryColumn("Id");
 	}
 
 	public override void Down()
@@ -46,6 +46,6 @@ public class _4_CreateProjectAdvertisementTable : Migration {
         Delete.ForeignKey("fk_project_advertisement_status").OnTable("ProjectAdvertisement");
         Delete.ForeignKey("fk_project_advertisement_subject").OnTable("ProjectAdvertisement");
         Delete.ForeignKey("fk_project_advertisement_requirements").OnTable("ProjectAdvertisement");
-        Delete.Table("PaymentOffer");
+        Delete.Table("ProjectAdvertisement").IfExists();
 	}
 }

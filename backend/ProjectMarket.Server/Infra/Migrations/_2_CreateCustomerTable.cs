@@ -18,6 +18,6 @@ public class _2_CreateCustomerTable : Migration {
 
 	public override void Down()
 	{
-        Delete.Table("Costumer");
+        Delete.Table("Costumer").IfExists();
 	}
 }

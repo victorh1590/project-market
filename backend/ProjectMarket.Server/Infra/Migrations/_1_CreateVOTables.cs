@@ -24,16 +24,17 @@ public class _1_CreateVOTables : Migration {
             .WithColumn("Name").AsString(64).Unique().NotNullable();
 
         Create.Table("PaymentFrequency")
-            .WithColumn("Id").AsInt32().NotNullable().PrimaryKey("pk_knowledge_area").Identity()
+            .WithColumn("Id").AsInt32().NotNullable().PrimaryKey("pk_payment_frequency").Identity()
             .WithColumn("Description").AsString(32).Unique().NotNullable()
             .WithColumn("Suffix").AsString(32).Unique().NotNullable();
 	}
 
 	public override void Down()
 	{
-        Delete.Table("AdvertisementStatus");
-        Delete.Table("Currency");
-        Delete.Table("JobRequirement");
-        Delete.Table("KnowledgeArea");
+        Delete.Table("AdvertisementStatus").IfExists();
+        Delete.Table("Currency").IfExists();
+        Delete.Table("JobRequirement").IfExists();
+        Delete.Table("KnowledgeArea").IfExists();
+        Delete.Table("PaymentFrequency").IfExists();
 	}
 }

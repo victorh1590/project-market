@@ -11,7 +11,7 @@ public class _3_CreatePaymentOfferTable : Migration {
         int valuePrecision = 2;
 
         Create.Table("PaymentOffer")
-            .WithColumn("Id").AsInt32().NotNullable().PrimaryKey("pk_ticket").Identity()
+            .WithColumn("Id").AsInt32().NotNullable().PrimaryKey("pk_payment_offer").Identity()
             .WithColumn("Value").AsDecimal(valueMaxSize,valuePrecision).NotNullable() 
             .WithColumn("PaymentFrequencyId").AsInt32().NotNullable()
             .WithColumn("CurrencyId").AsInt32().NotNullable();
@@ -29,6 +29,6 @@ public class _3_CreatePaymentOfferTable : Migration {
 	{   
         Delete.ForeignKey("fk_payment_offer_payment_frequency").OnTable("PaymentOffer");
         Delete.ForeignKey("fk_payment_offer_currency").OnTable("PaymentOffer");
-        Delete.Table("PaymentOffer");
+        Delete.Table("PaymentOffer").IfExists();
 	}
 }
