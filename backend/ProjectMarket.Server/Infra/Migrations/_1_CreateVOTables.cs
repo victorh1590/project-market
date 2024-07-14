@@ -3,30 +3,54 @@ using FluentMigrator;
 namespace ProjectMarket.Server.Infra.Migrations;
 
 [Migration(1)]
-public class _1_CreateVOTables : Migration {
+public class _1_CreateVOTables(IConfiguration configuration) : Migration {
     public override void Up()
 	{
         Create.Table("AdvertisementStatus")
-            .WithColumn("AdvertisementStatusId").AsInt32().NotNullable().PrimaryKey("pk_advertisement_status").Identity()
-            .WithColumn("Status").AsString(64).Unique().NotNullable();
+            .WithColumn("AdvertisementStatusName").AsString(64).PrimaryKey("pk_advertisement_status").NotNullable();
 
         Create.Table("Currency")
-            .WithColumn("CurrencyId").AsInt32().NotNullable().PrimaryKey("pk_currency").Identity()
-            .WithColumn("Name").AsString(64).Unique().NotNullable()
+            .WithColumn("CurrencyName").AsString(64).PrimaryKey("pk_currency").NotNullable()
             .WithColumn("Prefix").AsString(8).NotNullable();
 
         Create.Table("JobRequirement")
-            .WithColumn("JobRequirementId").AsInt32().NotNullable().PrimaryKey("pk_job_requirement").Identity()
-            .WithColumn("Requirement").AsString(64).Unique().NotNullable();
+            .WithColumn("JobRequirementName").AsString(64).PrimaryKey("pk_job_requirement").NotNullable();
 
         Create.Table("KnowledgeArea")
-            .WithColumn("KnowledgeAreaId").AsInt32().NotNullable().PrimaryKey("pk_knowledge_area").Identity()
-            .WithColumn("Name").AsString(64).Unique().NotNullable();
+            .WithColumn("KnowledgeAreaName").AsString(64).PrimaryKey("pk_knowledge_area").NotNullable();
 
         Create.Table("PaymentFrequency")
-            .WithColumn("PaymentFrequencyId").AsInt32().NotNullable().PrimaryKey("pk_payment_frequency").Identity()
-            .WithColumn("Description").AsString(32).Unique().NotNullable()
+            .WithColumn("PaymentFrequencyName").AsString(32).PrimaryKey("pk_payment_frequency").NotNullable()
             .WithColumn("Suffix").AsString(32).Unique().NotNullable();
+
+        if(configuration.GetValue<bool>("Database:UseSeedData")) {
+            Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Open" });
+            Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Paused" });
+            Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Closed" });
+
+            Insert.IntoTable("Currency").Row(new { CurrencyName = "Dollar", Prefix = "$" });
+            Insert.IntoTable("Currency").Row(new { CurrencyName = "Euro", Prefix = "€" });
+            Insert.IntoTable("Currency").Row(new { CurrencyName = "Yen", Prefix = "¥" });
+
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "Python" });
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "C#" });
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "Java" });
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "Go" });
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "Javascript" });
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "PHP" });
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "Ruby" });
+            Insert.IntoTable("JobRequirement").Row(new { JobRequirementName = "C++" });
+
+            Insert.IntoTable("KnowledgeArea").Row(new { KnowledgeAreaName = "Software Development" });
+            Insert.IntoTable("KnowledgeArea").Row(new { KnowledgeAreaName = "AI" });
+            Insert.IntoTable("KnowledgeArea").Row(new { KnowledgeAreaName = "Data Science" });
+            Insert.IntoTable("KnowledgeArea").Row(new { KnowledgeAreaName = "DevOps" });
+            Insert.IntoTable("KnowledgeArea").Row(new { KnowledgeAreaName = "UI/UX" });
+
+            Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Hourly", Suffix = "per hour" });
+            Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Daily", Suffix = "per day" });
+            Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Once", Suffix = "when project is done" });
+        }
 	}
 
 	public override void Down()
