@@ -6,6 +6,4 @@ public class Costumer {
     required public string Email { get; set; }
     required public string Password { get; set; }
     public DateTime RegistrationDate { get; set; }
-    //
-    public List<ProjectAdvertisement>? Advertisements { get; set; }
 }
