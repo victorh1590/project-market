@@ -29,7 +29,7 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
             "VALUES " +
             "(@Title, @Description, @OpenedOn, @Deadline, @PaymentOfferId, @CostumerId, @StatusId, @SubjectsId)";
 
-        foreach(int knowledgeAreaId in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaId).ToArray()) {
+        foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
         _uow.Connection.Execute(query, 
             new {
                 Title = ProjectAdvertisement.Title,
@@ -38,8 +38,8 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
                 Deadline = ProjectAdvertisement.Deadline,
                 PaymentOfferId = ProjectAdvertisement.PaymentOffer.PaymentOfferId,
                 CostumerId = ProjectAdvertisement.Costumer.CostumerId,
-                StatusId = ProjectAdvertisement.Status.AdvertisementStatusId,
-                SubjectId = knowledgeAreaId
+                StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
+                SubjectId = knowledgeAreaName
             });
         }
     }
@@ -52,7 +52,7 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
             "PaymentOfferId = @PaymentOfferId, CostumerId = @CostumerId, StatusId = @StatusId, SubjectId = @SubjectId " + 
             "WHERE ProjectAdvertisementId = @ProjectAdvertisementId";
 
-        foreach(int knowledgeAreaId in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaId).ToArray()) {
+        foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
             _uow.Connection.Execute(query, 
             new {
                 Title = ProjectAdvertisement.Title,
@@ -61,8 +61,8 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
                 Deadline = ProjectAdvertisement.Deadline,
                 PaymentOfferId = ProjectAdvertisement.PaymentOffer.PaymentOfferId,
                 CostumerId = ProjectAdvertisement.Costumer.CostumerId,
-                StatusId = ProjectAdvertisement.Status.AdvertisementStatusId,
-                SubjectId = knowledgeAreaId
+                StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
+                SubjectId = knowledgeAreaName
             });
         }
     }
