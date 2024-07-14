@@ -14,27 +14,27 @@ public class CurrencyRepository(IUnitOfWork uow)
         return _uow.Connection.Query<Currency>(query);
     }
 
-    public Currency? GetByCurrencyId(int id)
+    public Currency? GetByCurrencyName(string name)
     {
-        string query = "SELECT * FROM Currency WHERE CurrencyId = @CurrencyId";
-        return _uow.Connection.QueryFirstOrDefault<Currency>(query, new { CurrencyId = id });
+        string query = "SELECT * FROM Currency WHERE CurrencyName = @CurrencyName";
+        return _uow.Connection.QueryFirstOrDefault<Currency>(query, new { CurrencyName = name });
     }
 
     public void Insert(Currency Currency)
     {
-        string query = "INSERT INTO Currency (Name, Prefix) VALUES (@Name, @Prefix)";
+        string query = "INSERT INTO Currency (CurrencyName, Prefix) VALUES (@CurrencyName, @Prefix)";
         _uow.Connection.Execute(query, Currency);
     }
 
     public void Update(Currency Currency)
     {
-        string query = "UPDATE Currency SET Name = @Name, Prefix = @Prefix WHERE CurrencyId = @CurrencyId";
+        string query = "UPDATE Currency SET CurrencyName = @CurrencyName, Prefix = @Prefix WHERE CurrencyName = @CurrencyName";
         _uow.Connection.Execute(query, Currency);
     }
 
-    public void Delete(int id)
+    public void Delete(string name)
     {
-        string query = "DELETE CASCADE FROM Currency WHERE CurrencyId = @CurrencyId";
-        _uow.Connection.Execute(query, new { CurrencyId = id });
+        string query = "DELETE CASCADE FROM Currency WHERE CurrencyName = @CurrencyName";
+        _uow.Connection.Execute(query, new { CurrencyName = name });
     }
 }

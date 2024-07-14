@@ -7,34 +7,34 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<KnowledgeAreaVO> GetAll()
+    public IEnumerable<KnowledgeArea> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM KnowledgeArea";
-        return _uow.Connection.Query<KnowledgeAreaVO>(query);
+        return _uow.Connection.Query<KnowledgeArea>(query);
     }
 
-    public KnowledgeAreaVO? GetByKnowledgeAreaId(int id)
+    public KnowledgeArea? GetByKnowledgeAreaName(string name)
     {
-        string query = "SELECT * FROM KnowledgeArea WHERE KnowledgeAreaId = @KnowledgeAreaId";
-        return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVO>(query, new { KnowledgeAreaId = id });
+        string query = "SELECT * FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
+        return _uow.Connection.QueryFirstOrDefault<KnowledgeArea>(query, new { KnowledgeAreaName = name });
     }
 
-    public void Insert(KnowledgeAreaVO KnowledgeArea)
+    public void Insert(KnowledgeArea KnowledgeArea)
     {
-        string query = "INSERT INTO KnowledgeArea (Name) VALUES (@Name)";
+        string query = "INSERT INTO KnowledgeArea (KnowledgeAreaName) VALUES (@KnowledgeAreaName)";
         _uow.Connection.Execute(query, KnowledgeArea);
     }
 
-    public void Update(KnowledgeAreaVO KnowledgeArea)
+    public void Update(KnowledgeArea KnowledgeArea)
     {
-        string query = "UPDATE KnowledgeArea SET Name = @Name WHERE KnowledgeAreaId = @KnowledgeAreaId";
+        string query = "UPDATE KnowledgeArea SET KnowledgeAreaName = @KnowledgeAreaName WHERE KnowledgeAreaName = @KnowledgeAreaName";
         _uow.Connection.Execute(query, KnowledgeArea);
     }
 
-    public void Delete(int id)
+    public void Delete(string name)
     {
-        string query = "DELETE CASCADE FROM KnowledgeArea WHERE KnowledgeAreaId = @KnowledgeAreaId";
-        _uow.Connection.Execute(query, new { KnowledgeAreaId = id });
+        string query = "DELETE CASCADE FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
+        _uow.Connection.Execute(query, new { KnowledgeAreaName = name });
     }
 }

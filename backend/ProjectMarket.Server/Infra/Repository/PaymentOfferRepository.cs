@@ -14,21 +14,21 @@ public class PaymentOfferRepository(IUnitOfWork uow)
         return _uow.Connection.Query<PaymentOffer>(query);
     }
 
-    public PaymentOffer? GetByPaymentOfferId(int id)
+    public PaymentOffer? GetByPaymentOfferName(string name)
     {
-        string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
-        return _uow.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferId = id });
+        string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferName = @PaymentOfferName";
+        return _uow.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferName = name });
     }
 
     public void Insert(PaymentOffer PaymentOffer)
     {
         string query = 
-            "INSERT INTO PaymentOffer (Value, PaymentFrequencyId, CurrencyId) " + 
-            "VALUES (@Value, @PaymentFrequency, @CurrencyId)";
+            "INSERT INTO PaymentOffer (Value, PaymentFrequencyName, CurrencyName) " + 
+            "VALUES (@Value, @PaymentFrequencyName, @CurrencyName)";
         _uow.Connection.Execute(query, new {
             PaymentOffer.Value,
-            PaymentOffer.PaymentFrequency.PaymentFrequencyId,
-            PaymentOffer.Currency.CurrencyId
+            PaymentOffer.PaymentFrequency.PaymentFrequencyName,
+            PaymentOffer.Currency.CurrencyName
         });
     }
 
@@ -36,18 +36,18 @@ public class PaymentOfferRepository(IUnitOfWork uow)
     {
         string query = 
             "UPDATE PaymentOffer " +
-            "SET Value = @Value, PaymentFrequencyId = @PaymentFrequencyId, @CurrencyId = CurrencyId " +
+            "SET Value = @Value, PaymentFrequencyName = @PaymentFrequencyName, @CurrencyName = CurrencyName " +
             "WHERE PaymentOfferId = @PaymentOfferId";
         _uow.Connection.Execute(query, new {
             PaymentOffer.Value,
-            PaymentOffer.PaymentFrequency.PaymentFrequencyId,
-            PaymentOffer.Currency.CurrencyId
+            PaymentOffer.PaymentFrequency.PaymentFrequencyName,
+            PaymentOffer.Currency.CurrencyName
         });
     }
 
-    public void Delete(int id)
+    public void Delete(string name)
     {
-        string query = "DELETE CASCADE FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
-        _uow.Connection.Execute(query, new { PaymentOfferId = id });
+        string query = "DELETE CASCADE FROM PaymentOffer WHERE PaymentOfferName = @PaymentOfferName";
+        _uow.Connection.Execute(query, new { PaymentOfferName = name });
     }
 }
