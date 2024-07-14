@@ -24,6 +24,9 @@ public class _1_CreateVOTables(IConfiguration configuration) : Migration {
             .WithColumn("Suffix").AsString(32).Unique().NotNullable();
 
         if(configuration.GetValue<bool>("Database:UseSeedData")) {
+            
+            DeleteAllRows();
+
             Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Open" });
             Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Paused" });
             Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Closed" });
@@ -55,10 +58,20 @@ public class _1_CreateVOTables(IConfiguration configuration) : Migration {
 
 	public override void Down()
 	{
+        DeleteAllRows();
+
         Delete.Table("AdvertisementStatus").IfExists();
         Delete.Table("Currency").IfExists();
         Delete.Table("JobRequirement").IfExists();
         Delete.Table("KnowledgeArea").IfExists();
         Delete.Table("PaymentFrequency").IfExists();
 	}
+
+    public void DeleteAllRows() {
+        Delete.FromTable("AdvertisementStatus").AllRows();
+        Delete.FromTable("Currency").AllRows();
+        Delete.FromTable("JobRequirement").AllRows();
+        Delete.FromTable("KnowledgeArea").AllRows();
+        Delete.FromTable("PaymentFrequency").AllRows();
+    }
 }

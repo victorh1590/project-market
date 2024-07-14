@@ -26,6 +26,8 @@ public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migratio
             .ToTable("Currency").PrimaryColumn("CurrencyName");
 
         if(configuration.GetValue<bool>("Database:UseSeedData")) {
+            DeleteAllRows();
+
             Insert.IntoTable("PaymentOffer").Row(new { Value = 20.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Dollar" });
             Insert.IntoTable("PaymentOffer").Row(new { Value = 200.00M, PaymentFrequencyName = "Daily", CurrencyName = "Dollar" });
             Insert.IntoTable("PaymentOffer").Row(new { Value = 3500.00M, PaymentFrequencyName = "Once", CurrencyName = "Euro" });
@@ -36,8 +38,14 @@ public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migratio
 
 	public override void Down()
 	{   
+        DeleteAllRows();
+
         Delete.ForeignKey("fk_payment_offer_payment_frequency").OnTable("PaymentOffer");
         Delete.ForeignKey("fk_payment_offer_currency").OnTable("PaymentOffer");
         Delete.Table("PaymentOffer").IfExists();
 	}
+
+    public void DeleteAllRows() {
+        Delete.FromTable("PaymentOffer").AllRows();
+    }
 }
