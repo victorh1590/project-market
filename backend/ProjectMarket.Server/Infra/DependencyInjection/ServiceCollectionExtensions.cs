@@ -16,7 +16,7 @@ public static class MigrationsServiceCollectionExtensions
                     // Add common FluentMigrator services
                     .AddFluentMigratorCore()
                     .ConfigureRunner(rb => rb
-                        // Add SQLite support to FluentMigrator
+                        // Add Postgres support to FluentMigrator
                         .AddPostgres()
                         // Set the connection string
                         .WithGlobalConnectionString(configuration["ConnectionString:Postgresql"])

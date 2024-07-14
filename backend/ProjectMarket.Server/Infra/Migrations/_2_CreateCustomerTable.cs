@@ -1,4 +1,5 @@
 using FluentMigrator;
+using FluentMigrator.SqlServer;
 
 namespace ProjectMarket.Server.Infra.Migrations;
 
@@ -22,37 +23,37 @@ public class _2_CreateCustomerTable(IConfiguration configuration) : Migration {
 
             Insert.IntoTable("Costumer").Row(new { 
                 Name = "Adam", Email = "example@example.com", Password = "$2a$04$vo0GaDyEPfOb9f6gqviWh.UZLnabjN/cUEeBV5j21mLXSlngv4LyS", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new { 
                 Name = "Alice Johnson", Email = "alice.johnson@example.com", Password = "password1", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new { 
                 Name = "Bob Smith", Email = "bob.smith@example.com", Password = "password2", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new { 
                 Name = "Charlie Brown", Email = "charlie.brown@example.com", Password = "password3", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new { 
                 Name = "David Wilson", Email = "david.wilson@example.com", Password = "password4", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new { 
                 Name = "Emma Davis", Email = "emma.davis@example.com", Password = "password5", RegistrationDate = DateTime.Now
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new { 
                 Name = "Frank Miller", Email = "frank.miller@example.com", Password = "password6", RegistrationDate = DateTime.Now
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new {
                 Name = "Grace Lee", Email = "grace.lee@example.com", Password = "password7", RegistrationDate = DateTime.Now 
-            });         
+            }).WithIdentityInsert();         
             Insert.IntoTable("Costumer").Row(new {
                 Name = "Henry Thompson", Email = "henry.thompson@example.com", Password = "password8", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new {
                 Name = "Ivy Martinez", Email = "ivy.martinez@example.com", Password = "password9", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
             Insert.IntoTable("Costumer").Row(new {
                 Name = "Jack White", Email = "jack.white@example.com", Password = "password10", RegistrationDate = DateTime.Now 
-            });
+            }).WithIdentityInsert();
 
         }
 	}

@@ -54,8 +54,6 @@ public class _1_CreateVOTables(IConfiguration configuration) : Migration {
             Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Daily", Suffix = "per day" });
             Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Once", Suffix = "when project is done" });
         }
-        
-
 	}
 
 	public override void Down()

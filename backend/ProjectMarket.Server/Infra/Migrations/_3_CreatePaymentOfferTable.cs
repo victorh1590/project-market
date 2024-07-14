@@ -1,4 +1,5 @@
 using FluentMigrator;
+using FluentMigrator.SqlServer;
 using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Infra.Migrations;
@@ -28,11 +29,21 @@ public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migratio
         if(configuration.GetValue<bool>("Database:UseSeedData")) {
             DeleteAllRows();
 
-            Insert.IntoTable("PaymentOffer").Row(new { Value = 20.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Dollar" });
-            Insert.IntoTable("PaymentOffer").Row(new { Value = 200.00M, PaymentFrequencyName = "Daily", CurrencyName = "Dollar" });
-            Insert.IntoTable("PaymentOffer").Row(new { Value = 3500.00M, PaymentFrequencyName = "Once", CurrencyName = "Euro" });
-            Insert.IntoTable("PaymentOffer").Row(new { Value = 50000.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Yen" });
-            Insert.IntoTable("PaymentOffer").Row(new { Value = 750000.00M, PaymentFrequencyName = "Once", CurrencyName = "Yen" });
+            Insert.IntoTable("PaymentOffer")
+                .Row(new { Value = 20.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Dollar" })
+                .WithIdentityInsert();
+            Insert.IntoTable("PaymentOffer")
+                .Row(new { Value = 200.00M, PaymentFrequencyName = "Daily", CurrencyName = "Dollar" })
+                .WithIdentityInsert();
+            Insert.IntoTable("PaymentOffer")
+                .Row(new { Value = 3500.00M, PaymentFrequencyName = "Once", CurrencyName = "Euro" })
+                .WithIdentityInsert();
+            Insert.IntoTable("PaymentOffer")
+                .Row(new { Value = 50000.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Yen" })
+                .WithIdentityInsert();
+            Insert.IntoTable("PaymentOffer")
+                .Row(new { Value = 750000.00M, PaymentFrequencyName = "Once", CurrencyName = "Yen" })
+                .WithIdentityInsert();
         }
 	}
 
