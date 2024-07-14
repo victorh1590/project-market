@@ -7,37 +7,37 @@ public class PaymentFrequencyRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<PaymentFrequency> GetAll()
+    public IEnumerable<PaymentFrequencyVO> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM PaymentFrequency";
-        return _uow.Connection.Query<PaymentFrequency>(query);
+        return _uow.Connection.Query<PaymentFrequencyVO>(query);
     }
 
-    public PaymentFrequency? GetByPaymentFrequencyId(int id)
+    public PaymentFrequencyVO? GetByPaymentFrequencyName(string name)
     {
-        string query = "SELECT * FROM PaymentFrequency WHERE PaymentFrequencyId = @PaymentFrequencyId";
-        return _uow.Connection.QueryFirstOrDefault<PaymentFrequency>(query, new { PaymentFrequencyId = id });
+        string query = "SELECT * FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
+        return _uow.Connection.QueryFirstOrDefault<PaymentFrequencyVO>(query, new { PaymentFrequencyName = name });
     }
 
-    public void Insert(PaymentFrequency PaymentFrequency)
+    public void Insert(PaymentFrequencyVO PaymentFrequency)
     {
         string query = "INSERT INTO PaymentFrequency (Description, Suffix) VALUES (@Description, @Suffix)";
         _uow.Connection.Execute(query, PaymentFrequency);
     }
 
-    public void Update(PaymentFrequency PaymentFrequency)
+    public void Update(PaymentFrequencyVO PaymentFrequency)
     {
         string query = 
             "UPDATE PaymentFrequency " +
             "SET Description = @Description, Suffix = @Suffix " +
-            "WHERE PaymentFrequencyId = @PaymentFrequencyId";
+            "WHERE PaymentFrequencyName = @PaymentFrequencyName";
         _uow.Connection.Execute(query, PaymentFrequency);
     }
 
-    public void Delete(int id)
+    public void Delete(string name)
     {
-        string query = "DELETE CASCADE FROM PaymentFrequency WHERE PaymentFrequencyId = @PaymentFrequencyId";
-        _uow.Connection.Execute(query, new { PaymentFrequencyId = id });
+        string query = "DELETE CASCADE FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
+        _uow.Connection.Execute(query, new { PaymentFrequencyNamePaymentFrequencyName = name });
     }
 }

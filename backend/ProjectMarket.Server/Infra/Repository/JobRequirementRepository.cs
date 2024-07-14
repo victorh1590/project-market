@@ -7,26 +7,26 @@ public class JobRequirementRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<JobRequirement> GetAll()
+    public IEnumerable<JobRequirementVO> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM JobRequirement";
-        return _uow.Connection.Query<JobRequirement>(query);
+        return _uow.Connection.Query<JobRequirementVO>(query);
     }
 
-    public JobRequirement? GetByJobRequirementName(string name)
+    public JobRequirementVO? GetByJobRequirementName(string name)
     {
         string query = "SELECT * FROM JobRequirement WHERE JobRequirementName = @JobRequirementName";
-        return _uow.Connection.QueryFirstOrDefault<JobRequirement>(query, new { JobRequirementName = name });
+        return _uow.Connection.QueryFirstOrDefault<JobRequirementVO>(query, new { JobRequirementName = name });
     }
 
-    public void Insert(JobRequirement JobRequirement)
+    public void Insert(JobRequirementVO JobRequirement)
     {
         string query = "INSERT INTO JobRequirement (JobRequirementName) VALUES (@JobRequirementName)";
         _uow.Connection.Execute(query, JobRequirement);
     }
 
-    public void Update(JobRequirement JobRequirement)
+    public void Update(JobRequirementVO JobRequirement)
     {
         string query = "UPDATE JobRequirement SET JobRequirementName = @JobRequirementName WHERE JobRequirementName = @JobRequirementName";
         _uow.Connection.Execute(query, JobRequirement);

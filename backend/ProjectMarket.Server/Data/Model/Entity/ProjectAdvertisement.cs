@@ -10,7 +10,7 @@ public class ProjectAdvertisement {
     public DateTime? Deadline { get; set; }
     required public PaymentOffer PaymentOffer { get; set; }
     required public Costumer Costumer { get; set; }
-    required public AdvertisementStatus Status { get; set; }
-    required public List<KnowledgeArea> Subjects { get; set; }
-    public List<JobRequirement>? Requirements { get; set; }
+    required public AdvertisementStatusVO Status { get; set; }
+    required public List<KnowledgeAreaVO> Subjects { get; set; }
+    public List<JobRequirementVO>? Requirements { get; set; }
 }

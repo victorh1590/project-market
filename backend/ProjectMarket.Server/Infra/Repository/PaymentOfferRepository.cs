@@ -14,10 +14,10 @@ public class PaymentOfferRepository(IUnitOfWork uow)
         return _uow.Connection.Query<PaymentOffer>(query);
     }
 
-    public PaymentOffer? GetByPaymentOfferName(string name)
+    public PaymentOffer? GetByPaymentOfferId(int id)
     {
-        string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferName = @PaymentOfferName";
-        return _uow.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferName = name });
+        string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
+        return _uow.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferId = id });
     }
 
     public void Insert(PaymentOffer PaymentOffer)
@@ -45,9 +45,9 @@ public class PaymentOfferRepository(IUnitOfWork uow)
         });
     }
 
-    public void Delete(string name)
+    public void Delete(int id)
     {
-        string query = "DELETE CASCADE FROM PaymentOffer WHERE PaymentOfferName = @PaymentOfferName";
-        _uow.Connection.Execute(query, new { PaymentOfferName = name });
+        string query = "DELETE CASCADE FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
+        _uow.Connection.Execute(query, new { PaymentOfferId = id });
     }
 }

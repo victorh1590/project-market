@@ -7,26 +7,26 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<KnowledgeArea> GetAll()
+    public IEnumerable<KnowledgeAreaVO> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM KnowledgeArea";
-        return _uow.Connection.Query<KnowledgeArea>(query);
+        return _uow.Connection.Query<KnowledgeAreaVO>(query);
     }
 
-    public KnowledgeArea? GetByKnowledgeAreaName(string name)
+    public KnowledgeAreaVO? GetByKnowledgeAreaName(string name)
     {
         string query = "SELECT * FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
-        return _uow.Connection.QueryFirstOrDefault<KnowledgeArea>(query, new { KnowledgeAreaName = name });
+        return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVO>(query, new { KnowledgeAreaName = name });
     }
 
-    public void Insert(KnowledgeArea KnowledgeArea)
+    public void Insert(KnowledgeAreaVO KnowledgeArea)
     {
         string query = "INSERT INTO KnowledgeArea (KnowledgeAreaName) VALUES (@KnowledgeAreaName)";
         _uow.Connection.Execute(query, KnowledgeArea);
     }
 
-    public void Update(KnowledgeArea KnowledgeArea)
+    public void Update(KnowledgeAreaVO KnowledgeArea)
     {
         string query = "UPDATE KnowledgeArea SET KnowledgeAreaName = @KnowledgeAreaName WHERE KnowledgeAreaName = @KnowledgeAreaName";
         _uow.Connection.Execute(query, KnowledgeArea);
