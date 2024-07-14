@@ -14,10 +14,10 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
         return _uow.Connection.Query<KnowledgeAreaVO>(query);
     }
 
-    public KnowledgeAreaVO? GetById(int id)
+    public KnowledgeAreaVO? GetByKnowledgeAreaId(int id)
     {
-        string query = "SELECT * FROM KnowledgeArea WHERE Id = @Id";
-        return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVO>(query, new { Id = id });
+        string query = "SELECT * FROM KnowledgeArea WHERE KnowledgeAreaId = @KnowledgeAreaId";
+        return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVO>(query, new { KnowledgeAreaId = id });
     }
 
     public void Insert(KnowledgeAreaVO KnowledgeArea)
@@ -28,15 +28,13 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
 
     public void Update(KnowledgeAreaVO KnowledgeArea)
     {
-        string query = "UPDATE KnowledgeArea SET Name = @Name WHERE Id = @Id";
+        string query = "UPDATE KnowledgeArea SET Name = @Name WHERE KnowledgeAreaId = @KnowledgeAreaId";
         _uow.Connection.Execute(query, KnowledgeArea);
     }
 
     public void Delete(int id)
     {
-        // should return 0 if it has any advertisement linked to it.
-        // will require integration tests to make sure works as intended.
-        string query = "DELETE FROM KnowledgeArea WHERE Id = @Id";
-        _uow.Connection.Execute(query, new { Id = id });
+        string query = "DELETE CASCADE FROM KnowledgeArea WHERE KnowledgeAreaId = @KnowledgeAreaId";
+        _uow.Connection.Execute(query, new { KnowledgeAreaId = id });
     }
 }

@@ -3,7 +3,7 @@ using ProjectMarket.Server.Data.Model.VO;
 namespace ProjectMarket.Server.Data.Model.Entity;
 
 public class ProjectAdvertisement {
-    required public int Id { get; set; }
+    required public int ProjectAdvertisementId { get; set; }
     required public string Title { get; set; }
     public string? Description { get; set; }
     required public DateTime OpenedOn { get; set; }

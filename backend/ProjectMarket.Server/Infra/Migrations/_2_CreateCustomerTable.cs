@@ -9,7 +9,7 @@ public class _2_CreateCustomerTable : Migration {
         int bcryptHashSize = 72;
 
         Create.Table("Costumer")
-            .WithColumn("Id").AsInt32().NotNullable().PrimaryKey("pk_costumer").Identity()
+            .WithColumn("CostumerId").AsInt32().NotNullable().PrimaryKey("pk_costumer").Identity()
             .WithColumn("Name").AsString(64).Unique().NotNullable()
             .WithColumn("Email").AsString(128).NotNullable()
             .WithColumn("Password").AsString(bcryptHashSize).NotNullable()

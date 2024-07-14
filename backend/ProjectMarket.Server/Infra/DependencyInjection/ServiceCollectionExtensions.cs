@@ -3,7 +3,6 @@ namespace ProjectMarket.Server.Infra.DependencyInjection;
 
 using System.Reflection;
 using FluentMigrator.Runner;
-using ProjectMarket.Server.Infra.Migrations;
 
 public static class MigrationsServiceCollectionExtensions
 {

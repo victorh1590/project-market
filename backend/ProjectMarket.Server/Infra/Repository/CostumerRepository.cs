@@ -14,10 +14,10 @@ public class CostumerRepository(IUnitOfWork uow)
         return _uow.Connection.Query<Costumer>(query);
     }
 
-    public Costumer? GetById(int id)
+    public Costumer? GetByCostumerId(int id)
     {
-        string query = "SELECT * FROM Costumer WHERE Id = @Id";
-        return _uow.Connection.QueryFirstOrDefault<Costumer>(query, new { Id = id });
+        string query = "SELECT * FROM Costumer WHERE CostumerId = @CostumerId";
+        return _uow.Connection.QueryFirstOrDefault<Costumer>(query, new { CostumerId = id });
     }
 
     public void Insert(Costumer Costumer)
@@ -27,10 +27,6 @@ public class CostumerRepository(IUnitOfWork uow)
             "VALUES (@Name, @Email, @Password, @RegistrationDate)";
 
         _uow.Connection.Execute(query,Costumer);
-
-        // if(Costumer.Advertisements?.Count > 0) {
-        //   // delegate to Advertisements Repo and pass _uow as dependency.
-        // }
     }
 
     public void Update(Costumer Costumer)
@@ -38,15 +34,13 @@ public class CostumerRepository(IUnitOfWork uow)
         string query = 
             "UPDATE Costumer " + 
             "SET Name = @Name, Email = @Email, Password = @Password, RegistrationDate = @RegistrationDate " + 
-            "WHERE Id = @Id";
+            "WHERE CostumerId = @CostumerId";
         _uow.Connection.Execute(query, Costumer);
     }
 
     public void Delete(Costumer Costumer)
     {
-        // delegate to Advertisements repo first, do result == Costumer.Advertisements... and proceed if ok.
-        // cascade?
-        string query = "DELETE FROM Costumer WHERE Id = @Id";
+        string query = "DELETE CASCADE FROM Costumer WHERE CostumerId = @CostumerId";
         _uow.Connection.Execute(query, Costumer);
     }
 }
