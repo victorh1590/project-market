@@ -1,6 +1,5 @@
 using FluentMigrator;
 using FluentMigrator.SqlServer;
-using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Infra.Migrations;
 

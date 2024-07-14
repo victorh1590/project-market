@@ -1,3 +1,4 @@
+using ProjectMarket.Server.Data.Model.Relational;
 using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
@@ -11,6 +12,4 @@ public class ProjectAdvertisement {
     required public PaymentOffer PaymentOffer { get; set; }
     required public Costumer Costumer { get; set; }
     required public AdvertisementStatusVO Status { get; set; }
-    required public List<KnowledgeAreaVO> Subjects { get; set; }
-    public List<JobRequirementVO>? Requirements { get; set; }
 }

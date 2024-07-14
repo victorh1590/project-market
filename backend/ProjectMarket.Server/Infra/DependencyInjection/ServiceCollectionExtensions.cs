@@ -1,4 +1,3 @@
-
 namespace ProjectMarket.Server.Infra.DependencyInjection;
 
 using System.Reflection;
