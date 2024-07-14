@@ -11,6 +11,6 @@ public class ProjectAdvertisement {
     required public PaymentOffer PaymentOffer { get; set; }
     required public Costumer Costumer { get; set; }
     required public AdvertisementStatus Status { get; set; }
-    required public List<KnowledgeAreaVO> Subjects { get; set; }
+    required public List<KnowledgeArea> Subjects { get; set; }
     public List<JobRequirement>? Requirements { get; set; }
 }
