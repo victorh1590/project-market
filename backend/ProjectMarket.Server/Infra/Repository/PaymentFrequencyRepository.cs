@@ -7,26 +7,26 @@ public class PaymentFrequencyRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<PaymentFrequencyVO> GetAll()
+    public IEnumerable<PaymentFrequency> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM PaymentFrequency";
-        return _uow.Connection.Query<PaymentFrequencyVO>(query);
+        return _uow.Connection.Query<PaymentFrequency>(query);
     }
 
-    public PaymentFrequencyVO? GetByPaymentFrequencyId(int id)
+    public PaymentFrequency? GetByPaymentFrequencyId(int id)
     {
         string query = "SELECT * FROM PaymentFrequency WHERE PaymentFrequencyId = @PaymentFrequencyId";
-        return _uow.Connection.QueryFirstOrDefault<PaymentFrequencyVO>(query, new { PaymentFrequencyId = id });
+        return _uow.Connection.QueryFirstOrDefault<PaymentFrequency>(query, new { PaymentFrequencyId = id });
     }
 
-    public void Insert(PaymentFrequencyVO PaymentFrequency)
+    public void Insert(PaymentFrequency PaymentFrequency)
     {
         string query = "INSERT INTO PaymentFrequency (Description, Suffix) VALUES (@Description, @Suffix)";
         _uow.Connection.Execute(query, PaymentFrequency);
     }
 
-    public void Update(PaymentFrequencyVO PaymentFrequency)
+    public void Update(PaymentFrequency PaymentFrequency)
     {
         string query = 
             "UPDATE PaymentFrequency " +

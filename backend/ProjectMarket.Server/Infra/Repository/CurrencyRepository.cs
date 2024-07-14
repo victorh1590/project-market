@@ -7,26 +7,26 @@ public class CurrencyRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<CurrencyVO> GetAll()
+    public IEnumerable<Currency> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM Currency";
-        return _uow.Connection.Query<CurrencyVO>(query);
+        return _uow.Connection.Query<Currency>(query);
     }
 
-    public CurrencyVO? GetByCurrencyId(int id)
+    public Currency? GetByCurrencyId(int id)
     {
         string query = "SELECT * FROM Currency WHERE CurrencyId = @CurrencyId";
-        return _uow.Connection.QueryFirstOrDefault<CurrencyVO>(query, new { CurrencyId = id });
+        return _uow.Connection.QueryFirstOrDefault<Currency>(query, new { CurrencyId = id });
     }
 
-    public void Insert(CurrencyVO Currency)
+    public void Insert(Currency Currency)
     {
         string query = "INSERT INTO Currency (Name, Prefix) VALUES (@Name, @Prefix)";
         _uow.Connection.Execute(query, Currency);
     }
 
-    public void Update(CurrencyVO Currency)
+    public void Update(Currency Currency)
     {
         string query = "UPDATE Currency SET Name = @Name, Prefix = @Prefix WHERE CurrencyId = @CurrencyId";
         _uow.Connection.Execute(query, Currency);

@@ -2,9 +2,9 @@ using ProjectMarket.Server.Data.Model.Entity;
 
 namespace ProjectMarket.Server.Data.Model.VO;
 
-public struct AdvertisementStatusVO {
-    required public int AdvertisementStatusId { get; set; }
-    required public string Status { get; set; }
+public class JobRequirement {
+    required public int JobRequirementId { get; set; }
+    required public string Requirement { get; set; }
     //
     public List<ProjectAdvertisement>? Advertisements { get; set; }
 }
