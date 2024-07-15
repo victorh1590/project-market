@@ -12,7 +12,7 @@ public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migratio
         int valuePrecision = 2;
 
         Create.Table("PaymentOffer")
-            .WithColumn("PaymentOfferId").AsInt32().NotNullable().PrimaryKey("pk_payment_offer").Identity()
+            .WithColumn("PaymentOfferId").AsInt32().PrimaryKey("pk_payment_offer").Identity().NotNullable()
             .WithColumn("Value").AsDecimal(valueMaxSize,valuePrecision).NotNullable() 
             .WithColumn("PaymentFrequencyName").AsInt32().NotNullable()
             .WithColumn("CurrencyName").AsInt32().NotNullable();

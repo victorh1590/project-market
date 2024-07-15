@@ -10,13 +10,13 @@ public class CurrencyRepository(IUnitOfWork uow)
     public IEnumerable<CurrencyVO> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT * FROM Currency";
+        string query = "SELECT CurrencyName, Prefix FROM Currency";
         return _uow.Connection.Query<CurrencyVO>(query);
     }
 
     public CurrencyVO? GetByCurrencyName(string name)
     {
-        string query = "SELECT * FROM Currency WHERE CurrencyName = @CurrencyName";
+        string query = "SELECT CurrencyName, Prefix FROM Currency WHERE CurrencyName = @CurrencyName";
         return _uow.Connection.QueryFirstOrDefault<CurrencyVO>(query, new { CurrencyName = name });
     }
 

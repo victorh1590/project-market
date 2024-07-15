@@ -10,13 +10,13 @@ public class PaymentFrequencyRepository(IUnitOfWork uow)
     public IEnumerable<PaymentFrequencyVO> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT * FROM PaymentFrequency";
+        string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency";
         return _uow.Connection.Query<PaymentFrequencyVO>(query);
     }
 
     public PaymentFrequencyVO? GetByPaymentFrequencyName(string name)
     {
-        string query = "SELECT * FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
+        string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
         return _uow.Connection.QueryFirstOrDefault<PaymentFrequencyVO>(query, new { PaymentFrequencyName = name });
     }
 

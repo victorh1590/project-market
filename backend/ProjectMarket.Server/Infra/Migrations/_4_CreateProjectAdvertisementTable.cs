@@ -1,6 +1,5 @@
 using FluentMigrator;
 using FluentMigrator.SqlServer;
-using ProjectMarket.Server.Data.Model.Entity;
 
 namespace ProjectMarket.Server.Infra.Migrations;
 
@@ -9,7 +8,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
     public override void Up()
 	{
         Create.Table("ProjectAdvertisement")
-            .WithColumn("ProjectAdvertisementId").AsInt32().NotNullable().Unique().PrimaryKey("pk_project_advertisement").Identity()
+            .WithColumn("ProjectAdvertisementId").AsInt32().Unique().PrimaryKey("pk_project_advertisement").Identity().NotNullable()
             .WithColumn("Title").AsString(128).NotNullable()
             .WithColumn("Description").AsString(512).Nullable()
             .WithColumn("OpenedOn").AsDateTime().NotNullable()
@@ -29,10 +28,6 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
         Create.ForeignKey("fk_project_advertisement_advertisement_status")
             .FromTable("ProjectAdvertisement").ForeignColumn("StatusId")
             .ToTable("AdvertisementStatus").PrimaryColumn("StatusId");
-
-        Create.ForeignKey("fk_project_advertisement_knowledge_area")
-            .FromTable("ProjectAdvertisement").ForeignColumn("SubjectId")
-            .ToTable("KnowledgeArea").PrimaryColumn("SubjectId");
 
         // Project Advertisement x Job Requirement
         Create.Table("ProjectAdvertisementJobRequirement")

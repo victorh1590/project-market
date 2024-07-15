@@ -10,13 +10,13 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
     public IEnumerable<KnowledgeAreaVO> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT * FROM KnowledgeArea";
+        string query = "SELECT KnowledgeAreaName FROM KnowledgeArea";
         return _uow.Connection.Query<KnowledgeAreaVO>(query);
     }
 
     public KnowledgeAreaVO? GetByKnowledgeAreaName(string name)
     {
-        string query = "SELECT * FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
+        string query = "SELECT KnowledgeAreaName FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
         return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVO>(query, new { KnowledgeAreaName = name });
     }
 

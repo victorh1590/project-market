@@ -10,13 +10,13 @@ public class JobRequirementRepository(IUnitOfWork uow)
     public IEnumerable<JobRequirementVO> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT * FROM JobRequirement";
+        string query = "SELECT JobRequirementName FROM JobRequirement";
         return _uow.Connection.Query<JobRequirementVO>(query);
     }
 
     public JobRequirementVO? GetByJobRequirementName(string name)
     {
-        string query = "SELECT * FROM JobRequirement WHERE JobRequirementName = @JobRequirementName";
+        string query = "SELECT JobRequirementName FROM JobRequirement WHERE JobRequirementName = @JobRequirementName";
         return _uow.Connection.QueryFirstOrDefault<JobRequirementVO>(query, new { JobRequirementName = name });
     }
 

@@ -10,13 +10,13 @@ public class AdvertisementStatusRepository(IUnitOfWork uow)
     public IEnumerable<AdvertisementStatusVO> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT * FROM AdvertisementStatus";
+        string query = "SELECT AdvertisementStatusName FROM AdvertisementStatus";
         return _uow.Connection.Query<AdvertisementStatusVO>(query);
     }
 
     public AdvertisementStatusVO? GetByAdvertisementStatusName(string name)
     {
-        string query = "SELECT * FROM AdvertisementStatus WHERE AdvertisementStatusName = @AdvertisementStatusName";
+        string query = "SELECT AdvertisementStatusName FROM AdvertisementStatus WHERE AdvertisementStatusName = @AdvertisementStatusName";
         return _uow.Connection.QueryFirstOrDefault<AdvertisementStatusVO>(query, new { AdvertisementStatusName = name });
     }
 
