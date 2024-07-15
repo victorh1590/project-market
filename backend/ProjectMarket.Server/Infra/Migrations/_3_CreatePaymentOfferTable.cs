@@ -7,15 +7,15 @@ namespace ProjectMarket.Server.Infra.Migrations;
 public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migration {
     public override void Up()
 	{
-        // MaxValue = 1_000_000.00
-        int valueMaxSize = 7;
+        // MaxValue = 1_000_000_000_000_000.00
+        int valueMaxSize = 17;
         int valuePrecision = 2;
 
         Create.Table("PaymentOffer")
             .WithColumn("PaymentOfferId").AsInt32().PrimaryKey("pk_payment_offer").Identity().NotNullable()
             .WithColumn("Value").AsDecimal(valueMaxSize,valuePrecision).NotNullable() 
-            .WithColumn("PaymentFrequencyName").AsInt32().NotNullable()
-            .WithColumn("CurrencyName").AsInt32().NotNullable();
+            .WithColumn("PaymentFrequencyName").AsString(32).NotNullable()
+            .WithColumn("CurrencyName").AsString(64).NotNullable();
 
         Create.ForeignKey("fk_payment_offer_payment_frequency")
             .FromTable("PaymentOffer").ForeignColumn("PaymentFrequencyName")
@@ -29,20 +29,15 @@ public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migratio
             DeleteAllRows();
 
             Insert.IntoTable("PaymentOffer")
-                .Row(new { Value = 20.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Dollar" })
-                .WithIdentityInsert();
+                .Row(new { Value = 20.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Dollar" });
             Insert.IntoTable("PaymentOffer")
-                .Row(new { Value = 200.00M, PaymentFrequencyName = "Daily", CurrencyName = "Dollar" })
-                .WithIdentityInsert();
+                .Row(new { Value = 200.00M, PaymentFrequencyName = "Daily", CurrencyName = "Dollar" });
             Insert.IntoTable("PaymentOffer")
-                .Row(new { Value = 3500.00M, PaymentFrequencyName = "Once", CurrencyName = "Euro" })
-                .WithIdentityInsert();
+                .Row(new { Value = 3500.00M, PaymentFrequencyName = "Once", CurrencyName = "Euro" });
             Insert.IntoTable("PaymentOffer")
-                .Row(new { Value = 50000.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Yen" })
-                .WithIdentityInsert();
+                .Row(new { Value = 50000.00M, PaymentFrequencyName = "Hourly", CurrencyName = "Yen" });
             Insert.IntoTable("PaymentOffer")
-                .Row(new { Value = 750000.00M, PaymentFrequencyName = "Once", CurrencyName = "Yen" })
-                .WithIdentityInsert();
+                .Row(new { Value = 750000.00M, PaymentFrequencyName = "Once", CurrencyName = "Yen" });
         }
 	}
 

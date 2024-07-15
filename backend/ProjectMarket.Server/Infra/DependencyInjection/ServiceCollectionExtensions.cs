@@ -18,7 +18,7 @@ public static class MigrationsServiceCollectionExtensions
                         // Add Postgres support to FluentMigrator
                         .AddPostgres()
                         // Set the connection string
-                        .WithGlobalConnectionString(configuration["ConnectionString:Postgresql"])
+                        .WithGlobalConnectionString(configuration["CONNECTIONSTRING__POSTGRESQL"])
                         // Define the assembly containing the migrations
                         .ScanIn(assemblies).For.Migrations())
                     // Enable logging to console in the FluentMigrator way

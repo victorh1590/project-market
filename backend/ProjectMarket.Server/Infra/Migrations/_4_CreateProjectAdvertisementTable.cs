@@ -1,5 +1,7 @@
 using FluentMigrator;
 using FluentMigrator.SqlServer;
+using ProjectMarket.Server.Data.Model.Entity;
+using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Infra.Migrations;
 
@@ -15,7 +17,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
             .WithColumn("Deadline").AsDateTime().Nullable()
             .WithColumn("PaymentOfferId").AsInt32().NotNullable()
             .WithColumn("CostumerId").AsInt32().NotNullable()
-            .WithColumn("StatusId").AsInt32().NotNullable();
+            .WithColumn("AdvertisementStatusName").AsString(64).NotNullable();
 
         Create.ForeignKey("fk_project_advertisement_payment_offer")
             .FromTable("ProjectAdvertisement").ForeignColumn("PaymentOfferId")
@@ -26,8 +28,8 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
             .ToTable("Costumer").PrimaryColumn("CostumerId");
 
         Create.ForeignKey("fk_project_advertisement_advertisement_status")
-            .FromTable("ProjectAdvertisement").ForeignColumn("StatusId")
-            .ToTable("AdvertisementStatus").PrimaryColumn("StatusId");
+            .FromTable("ProjectAdvertisement").ForeignColumn("AdvertisementStatusName")
+            .ToTable("AdvertisementStatus").PrimaryColumn("AdvertisementStatusName");
 
         // Project Advertisement x Job Requirement
         Create.Table("ProjectAdvertisementJobRequirement")
@@ -38,7 +40,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
             .OnTable("ProjectAdvertisementJobRequirement")
             .Columns("ProjectAdvertisementId", "JobRequirementName");
 
-        Create.ForeignKey("pk_project_advertisement_job_requirement")
+        Create.ForeignKey("fk_project_advertisement_job_requirement")
             .FromTable("ProjectAdvertisementJobRequirement").ForeignColumn("ProjectAdvertisementId")
             .ToTable("ProjectAdvertisement").PrimaryColumn("ProjectAdvertisementId");
 
@@ -55,105 +57,113 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
             .OnTable("ProjectAdvertisementKnowledgeArea")
             .Columns("ProjectAdvertisementId", "KnowledgeAreaName");
 
-        Create.ForeignKey("pk_project_advertisement_knowledge_area")
+        Create.ForeignKey("fk_project_advertisement_knowledge_area")
             .FromTable("ProjectAdvertisementKnowledgeArea").ForeignColumn("ProjectAdvertisementId")
             .ToTable("ProjectAdvertisement").PrimaryColumn("ProjectAdvertisementId");
 
-        Create.ForeignKey("fk_knowledge_area_fk_project_advertisement")
+        Create.ForeignKey("fk_knowledge_area_project_advertisement")
             .FromTable("ProjectAdvertisementKnowledgeArea").ForeignColumn("KnowledgeAreaName")
             .ToTable("KnowledgeArea").PrimaryColumn("KnowledgeAreaName");
             
         if(configuration.GetValue<bool>("Database:UseSeedData")) {
             DeleteAllRows();
 
+            int projectadvertisementId = 0;
+
             // Insert 1.
-            var projectAdvertisementId1 = Insert.IntoTable("ProjectAdvertisement").Row(new {
+            var projectAdvertisementId1 = Insert.IntoTable("ProjectAdvertisement").WithIdentityInsert()
+            .Row(new {
+                ProjectAdvertisementId = ++projectadvertisementId,
                 Title = "Some AI Project",
                 Description = "Something Something AI",
                 OpenedOn = DateTime.Now,
                 Deadline = DateTime.Now.AddMonths(2),
                 PaymentOfferId = 1,
-                Costumer = 1,
-                Status = "Open",
-            }).WithIdentityInsert();
+                CostumerId = 1,
+                AdvertisementStatusName = "Open",
+            });
 
             Insert.IntoTable("ProjectAdvertisementKnowledgeArea").Row(new {
-                ProjectAdvertisement = projectAdvertisementId1,
-                JobRequirement = "AI"
+                ProjectAdvertisementId = projectadvertisementId,
+                KnowledgeAreaName = "AI"
             });
 
             Insert.IntoTable("ProjectAdvertisementJobRequirement").Row(new {
-                ProjectAdvertisement = projectAdvertisementId1,
-                JobRequirement = "Python"
+                ProjectAdvertisementId = projectadvertisementId,
+                JobRequirementName = "Python"
             });
 
             // Insert 2.
-            var projectAdvertisementId2 = Insert.IntoTable("ProjectAdvertisement").Row(new {
+            var projectAdvertisementId2 = Insert.IntoTable("ProjectAdvertisement").WithIdentityInsert()
+            .Row(new {
+                ProjectAdvertisementId = ++projectadvertisementId,
                 Title = "Some Website",
                 Description = "Website Description",
                 OpenedOn = DateTime.Now.AddMonths(-2),
                 Deadline = DateTime.Now.AddMonths(2),
                 PaymentOfferId = 4,
-                Costumer = 4,
-                Status = "Paused",
-            }).WithIdentityInsert();
-            
+                CostumerId = 4,
+                AdvertisementStatusName = "Paused",
+            });
+                
             Insert.IntoTable("ProjectAdvertisementKnowledgeArea").Row(new {
-                ProjectAdvertisement = projectAdvertisementId2,
-                JobRequirement = "Software Development"
+                ProjectAdvertisementId = projectadvertisementId,
+                KnowledgeAreaName = "Software Development"
             });
 
             Insert.IntoTable("ProjectAdvertisementKnowledgeArea").Row(new {
-                ProjectAdvertisement = projectAdvertisementId2,
-                JobRequirement = "UI/UX"
+                ProjectAdvertisementId = projectadvertisementId,
+                KnowledgeAreaName = "UI/UX"
             });
 
             Insert.IntoTable("ProjectAdvertisementJobRequirement").Row(new {
-                ProjectAdvertisement = projectAdvertisementId2,
-                JobRequirement = "Javascript"
+                ProjectAdvertisementId = projectadvertisementId,
+                JobRequirementName = "Javascript"
             });
 
             // Insert 3.
-            var projectAdvertisementId3 = Insert.IntoTable("ProjectAdvertisement").Row(new {
+            var projectAdvertisementId3 = Insert.IntoTable("ProjectAdvertisement").WithIdentityInsert()
+            .Row(new {
+                ProjectAdvertisementId = ++projectadvertisementId,
                 Title = "Website Layout Creation",
                 Description = "Create a layout for a website...",
                 OpenedOn = DateTime.Now.AddMonths(-4),
                 Deadline = DateTime.Now.AddMonths(-3),
                 PaymentOfferId = 2,
-                Costumer = 2,
-                Status = "Closed",
-            }).WithIdentityInsert();
+                CostumerId = 2,
+                AdvertisementStatusName = "Closed",
+            });
 
             Insert.IntoTable("ProjectAdvertisementKnowledgeArea").Row(new {
-                ProjectAdvertisement = projectAdvertisementId3,
-                JobRequirement = "UI/UX"
+                ProjectAdvertisementId = projectadvertisementId,
+                KnowledgeAreaName = "UI/UX"
             });
 
             // Insert 4.
-            var projectAdvertisementId4 = Insert.IntoTable("ProjectAdvertisement").Row(new {
+            var projectAdvertisementId4 = Insert.IntoTable("ProjectAdvertisement").WithIdentityInsert()
+            .Row(new {
+                ProjectAdvertisementId = ++projectadvertisementId,
                 Title = "Analysing Data",
                 Description = "Data analysis of something.",
                 OpenedOn = DateTime.Now,
                 PaymentOfferId = 3,
-                Costumer = 5,
-                Status = "Open",
-                Subject = "Data Science",
-                Requirement = "Python"
-            }).WithIdentityInsert();
-
-            Insert.IntoTable("ProjectAdvertisementKnowledgeArea").Row(new {
-                ProjectAdvertisement = projectAdvertisementId4,
-                JobRequirement = "Data Science"
+                CostumerId = 5,
+                AdvertisementStatusName = "Open",
             });
 
             Insert.IntoTable("ProjectAdvertisementKnowledgeArea").Row(new {
-                ProjectAdvertisement = projectAdvertisementId4,
-                JobRequirement = "AI"
+                ProjectAdvertisementId = projectadvertisementId,
+                KnowledgeAreaName = "Data Science"
+            });
+
+            Insert.IntoTable("ProjectAdvertisementKnowledgeArea").Row(new {
+                ProjectAdvertisementId = projectadvertisementId,
+                KnowledgeAreaName = "AI"
             });
 
             Insert.IntoTable("ProjectAdvertisementJobRequirement").Row(new {
-                ProjectAdvertisement = projectAdvertisementId4,
-                JobRequirement = "Python"
+                ProjectAdvertisementId = projectadvertisementId,
+                JobRequirementName = "Python"
             });
         }
     }

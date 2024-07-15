@@ -9,7 +9,7 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
     private IDbTransaction? _transaction;
 
     public UnitOfWork(IConfiguration configuration) {
-        Connection = new NpgsqlConnection(configuration.GetConnectionString("postgresql"));
+        Connection = new NpgsqlConnection(configuration["CONNECTIONSTRING__POSTGRESQL"]);
         Connection.Open();
     }
     public void Begin() {

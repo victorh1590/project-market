@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+    .AddJsonFile("env.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
     .AddUserSecrets<Program>()
     .AddCommandLine(args)
@@ -21,7 +23,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 using(var serviceScope = app.Services.CreateScope()) {
-    // serviceScope.ServiceProvider.GetRequiredService<IMigrationRunner>().MigrateDown(4);
+    // serviceScope.ServiceProvider.GetRequiredService<IMigrationRunner>().MigrateDown(0);
     serviceScope.ServiceProvider.GetRequiredService<IMigrationRunner>().MigrateUp(4);
 }
 

@@ -24,7 +24,6 @@ public class _1_CreateVOTables(IConfiguration configuration) : Migration {
             .WithColumn("Suffix").AsString(32).Unique().NotNullable();
 
         if(configuration.GetValue<bool>("Database:UseSeedData")) {
-            
             DeleteAllRows();
 
             Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Open" });
