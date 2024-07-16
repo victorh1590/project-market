@@ -8,8 +8,8 @@ public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migratio
     public override void Up()
 	{
         // MaxValue = 1_000_000_000_000_000.00
-        int valueMaxSize = 17;
-        int valuePrecision = 2;
+        const int valueMaxSize = 17;
+        const int valuePrecision = 2;
 
         Create.Table("PaymentOffer")
             .WithColumn("PaymentOfferId").AsInt32().PrimaryKey("pk_payment_offer").Identity().NotNullable()
