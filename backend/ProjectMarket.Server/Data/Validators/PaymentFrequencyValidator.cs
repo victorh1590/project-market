@@ -15,7 +15,7 @@ public class PaymentFrequencyValidator : AbstractValidator<PaymentFrequencyVO>
             .NotEmpty()
             .MaximumLength(nameMaximumLength)
             .WithName("PaymentFrequencyName");
-        RuleFor(paymentFrequency => paymentFrequency.PaymentFrequencyName)
+        RuleFor(paymentFrequency => paymentFrequency.Suffix)
             .NotEmpty()
             .MaximumLength(suffixMaximumLength)
             .WithName("Suffix");
