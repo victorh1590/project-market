@@ -25,9 +25,9 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
     {
         string query = 
             "INSERT INTO ProjectAdvertisement " +
-            "(Title, Description, OpenedOn, Deadline, PaymentOfferId, CostumerId, StatusId, SubjectsId) " +
+            "(Title, Description, OpenedOn, Deadline, PaymentOfferId, CustomerId, StatusId, SubjectsId) " +
             "VALUES " +
-            "(@Title, @Description, @OpenedOn, @Deadline, @PaymentOfferId, @CostumerId, @StatusId, @SubjectsId)";
+            "(@Title, @Description, @OpenedOn, @Deadline, @PaymentOfferId, @CustomerId, @StatusId, @SubjectsId)";
 
         foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
         _uow.Connection.Execute(query, 
@@ -37,7 +37,7 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
                 OpenedOn = ProjectAdvertisement.OpenedOn,
                 Deadline = ProjectAdvertisement.Deadline,
                 PaymentOfferId = ProjectAdvertisement.PaymentOffer.PaymentOfferId,
-                CostumerId = ProjectAdvertisement.Costumer.CostumerId,
+                CustomerId = ProjectAdvertisement.Customer.CustomerId,
                 StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
                 SubjectId = knowledgeAreaName
             });
@@ -49,7 +49,7 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
         string query = 
             "UPDATE ProjectAdvertisement " + 
             "SET Title = @Title, Description = @Description, OpenedOn = @OpenedOn, Deadline = @Deadline, " +
-            "PaymentOfferId = @PaymentOfferId, CostumerId = @CostumerId, StatusId = @StatusId, SubjectId = @SubjectId " + 
+            "PaymentOfferId = @PaymentOfferId, CustomerId = @CustomerId, StatusId = @StatusId, SubjectId = @SubjectId " + 
             "WHERE ProjectAdvertisementId = @ProjectAdvertisementId";
 
         foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
@@ -60,7 +60,7 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
                 OpenedOn = ProjectAdvertisement.OpenedOn,
                 Deadline = ProjectAdvertisement.Deadline,
                 PaymentOfferId = ProjectAdvertisement.PaymentOffer.PaymentOfferId,
-                CostumerId = ProjectAdvertisement.Costumer.CostumerId,
+                CustomerId = ProjectAdvertisement.Customer.CustomerId,
                 StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
                 SubjectId = knowledgeAreaName
             });

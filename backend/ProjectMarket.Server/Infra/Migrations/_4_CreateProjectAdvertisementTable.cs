@@ -16,16 +16,16 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
             .WithColumn("OpenedOn").AsDateTime().NotNullable()
             .WithColumn("Deadline").AsDateTime().Nullable()
             .WithColumn("PaymentOfferId").AsInt32().NotNullable()
-            .WithColumn("CostumerId").AsInt32().NotNullable()
+            .WithColumn("CustomerId").AsInt32().NotNullable()
             .WithColumn("AdvertisementStatusName").AsString(64).NotNullable();
 
         Create.ForeignKey("fk_project_advertisement_payment_offer")
             .FromTable("ProjectAdvertisement").ForeignColumn("PaymentOfferId")
             .ToTable("PaymentOffer").PrimaryColumn("PaymentOfferId");
 
-        Create.ForeignKey("fk_project_advertisement_costumer")
-            .FromTable("ProjectAdvertisement").ForeignColumn("CostumerId")
-            .ToTable("Costumer").PrimaryColumn("CostumerId");
+        Create.ForeignKey("fk_project_advertisement_customer")
+            .FromTable("ProjectAdvertisement").ForeignColumn("CustomerId")
+            .ToTable("Customer").PrimaryColumn("CustomerId");
 
         Create.ForeignKey("fk_project_advertisement_advertisement_status")
             .FromTable("ProjectAdvertisement").ForeignColumn("AdvertisementStatusName")
@@ -79,7 +79,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
                 OpenedOn = DateTime.Now,
                 Deadline = DateTime.Now.AddMonths(2),
                 PaymentOfferId = 1,
-                CostumerId = 1,
+                CustomerId = 1,
                 AdvertisementStatusName = "Open",
             });
 
@@ -102,7 +102,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
                 OpenedOn = DateTime.Now.AddMonths(-2),
                 Deadline = DateTime.Now.AddMonths(2),
                 PaymentOfferId = 4,
-                CostumerId = 4,
+                CustomerId = 4,
                 AdvertisementStatusName = "Paused",
             });
                 
@@ -130,7 +130,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
                 OpenedOn = DateTime.Now.AddMonths(-4),
                 Deadline = DateTime.Now.AddMonths(-3),
                 PaymentOfferId = 2,
-                CostumerId = 2,
+                CustomerId = 2,
                 AdvertisementStatusName = "Closed",
             });
 
@@ -147,7 +147,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
                 Description = "Data analysis of something.",
                 OpenedOn = DateTime.Now,
                 PaymentOfferId = 3,
-                CostumerId = 5,
+                CustomerId = 5,
                 AdvertisementStatusName = "Open",
             });
 
@@ -173,7 +173,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
         DeleteAllRows();
 
         Delete.ForeignKey("fk_project_advertisement_payment_offer").OnTable("ProjectAdvertisement");
-        Delete.ForeignKey("fk_project_advertisement_costumer").OnTable("ProjectAdvertisement");
+        Delete.ForeignKey("fk_project_advertisement_customer").OnTable("ProjectAdvertisement");
         Delete.ForeignKey("fk_project_advertisement_status").OnTable("ProjectAdvertisement");
         Delete.Table("ProjectAdvertisement").IfExists();
 
