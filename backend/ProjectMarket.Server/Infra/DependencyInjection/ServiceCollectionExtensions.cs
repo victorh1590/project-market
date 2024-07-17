@@ -52,10 +52,13 @@ public static class MigrationsServiceCollectionExtensions
             catch (ReflectionTypeLoadException ex)
             {
                 Console.WriteLine(ex?.Message);
-                // // Handle exceptions loading types from assembly if needed
-                // foreach (Exception innerEx in ex.LoaderExceptions)
-                // {
-                // }
+                // Handle exceptions loading types from assembly if needed
+                if(ex?.LoaderExceptions != null) {
+                    foreach (var innerEx in ex.LoaderExceptions.Where(innerEx => innerEx != null).ToArray())
+                    {
+                        Console.WriteLine(innerEx?.Message);
+                    }
+                }
             }
         }
 
