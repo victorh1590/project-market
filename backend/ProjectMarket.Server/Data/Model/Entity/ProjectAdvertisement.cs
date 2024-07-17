@@ -1,6 +1,6 @@
-using ProjectMarket.Server.Data.Model.Relational;
+using FluentValidation;
 using ProjectMarket.Server.Data.Model.VO;
-using CommunityToolkit.Diagnostics;
+using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
@@ -27,7 +27,6 @@ public class ProjectAdvertisement {
         List<KnowledgeAreaVO> subjects,
         List<JobRequirementVO>? requirements) 
     {
-        Guard.IsNotEmpty(subjects);
         ProjectAdvertisementId = id;
         Title = title;
         Description = description;
@@ -37,5 +36,8 @@ public class ProjectAdvertisement {
         Status = status;
         Subjects = subjects;
         Requirements = requirements;
+
+        var validator = new ProjectAdvertisementValidator();
+        validator.ValidateAndThrow(this);
     }
 }
