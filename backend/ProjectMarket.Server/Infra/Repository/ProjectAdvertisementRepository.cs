@@ -76,8 +76,29 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
                 StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
             });
 
-        foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
-            
+        string[] knowledgeAreaNames =  ProjectAdvertisement.Subjects
+            .Select(s => s.KnowledgeAreaName)
+            .ToArray();
+
+        string deleteQuery = 
+            "DELETE FROM ProjectAdvertisementJobRequirement " +
+            "WHERE ProjectAdvertisementId = @ProjectAdvertisementId AND JobRequirementName NOT IN @KnowledgeAreaNames";
+        _uow.Connection.Execute(deleteQuery, new {
+            ProjectAdvertisementId = ProjectAdvertisement.ProjectAdvertisementId,
+            KnowledgeAreaNames = knowledgeAreaNames
+        });
+
+        foreach (string knowledgeAreaName in knowledgeAreaNames)
+        {
+            string insertRelation = 
+                "INSERT INTO ProjectAdvertisementJobRequirement " +
+                "(ProjectAdvertisementId, JobRequirementName) " +
+                "VALUES " +
+                "(@ProjectAdvertisementId, @JobRequirementName)";
+            _uow.Connection.Execute(insertRelation, new {
+                ProjectAdvertisementId = ProjectAdvertisement.ProjectAdvertisementId,
+                JobRequirementName = knowledgeAreaName
+            });
         }
     }
 
