@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.VO;
 
@@ -23,37 +24,48 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
 
     public void Insert(ProjectAdvertisement ProjectAdvertisement)
     {
-        string query = 
+        string insert = 
             "INSERT INTO ProjectAdvertisement " +
-            "(Title, Description, OpenedOn, Deadline, PaymentOfferId, CustomerId, StatusId, SubjectsId) " +
+            "(Title, Description, OpenedOn, Deadline, PaymentOfferId, CustomerId, StatusId) " +
             "VALUES " +
-            "(@Title, @Description, @OpenedOn, @Deadline, @PaymentOfferId, @CustomerId, @StatusId, @SubjectsId)";
+            "(@Title, @Description, @OpenedOn, @Deadline, @PaymentOfferId, @CustomerId, @StatusId)" +
+            "RETURNING ProjectAdvertisementId::INT";
 
-        foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
-        _uow.Connection.Execute(query, 
+        int id = _uow.Connection.QuerySingle<int>(insert, 
+        new {
+            Title = ProjectAdvertisement.Title,
+            Description = ProjectAdvertisement.Description,
+            OpenedOn = ProjectAdvertisement.OpenedOn,
+            Deadline = ProjectAdvertisement.Deadline,
+            PaymentOfferId = ProjectAdvertisement.PaymentOffer.PaymentOfferId,
+            CustomerId = ProjectAdvertisement.Customer.CustomerId,
+            StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
+        });
+
+        foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(adv => adv.KnowledgeAreaName).ToArray()) {
+            string insertRelation = 
+                "INSERT INTO ProjectAdvertisementJobRequirement " +
+                "(ProjectAdvertismentId, JobRequirementName) " +
+                "VALUES " +
+                "(@ProjectAdvertisementId, @JobRequirementName)";
+            int linesAffected = _uow.Connection.Execute(insertRelation, 
             new {
-                Title = ProjectAdvertisement.Title,
-                Description = ProjectAdvertisement.Description,
-                OpenedOn = ProjectAdvertisement.OpenedOn,
-                Deadline = ProjectAdvertisement.Deadline,
-                PaymentOfferId = ProjectAdvertisement.PaymentOffer.PaymentOfferId,
-                CustomerId = ProjectAdvertisement.Customer.CustomerId,
-                StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
-                SubjectId = knowledgeAreaName
+                ProjectAdvertisementId = id,
+                JobRequirementName = knowledgeAreaName
             });
+            if(linesAffected == 0) throw new InvalidOperationException("Insert failed: Number of lines inserted was zero");
         }
     }
 
     public void Update(ProjectAdvertisement ProjectAdvertisement)
     {
-        string query = 
+        string update = 
             "UPDATE ProjectAdvertisement " + 
             "SET Title = @Title, Description = @Description, OpenedOn = @OpenedOn, Deadline = @Deadline, " +
-            "PaymentOfferId = @PaymentOfferId, CustomerId = @CustomerId, StatusId = @StatusId, SubjectId = @SubjectId " + 
+            "PaymentOfferId = @PaymentOfferId, CustomerId = @CustomerId, StatusId = @StatusId" + 
             "WHERE ProjectAdvertisementId = @ProjectAdvertisementId";
 
-        foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
-            _uow.Connection.Execute(query, 
+            _uow.Connection.Execute(update, 
             new {
                 Title = ProjectAdvertisement.Title,
                 Description = ProjectAdvertisement.Description,
@@ -62,8 +74,10 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
                 PaymentOfferId = ProjectAdvertisement.PaymentOffer.PaymentOfferId,
                 CustomerId = ProjectAdvertisement.Customer.CustomerId,
                 StatusId = ProjectAdvertisement.Status.AdvertisementStatusName,
-                SubjectId = knowledgeAreaName
             });
+
+        foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(s => s.KnowledgeAreaName).ToArray()) {
+            
         }
     }
 
