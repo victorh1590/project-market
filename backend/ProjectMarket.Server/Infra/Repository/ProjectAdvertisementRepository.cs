@@ -1,7 +1,5 @@
 ﻿using Dapper;
-using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Entity;
-using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
@@ -44,10 +42,8 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
 
         foreach(string knowledgeAreaName in ProjectAdvertisement.Subjects.Select(adv => adv.KnowledgeAreaName).ToArray()) {
             string insertRelation = 
-                "INSERT INTO ProjectAdvertisementJobRequirement " +
-                "(ProjectAdvertismentId, JobRequirementName) " +
-                "VALUES " +
-                "(@ProjectAdvertisementId, @JobRequirementName)";
+                "INSERT INTO ProjectAdvertisementJobRequirement (ProjectAdvertismentId, JobRequirementName) " +
+                "VALUES (@ProjectAdvertisementId, @JobRequirementName)";
             int linesAffected = _uow.Connection.Execute(insertRelation, 
             new {
                 ProjectAdvertisementId = id,
@@ -91,10 +87,8 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
         foreach (string knowledgeAreaName in knowledgeAreaNames)
         {
             string insertRelation = 
-                "INSERT INTO ProjectAdvertisementJobRequirement " +
-                "(ProjectAdvertisementId, JobRequirementName) " +
-                "VALUES " +
-                "(@ProjectAdvertisementId, @JobRequirementName)";
+                "INSERT INTO ProjectAdvertisementJobRequirement (ProjectAdvertisementId, JobRequirementName) " +
+                "VALUES (@ProjectAdvertisementId, @JobRequirementName)";
             _uow.Connection.Execute(insertRelation, new {
                 ProjectAdvertisementId = ProjectAdvertisement.ProjectAdvertisementId,
                 JobRequirementName = knowledgeAreaName
