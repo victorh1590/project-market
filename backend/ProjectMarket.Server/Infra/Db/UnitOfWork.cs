@@ -3,7 +3,7 @@ using System.Data;
 
 namespace ProjectMarket.Server.Infra.Db;
 
-public sealed class UnitOfWork : IUnitOfWork, IDisposable
+public sealed class UnitOfWork : IUnitOfWork
 {
     public IDbConnection Connection { get; }
     private IDbTransaction? _transaction;

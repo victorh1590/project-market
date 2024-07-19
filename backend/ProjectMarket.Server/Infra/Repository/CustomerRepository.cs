@@ -3,21 +3,21 @@ using ProjectMarket.Server.Data.Model.Entity;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
-public class CustomerRepository(IUnitOfWork uow)
+public class CustomerRepository(IUnitOfWork unityOfWork)
 {
-    private readonly IUnitOfWork _uow = uow;
+    public readonly IUnitOfWork uow = unityOfWork;
 
     public IEnumerable<Customer> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM Customer";
-        return _uow.Connection.Query<Customer>(query);
+        return uow.Connection.Query<Customer>(query);
     }
 
     public Customer? GetByCustomerId(int id)
     {
         string query = "SELECT * FROM Customer WHERE CustomerId = @CustomerId";
-        return _uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id });
+        return uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id });
     }
 
     public void Insert(Customer Customer)
@@ -26,7 +26,7 @@ public class CustomerRepository(IUnitOfWork uow)
             "INSERT INTO Customer (Name, Email, Password, RegistrationDate) " +
             "VALUES (@Name, @Email, @Password, @RegistrationDate)";
 
-        _uow.Connection.Execute(query,Customer);
+        uow.Connection.Execute(query,Customer);
     }
 
     public void Update(Customer Customer)
@@ -35,12 +35,12 @@ public class CustomerRepository(IUnitOfWork uow)
             "UPDATE Customer " + 
             "SET Name = @Name, Email = @Email, Password = @Password, RegistrationDate = @RegistrationDate " + 
             "WHERE CustomerId = @CustomerId";
-        _uow.Connection.Execute(query, Customer);
+        uow.Connection.Execute(query, Customer);
     }
 
     public void Delete(Customer Customer)
     {
         string query = "DELETE CASCADE FROM Customer WHERE CustomerId = @CustomerId";
-        _uow.Connection.Execute(query, Customer);
+        uow.Connection.Execute(query, Customer);
     }
 }

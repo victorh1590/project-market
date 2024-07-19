@@ -1,11 +1,9 @@
-using FluentValidation;
 using ProjectMarket.Server.Data.Model.VO;
-using ProjectMarket.Server.Data.Validators;
-using ProjectMarket.Server.Data.Model.DTO;
+using ProjectMarket.Server.Data.Model.Entity;
 
-namespace ProjectMarket.Server.Data.Model.Entity;
+namespace ProjectMarket.Server.Data.Model.DTO;
 
-public class ProjectAdvertisement : IEntity {
+public class ProjectAdvertisementDTO {
     required public int? ProjectAdvertisementId { get; set; }
     required public string Title { get; set; }
     public string? Description { get; set; }
@@ -17,7 +15,7 @@ public class ProjectAdvertisement : IEntity {
     required public List<KnowledgeAreaVO> Subjects { get; set; }
     required public List<JobRequirementVO>? Requirements { get; set; }
 
-    public ProjectAdvertisement(
+    public ProjectAdvertisementDTO(
         int? id, 
         string title, 
         string? description, 
@@ -37,29 +35,5 @@ public class ProjectAdvertisement : IEntity {
         Status = status;
         Subjects = subjects;
         Requirements = requirements;
-
-        var validator = new ProjectAdvertisementValidator();
-        validator.ValidateAndThrow(this);
-    }
-
-    public ProjectAdvertisement(ProjectAdvertisementDTO dto) 
-    {
-        ProjectAdvertisementId = dto.ProjectAdvertisementId;
-        Title = dto.Title;
-        Description = dto.Description;
-        Deadline = dto.Deadline;
-        PaymentOffer = dto.PaymentOffer;
-        Customer = dto.Customer;
-        Status = dto.Status;
-        Subjects = dto.Subjects;
-        Requirements = dto.Requirements;
-
-        var validator = new ProjectAdvertisementValidator();
-        validator.ValidateAndThrow(this);
-    }
-
-    public void ValidateId() {
-        var validator = new NotNullValidator<int?>();
-        validator.ValidateAndThrow(ProjectAdvertisementId);
     }
 }

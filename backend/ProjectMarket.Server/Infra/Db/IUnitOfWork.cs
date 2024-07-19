@@ -2,7 +2,7 @@
 
 namespace ProjectMarket.Server;
 
-public interface IUnitOfWork
+public interface IUnitOfWork : IDisposable
 {
     public IDbConnection Connection { get; }
     public void Begin();

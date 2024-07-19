@@ -10,7 +10,10 @@ public class CustomerValidator : AbstractValidator<Customer>
         const int bcryptHashSize = 72;
         DateTime firstValidDate = new(2020, 01, 01, 00, 00, 00);
 
-        RuleFor(customer => customer.CustomerId).GreaterThan(0).WithName("CustomerId");
+        RuleFor(customer => customer.CustomerId)
+            .GreaterThan(0)
+            .WithName("CustomerId")
+            .Unless(customer => customer.CustomerId == null);
         RuleFor(customer => customer.Name).NotEmpty().WithName("Name");
         RuleFor(customer => customer.Email).NotEmpty().EmailAddress().WithName("Email");
         RuleFor(customer => customer.Password).Length(bcryptHashSize).WithName("Password");
