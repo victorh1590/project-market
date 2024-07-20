@@ -4,7 +4,7 @@ using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class PaymentOffer : IEntity {
+public class PaymentOffer {
     required public int? PaymentOfferId { get; set; }
     required public decimal Value { get; set; }
     required public PaymentFrequencyVO PaymentFrequency { get; set; }
@@ -21,12 +21,13 @@ public class PaymentOffer : IEntity {
         PaymentFrequency = paymentFrequency;
         Currency = currency;
 
-        var validator = new PaymentOfferValidator();
-        validator.ValidateAndThrow(this);
+        this.Validate();
     }
+}
 
-    public void ValidateId() {
-        var validator = new NotNullValidator<int?>();
-        validator.ValidateAndThrow(PaymentOfferId);
-    }
+public static class PaymentOfferExtensions {
+    public static PaymentOfferValidator Validator { get; private set; } = new();
+
+    public static void Validate(this PaymentOffer paymentOffer) => 
+        Validator.ValidateAndThrow(paymentOffer);
 }

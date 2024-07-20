@@ -5,7 +5,7 @@ using ProjectMarket.Server.Data.Model.DTO;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class ProjectAdvertisement : IEntity {
+public class ProjectAdvertisement {
     required public int? ProjectAdvertisementId { get; set; }
     required public string Title { get; set; }
     public string? Description { get; set; }
@@ -54,12 +54,13 @@ public class ProjectAdvertisement : IEntity {
         Subjects = dto.Subjects;
         Requirements = dto.Requirements;
 
-        var validator = new ProjectAdvertisementValidator();
-        validator.ValidateAndThrow(this);
+        this.Validate();
     }
+}
 
-    public void ValidateId() {
-        var validator = new NotNullValidator<int?>();
-        validator.ValidateAndThrow(ProjectAdvertisementId);
-    }
+public static class ProjectAdvertisementExtensions {
+    public static ProjectAdvertisementValidator Validator { get; private set; } = new();
+
+    public static void Validate(this ProjectAdvertisement projectAdvertisement) => 
+        Validator.ValidateAndThrow(projectAdvertisement);
 }

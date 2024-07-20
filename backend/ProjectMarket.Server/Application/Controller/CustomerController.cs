@@ -33,12 +33,12 @@ public class CustomersController : ControllerBase
 
     // TODO: Must refactor repository to return Id.
     [HttpPost]
-    public ActionResult<Customer> PostCustomer([FromBody] CustomerDTO customerDTO)
+    public ActionResult<Customer> PostCustomer([FromBody] CustomerDTO dto)
     {
         Customer customer; 
         try 
         {
-            customer = Customer.CreateCustomer(customerDTO);
+            dto.Validate();
         }
         catch(ValidationException e)
         {
@@ -50,7 +50,7 @@ public class CustomersController : ControllerBase
         {
             try 
             {
-                _customerRepository.Insert(customer);
+                _customerRepository.Insert(dto);
                 _customerRepository.uow.Commit();
             }
             catch(Exception e)

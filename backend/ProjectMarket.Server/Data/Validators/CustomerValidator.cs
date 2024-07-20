@@ -1,4 +1,5 @@
 using FluentValidation;
+using ProjectMarket.Server.Data.Model.DTO;
 using ProjectMarket.Server.Data.Model.Entity;
 
 namespace ProjectMarket.Server.Data.Validators;
@@ -13,7 +14,7 @@ public class CustomerValidator : AbstractValidator<Customer>
         RuleFor(customer => customer.CustomerId)
             .GreaterThan(0)
             .WithName("CustomerId")
-            .Unless(customer => customer.CustomerId == null);
+            .Unless(customer => customer is CustomerDTO);
         RuleFor(customer => customer.Name).NotEmpty().WithName("Name");
         RuleFor(customer => customer.Email).NotEmpty().EmailAddress().WithName("Email");
         RuleFor(customer => customer.Password).Length(bcryptHashSize).WithName("Password");

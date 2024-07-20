@@ -5,7 +5,7 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class Customer : IEntity {
+public class Customer {
     public int? CustomerId { get; set; }
     public string Name { get;set; }
     public string Email { get; set; }
@@ -25,23 +25,13 @@ public class Customer : IEntity {
         Password = password;
         RegistrationDate = registrationDate ?? DateTime.Now;
 
-        var validator = new CustomerValidator();
-        validator.ValidateAndThrow(this);
+        this.Validate();
     }
+}
 
-    public static Customer CreateCustomer(CustomerDTO dto)
-    {
-        return new Customer(
-            dto.CustomerId, 
-            dto.Name, 
-            dto.Email, 
-            dto.Password, 
-            dto.RegistrationDate
-        );
-    }
+public static class CustomerExtension {
+    public static CustomerValidator Validator { get; private set; } = new();
 
-    public void ValidateId() {
-        var validator = new NotNullValidator<int?>();
-        validator.ValidateAndThrow(CustomerId);
-    }
+    public static void Validate(this Customer paymentOffer) => 
+        Validator.ValidateAndThrow(paymentOffer);
 }

@@ -14,7 +14,8 @@ public class PaymentOfferValidator : AbstractValidator<PaymentOffer>
 
         RuleFor(paymentOffer => paymentOffer.PaymentOfferId)
             .GreaterThan(0)
-            .WithName("PaymentOfferId");
+            .WithName("PaymentOfferId")
+            .Unless(paymentOffer => paymentOffer is PaymentOfferDTO);
         RuleFor(paymentOffer => paymentOffer.Value)
             .InclusiveBetween(0.0M, maximumValue)
             .PrecisionScale(valueMaxSize, valuePrecision, ignoreTrailingZeros)
