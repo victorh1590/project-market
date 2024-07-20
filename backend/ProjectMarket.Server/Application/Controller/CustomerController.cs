@@ -36,22 +36,18 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     [HttpPost]
     public ActionResult<Customer> PostCustomer([FromBody] CustomerDto dto)
     {
-        try 
-        {
-            dto.Validate();
-        }
-        catch(ValidationException)
-        {
-            return BadRequest("Body is on a invalid state.");
-        }
-
         Customer inserted;
         using(_customerRepository.uow) 
         {
-            try 
+            try
             {
+                dto.Validate();
                 inserted = _customerRepository.Insert(dto);
                 _customerRepository.uow.Commit();
+            }
+            catch (ValidationException)
+            {
+                return BadRequest("Body is on a invalid state.");
             }
             catch(SqlException)
             {
@@ -59,8 +55,6 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
                 return BadRequest("Error saving customer.");
             }
         }
-
-        // Return the created customer with a 201 status code
         return CreatedAtAction(nameof(GetCustomerById), new { id = inserted.CustomerId }, inserted);
     }
 
@@ -68,32 +62,23 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     [HttpPut("{id:int}")]
     public ActionResult<Customer> UpdateCustomer([FromRoute] int id, [FromBody] CustomerDto dto)
     {
-        try
-        {
-            _customerRepository.GetByCustomerId(id);
-        }
-        catch(ArgumentException)
-        {
-            return NotFound();
-        }
-
-        Customer customer;
-        try 
-        {
-            customer = Customer.CreateCustomer(dto);
-        }
-        catch (ValidationException)
-        {
-            return BadRequest("Body is on a invalid state.");
-        }
-
         Customer updated;
         using(_customerRepository.uow) 
         {
             try 
             {
+                _customerRepository.GetByCustomerId(id);
+                Customer customer = Customer.CreateCustomer(dto);
                 updated = _customerRepository.Update(customer);
                 _customerRepository.uow.Commit();
+            }
+            catch(ArgumentException)
+            {
+                return NotFound();
+            }
+            catch (ValidationException)
+            {
+                return BadRequest("Body is on a invalid state.");
             }
             catch(SqlException)
             {
@@ -101,8 +86,6 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
                 return BadRequest("Error updating customer.");
             }
         }
-
-        // Return the created customer with a 201 status code
         return CreatedAtAction(nameof(GetCustomerById), new { id = updated.CustomerId }, updated);
     }
 }
