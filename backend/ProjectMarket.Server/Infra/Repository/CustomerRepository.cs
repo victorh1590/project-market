@@ -1,4 +1,6 @@
 using Dapper;
+using Microsoft.Data.SqlClient;
+using Npgsql;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.Interface;
 
@@ -15,10 +17,11 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
         return uow.Connection.Query<Customer>(query);
     }
 
-    public Customer? GetByCustomerId(int id)
+    public Customer GetByCustomerId(int id)
     {
         string query = "SELECT * FROM Customer WHERE CustomerId = @CustomerId";
-        return uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id });
+        return uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id }) 
+               ?? throw new ArgumentException($"{nameof(ICustomer.CustomerId)} not found");
     }
 
     public Customer Insert(ICustomer Customer)
