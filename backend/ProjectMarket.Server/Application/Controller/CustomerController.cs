@@ -14,20 +14,19 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     private readonly CustomerRepository _customerRepository = new(uow);
 
     [HttpGet("{id:int}")]
-    public ActionResult<Customer> GetCustomerById(int id, [FromServices] CustomerRepository repository)
+    public ActionResult<Customer> GetCustomerById(int id)
     {
         try
         {
-            Customer customer = repository.GetByCustomerId(id);
-            return Ok(customer);
+            return Ok(_customerRepository.GetByCustomerId(id));
         }
         catch (ArgumentException)
         {
-            return NotFound();
+            return NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found.");
         }
         catch(Exception)
         {
-            return BadRequest("Customer couldn't be retrieved.");
+            return BadRequest($"{nameof(Customer)} couldn't be retrieved.");
         }
     }
 
@@ -55,7 +54,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
             catch(Exception)
             {
                 _customerRepository.uow.Rollback();
-                return BadRequest("Customer couldn't be inserted.");
+                return BadRequest($"{nameof(Customer)} couldn't be inserted.");
             }
         }
         return CreatedAtAction(nameof(GetCustomerById), new { id = inserted.CustomerId }, inserted);
@@ -75,7 +74,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
             }
             catch(ArgumentException)
             {
-                return NotFound();
+                return NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found.");
             }
             catch (ValidationException)
             {
@@ -89,7 +88,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
             catch(Exception)
             {
                 _customerRepository.uow.Rollback();
-                return BadRequest("Customer couldn't be updated.");
+                return BadRequest($"{nameof(Customer)} couldn't be updated.");
             }
         }
         return NoContent();
