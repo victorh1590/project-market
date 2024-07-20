@@ -31,8 +31,6 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
         }
     }
 
-
-    // TODO: Must refactor repository to return Id.
     [HttpPost]
     public ActionResult<Customer> PostCustomer([FromBody] CustomerDto dto)
     {
@@ -49,27 +47,30 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
             {
                 return BadRequest("Body is on a invalid state.");
             }
-            catch(SqlException)
+            catch(SqlException) 
             {
                 _customerRepository.uow.Rollback();
                 return BadRequest("Error saving customer.");
+            }
+            catch(Exception)
+            {
+                _customerRepository.uow.Rollback();
+                return BadRequest("Customer couldn't be inserted.");
             }
         }
         return CreatedAtAction(nameof(GetCustomerById), new { id = inserted.CustomerId }, inserted);
     }
 
-    // TODO: Must refactor repository to return Id.
     [HttpPut("{id:int}")]
     public ActionResult<Customer> UpdateCustomer([FromRoute] int id, [FromBody] CustomerDto dto)
     {
-        Customer updated;
         using(_customerRepository.uow) 
         {
             try 
             {
                 _customerRepository.GetByCustomerId(id);
                 Customer customer = Customer.CreateCustomer(dto);
-                updated = _customerRepository.Update(customer);
+                _customerRepository.Update(customer);
                 _customerRepository.uow.Commit();
             }
             catch(ArgumentException)
@@ -85,7 +86,12 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
                 _customerRepository.uow.Rollback();
                 return BadRequest("Error updating customer.");
             }
+            catch(Exception)
+            {
+                _customerRepository.uow.Rollback();
+                return BadRequest("Customer couldn't be updated.");
+            }
         }
-        return CreatedAtAction(nameof(GetCustomerById), new { id = updated.CustomerId }, updated);
+        return NoContent();
     }
 }
