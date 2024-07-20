@@ -1,25 +1,19 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using ProjectMarket.Server.Data.Model.DTO;
+using Microsoft.Data.SqlClient;
+using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
-using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Application.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class CustomersController : ControllerBase
+public class CustomersController(IUnitOfWork uow) : ControllerBase
 {
-    private readonly IUnitOfWork _uow;
-    private readonly CustomerRepository _customerRepository;
+    private readonly CustomerRepository _customerRepository = new(uow);
 
-    public CustomersController(IUnitOfWork uow) {
-        _uow = uow;
-        _customerRepository = new CustomerRepository(_uow);
-    }
-
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public ActionResult<Customer> GetCustomerById(int id, [FromServices] CustomerRepository repository)
     {
         Customer? customer = repository.GetByCustomerId(id);
@@ -33,9 +27,8 @@ public class CustomersController : ControllerBase
 
     // TODO: Must refactor repository to return Id.
     [HttpPost]
-    public ActionResult<Customer> PostCustomer([FromBody] CustomerDTO dto)
+    public ActionResult<Customer> PostCustomer([FromBody] CustomerDto dto)
     {
-        Customer customer; 
         try 
         {
             dto.Validate();
@@ -53,7 +46,7 @@ public class CustomersController : ControllerBase
                 _customerRepository.Insert(dto);
                 _customerRepository.uow.Commit();
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 _customerRepository.uow.Rollback();
                 return BadRequest("Error saving customer.");
@@ -64,4 +57,45 @@ public class CustomersController : ControllerBase
         // return CreatedAtAction(nameof(GetCustomerById), new { id = createdCustomer.Id }, createdCustomer);
     }
 
+    // TODO: Must refactor repository to return Id.
+    [HttpPut("{id:int}")]
+    public ActionResult<Customer> UpdateCustomer(int id, [FromBody] CustomerDto dto)
+    {
+        try
+        {
+            _customerRepository.GetByCustomerId(id);
+        }
+        catch(SqlException)
+        {
+            return NotFound();
+        }
+
+        Customer customer;
+        try 
+        {
+            customer = Customer.CreateCustomer(dto);
+        }
+        catch (ValidationException)
+        {
+            return BadRequest("Body is on a invalid state.");
+        }
+
+        Customer createdCustomer;
+        using(_customerRepository.uow) 
+        {
+            try 
+            {
+                _customerRepository.Update(customer);
+                _customerRepository.uow.Commit();
+            }
+            catch(Exception e)
+            {
+                _customerRepository.uow.Rollback();
+                return BadRequest("Error saving customer.");
+            }
+        }
+
+        // Return the created customer with a 201 status code
+        // return CreatedAtAction(nameof(GetCustomerById), new { id = createdCustomer.Id }, createdCustomer);
+    }
 }

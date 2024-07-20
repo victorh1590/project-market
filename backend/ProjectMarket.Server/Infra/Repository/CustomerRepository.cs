@@ -1,5 +1,6 @@
 using Dapper;
 using ProjectMarket.Server.Data.Model.Entity;
+using ProjectMarket.Server.Data.Model.Interface;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
@@ -20,7 +21,7 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
         return uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id });
     }
 
-    public void Insert(Customer Customer)
+    public void Insert(ICustomer Customer)
     {
         string query = 
             "INSERT INTO Customer (Name, Email, Password, RegistrationDate) " +
@@ -29,7 +30,7 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
         uow.Connection.Execute(query,Customer);
     }
 
-    public void Update(Customer Customer)
+    public void Update(ICustomer Customer)
     {
         string query = 
             "UPDATE Customer " + 
@@ -38,7 +39,7 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
         uow.Connection.Execute(query, Customer);
     }
 
-    public void Delete(Customer Customer)
+    public void Delete(ICustomer Customer)
     {
         string query = "DELETE CASCADE FROM Customer WHERE CustomerId = @CustomerId";
         uow.Connection.Execute(query, Customer);

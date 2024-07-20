@@ -1,14 +1,17 @@
 using FluentValidation;
+using ProjectMarket.Server.Data.Model.Dto;
+using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Validators;
 using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class PaymentOffer {
-    required public int? PaymentOfferId { get; set; }
-    required public decimal Value { get; set; }
-    required public PaymentFrequencyVO PaymentFrequency { get; set; }
-    required public CurrencyVO Currency { get; set; }
+public class PaymentOffer : IPaymentOffer
+{
+    public int? PaymentOfferId { get; init; }
+    public decimal Value { get; set; }
+    public PaymentFrequencyVO PaymentFrequency { get; set; }
+    public CurrencyVO Currency { get; set; }
 
     public PaymentOffer(
         int? id,
@@ -23,10 +26,20 @@ public class PaymentOffer {
 
         this.Validate();
     }
+    
+    public static PaymentOffer CreatePaymentOffer(PaymentOfferDto dto)
+    {
+        return new PaymentOffer(
+            dto.PaymentOfferId, 
+            dto.Value, 
+            dto.PaymentFrequency, 
+            dto.Currency 
+        );
+    }
 }
 
 public static class PaymentOfferExtensions {
-    public static PaymentOfferValidator Validator { get; private set; } = new();
+    private static PaymentOfferValidator Validator { get; } = new();
 
     public static void Validate(this PaymentOffer paymentOffer) => 
         Validator.ValidateAndThrow(paymentOffer);

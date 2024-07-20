@@ -1,11 +1,13 @@
-namespace ProjectMarket.Server.Data.Model.DTO;
+using ProjectMarket.Server.Data.Model.Interface;
 
-public class CustomerDTO(
+namespace ProjectMarket.Server.Data.Model.Dto;
+
+public class CustomerDto(
    int? id,
    string name,
    string email,
    string password,
-   DateTime? registrationDate)
+   DateTime? registrationDate) : ICustomer
 {
     public int? CustomerId { get; set; } = id;
     public string Name { get; set; } = name;

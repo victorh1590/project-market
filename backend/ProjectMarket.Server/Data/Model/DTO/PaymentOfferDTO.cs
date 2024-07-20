@@ -1,22 +1,16 @@
+using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Model.VO;
 
-namespace ProjectMarket.Server.Data.Model.Entity;
+namespace ProjectMarket.Server.Data.Model.Dto;
 
-public class PaymentOfferDTO {
-    required public int? PaymentOfferId { get; set; }
-    required public decimal Value { get; set; }
-    required public PaymentFrequencyVO PaymentFrequency { get; set; }
-    required public CurrencyVO Currency { get; set; }
-
-    public PaymentOfferDTO(
-        int? id,
-        decimal value,
-        PaymentFrequencyVO paymentFrequency,
-        CurrencyVO currency)
-    {
-        PaymentOfferId = id;
-        Value = value;
-        PaymentFrequency = paymentFrequency;
-        Currency = currency;
-    }
+public class PaymentOfferDto(
+    int? id, 
+    decimal value, 
+    PaymentFrequencyVO paymentFrequency, 
+    CurrencyVO currency) : IPaymentOffer
+{
+    public int? PaymentOfferId { get; init; } = id;
+    public decimal Value { get; set; } = value;
+    public PaymentFrequencyVO PaymentFrequency { get; set; } = paymentFrequency;
+    public CurrencyVO Currency { get; set; } = currency;
 }
