@@ -1,11 +1,11 @@
 using FluentValidation;
 using Microsoft.IdentityModel.Tokens;
-using ProjectMarket.Server.Data.Model.Entity;
-using ProjectMarket.Server.Data.Model.DTO;
+using ProjectMarket.Server.Data.Model.Dto;
+using ProjectMarket.Server.Data.Model.Interface;
 
 namespace ProjectMarket.Server.Data.Validators;
 
-public class ProjectAdvertisementValidator : AbstractValidator<ProjectAdvertisement>
+public class ProjectAdvertisementValidator : AbstractValidator<IProjectAdvertisement>
 {
     public ProjectAdvertisementValidator()
     {
@@ -15,7 +15,7 @@ public class ProjectAdvertisementValidator : AbstractValidator<ProjectAdvertisem
         RuleFor(projectAdvertisement => projectAdvertisement.ProjectAdvertisementId)
             .GreaterThan(0)
             .WithName("ProjectAdvertisementId")
-            .Unless(projectAdvertisement => projectAdvertisement is ProjectAdvertisementDTO);
+            .Unless(projectAdvertisement => projectAdvertisement is ProjectAdvertisementDto);
         RuleFor(projectAdvertisement => projectAdvertisement.Title)
             .NotEmpty()
             .MaximumLength(128)

@@ -21,27 +21,31 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
         return uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id });
     }
 
-    public void Insert(ICustomer Customer)
+    public Customer Insert(ICustomer Customer)
     {
         string query = 
             "INSERT INTO Customer (Name, Email, Password, RegistrationDate) " +
-            "VALUES (@Name, @Email, @Password, @RegistrationDate)";
+            "VALUES (@Name, @Email, @Password, @RegistrationDate) " + 
+            "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
 
-        uow.Connection.Execute(query,Customer);
+       return uow.Connection.QuerySingle<Customer>(query, Customer);
     }
 
-    public void Update(ICustomer Customer)
+    public Customer Update(ICustomer Customer)
     {
         string query = 
             "UPDATE Customer " + 
             "SET Name = @Name, Email = @Email, Password = @Password, RegistrationDate = @RegistrationDate " + 
-            "WHERE CustomerId = @CustomerId";
-        uow.Connection.Execute(query, Customer);
+            "WHERE CustomerId = @CustomerId " +
+            "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
+        return uow.Connection.QuerySingle<Customer>(query, Customer);
     }
 
-    public void Delete(ICustomer Customer)
+    public bool Delete(ICustomer Customer)
     {
-        string query = "DELETE CASCADE FROM Customer WHERE CustomerId = @CustomerId";
-        uow.Connection.Execute(query, Customer);
+        string query = 
+            "DELETE CASCADE FROM Customer WHERE CustomerId = @CustomerId " +
+            "RETURNING CustomerId";
+        return uow.Connection.Execute(query, Customer) == 1;
     }
 }

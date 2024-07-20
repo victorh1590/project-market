@@ -1,39 +1,29 @@
 using ProjectMarket.Server.Data.Model.VO;
 using ProjectMarket.Server.Data.Model.Entity;
+using ProjectMarket.Server.Data.Model.Interface;
 
-namespace ProjectMarket.Server.Data.Model.DTO;
+namespace ProjectMarket.Server.Data.Model.Dto;
 
-public class ProjectAdvertisementDTO {
-    required public int? ProjectAdvertisementId { get; set; }
-    required public string Title { get; set; }
-    public string? Description { get; set; }
-    required public DateTime OpenedOn { get; set; }
-    public DateTime? Deadline { get; set; }
-    required public PaymentOffer PaymentOffer { get; set; }
-    required public Customer Customer { get; set; }
-    required public AdvertisementStatusVO Status { get; set; }
-    required public List<KnowledgeAreaVO> Subjects { get; set; }
-    required public List<JobRequirementVO>? Requirements { get; set; }
-
-    public ProjectAdvertisementDTO(
-        int? id, 
-        string title, 
-        string? description, 
-        DateTime? deadline,
-        PaymentOffer paymentOffer, 
-        Customer customer, 
-        AdvertisementStatusVO status, 
-        List<KnowledgeAreaVO> subjects,
-        List<JobRequirementVO>? requirements) 
-    {
-        ProjectAdvertisementId = id;
-        Title = title;
-        Description = description;
-        Deadline = deadline;
-        PaymentOffer = paymentOffer;
-        Customer = customer;
-        Status = status;
-        Subjects = subjects;
-        Requirements = requirements;
-    }
+public class ProjectAdvertisementDto(
+    int? id,
+    string title,
+    string? description,
+    DateTime? deadline,
+    PaymentOffer paymentOffer,
+    Customer customer,
+    AdvertisementStatusVO status,
+    List<KnowledgeAreaVO> subjects,
+    List<JobRequirementVO>? requirements,
+    DateTime openedOn) : IProjectAdvertisement
+{
+    public int? ProjectAdvertisementId { get; init; } = id;
+    public string Title { get;} = title;
+    public string? Description { get;} = description;
+    public DateTime OpenedOn { get;} = openedOn;
+    public DateTime? Deadline { get;} = deadline;
+    public PaymentOffer PaymentOffer { get;} = paymentOffer;
+    public Customer Customer { get;} = customer;
+    public AdvertisementStatusVO Status { get;} = status;
+    public List<KnowledgeAreaVO> Subjects { get;} = subjects;
+    public List<JobRequirementVO>? Requirements { get;} = requirements;
 }

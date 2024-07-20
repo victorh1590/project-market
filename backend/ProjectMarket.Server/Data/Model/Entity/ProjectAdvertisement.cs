@@ -1,21 +1,23 @@
 using FluentValidation;
+using ProjectMarket.Server.Data.Model.Dto;
+using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Model.VO;
 using ProjectMarket.Server.Data.Validators;
-using ProjectMarket.Server.Data.Model.DTO;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class ProjectAdvertisement {
-    required public int? ProjectAdvertisementId { get; set; }
-    required public string Title { get; set; }
+public class ProjectAdvertisement : IProjectAdvertisement
+{
+    public int? ProjectAdvertisementId { get; init; }
+    public string Title { get; set; }
     public string? Description { get; set; }
-    required public DateTime OpenedOn { get; set; }
+    public DateTime OpenedOn { get; set; }
     public DateTime? Deadline { get; set; }
-    required public PaymentOffer PaymentOffer { get; set; }
-    required public Customer Customer { get; set; }
-    required public AdvertisementStatusVO Status { get; set; }
-    required public List<KnowledgeAreaVO> Subjects { get; set; }
-    required public List<JobRequirementVO>? Requirements { get; set; }
+    public PaymentOffer PaymentOffer { get; set; }
+    public Customer Customer { get; set; }
+    public AdvertisementStatusVO Status { get; set; }
+    public List<KnowledgeAreaVO> Subjects { get; set; }
+    public List<JobRequirementVO>? Requirements { get; set; }
 
     public ProjectAdvertisement(
         int? id, 
@@ -42,7 +44,7 @@ public class ProjectAdvertisement {
         validator.ValidateAndThrow(this);
     }
 
-    public ProjectAdvertisement(ProjectAdvertisementDTO dto) 
+    public ProjectAdvertisement(ProjectAdvertisementDto dto) 
     {
         ProjectAdvertisementId = dto.ProjectAdvertisementId;
         Title = dto.Title;
@@ -59,7 +61,7 @@ public class ProjectAdvertisement {
 }
 
 public static class ProjectAdvertisementExtensions {
-    public static ProjectAdvertisementValidator Validator { get; private set; } = new();
+    private static ProjectAdvertisementValidator Validator { get; } = new();
 
     public static void Validate(this ProjectAdvertisement projectAdvertisement) => 
         Validator.ValidateAndThrow(projectAdvertisement);
