@@ -1,10 +1,11 @@
 using FluentValidation;
-using ProjectMarket.Server.Data.Model.Dto.ValueObjectDto;
+using Microsoft.AspNetCore.Mvc;
 using ProjectMarket.Server.Data.Validators;
+using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
-public struct CurrencyVo : ICurrency
+public struct CurrencyVo
 {
     public string CurrencyName { get; init; }
     public string Prefix { get; set; }
@@ -16,14 +17,16 @@ public struct CurrencyVo : ICurrency
         this.Validate();
     }
 
-    public CurrencyVo(CurrencyDto dto) : this(dto.CurrencyName, dto.Prefix)
+    public static CurrencyVo? CreateCurrencyVo(string currencyName, [FromServices] IUnitOfWork uow)
     {
+        CurrencyRepository currencyRepository = new(uow);
+        return currencyRepository.GetByCurrencyName(currencyName);
     }
 }
 
 public static class CurrencyExtensions {
     private static CurrencyValidator Validator { get; } = new();
 
-    public static void Validate(this ICurrency currency) => 
+    public static void Validate(this CurrencyVo currency) => 
         Validator.ValidateAndThrow(currency);
 }

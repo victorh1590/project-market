@@ -1,11 +1,9 @@
 using FluentValidation;
-using ProjectMarket.Server.Data.Model.Dto.ValueObjectDto;
-using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
-public struct PaymentFrequencyVo : IPaymentFrequency
+public struct PaymentFrequencyVo
 {
     public string PaymentFrequencyName { get; init; }
     public string Suffix { get; set; }
@@ -16,16 +14,11 @@ public struct PaymentFrequencyVo : IPaymentFrequency
 
         this.Validate();
     }
-    
-    public PaymentFrequencyVo(PaymentFrequencyDto dto) : 
-        this(dto.PaymentFrequencyName, dto.Suffix)
-    {
-    }
 }
 
 public static class PaymentFrequencyExtensions {
     private static PaymentFrequencyValidator Validator { get; } = new();
 
-    public static void Validate(this IPaymentFrequency paymentFrequency) => 
+    public static void Validate(this PaymentFrequencyVo paymentFrequency) => 
         Validator.ValidateAndThrow(paymentFrequency);
 }
