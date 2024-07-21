@@ -14,10 +14,11 @@ public class AdvertisementStatusRepository(IUnitOfWork uow)
         return _uow.Connection.Query<AdvertisementStatusVo>(query);
     }
 
-    public AdvertisementStatusVo? GetByAdvertisementStatusName(string name)
+    public AdvertisementStatusVo GetByAdvertisementStatusByName(string name)
     {
         string query = "SELECT AdvertisementStatusName FROM AdvertisementStatus WHERE AdvertisementStatusName = @AdvertisementStatusName";
-        return _uow.Connection.QueryFirstOrDefault<AdvertisementStatusVo>(query, new { AdvertisementStatusName = name });
+        return _uow.Connection.QuerySingleOrDefault(query, new { AdvertisementStatusName = name })
+            ?? throw new ArgumentException($"{nameof(AdvertisementStatusVo.AdvertisementStatusName)} not found");
     }
 
     public void Insert(AdvertisementStatusVo AdvertisementStatus)

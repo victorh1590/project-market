@@ -1,5 +1,4 @@
 using FluentValidation;
-using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Validators;
 
@@ -39,24 +38,8 @@ public class ProjectAdvertisement
         Subjects = subjects;
         Requirements = requirements;
 
-        var validator = new ProjectAdvertisementValidator();
-        validator.ValidateAndThrow(this);
+        this.Validate();
     }
-
-    // public ProjectAdvertisement(ProjectAdvertisementDto dto) 
-    // {
-    //     ProjectAdvertisementId = dto.ProjectAdvertisementId;
-    //     Title = dto.Title;
-    //     Description = dto.Description;
-    //     Deadline = dto.Deadline;
-    //     PaymentOffer = dto.PaymentOffer;
-    //     Customer = dto.Customer;
-    //     Status = dto.Status;
-    //     Subjects = dto.Subjects;
-    //     Requirements = dto.Requirements;
-    //
-    //     this.Validate();
-    // }
 }
 
 public static class ProjectAdvertisementExtensions {

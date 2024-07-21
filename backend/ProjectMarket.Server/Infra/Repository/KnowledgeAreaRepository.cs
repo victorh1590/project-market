@@ -14,10 +14,11 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
         return _uow.Connection.Query<KnowledgeAreaVo>(query);
     }
 
-    public KnowledgeAreaVo? GetByKnowledgeAreaName(string name)
+    public KnowledgeAreaVo GetByKnowledgeAreaByName(string name)
     {
         string query = "SELECT KnowledgeAreaName FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
-        return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVo>(query, new { KnowledgeAreaName = name });
+        return _uow.Connection.QuerySingleOrDefault(query, new { KnowledgeAreaName = name })
+            ?? throw new ArgumentException($"{nameof(KnowledgeAreaVo.KnowledgeAreaName)} not found");
     }
 
     public void Insert(KnowledgeAreaVo KnowledgeArea)

@@ -15,7 +15,7 @@ public class PaymentOfferRepository(IUnitOfWork uow)
         return uow.Connection.Query<PaymentOffer>(query);
     }
 
-    public PaymentOffer GetByPaymentOfferId(int id)
+    public PaymentOffer GetByPaymentOfferById(int id)
     {
         string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
         return uow.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferId = id }) 

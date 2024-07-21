@@ -14,10 +14,11 @@ public class JobRequirementRepository(IUnitOfWork uow)
         return _uow.Connection.Query<JobRequirementVo>(query);
     }
 
-    public JobRequirementVo? GetByJobRequirementName(string name)
+    public JobRequirementVo GetByJobRequirementName(string name)
     {
         string query = "SELECT JobRequirementName FROM JobRequirement WHERE JobRequirementName = @JobRequirementName";
-        return _uow.Connection.QueryFirstOrDefault<JobRequirementVo>(query, new { JobRequirementName = name });
+        return _uow.Connection.QuerySingleOrDefault(query, new { JobRequirementName = name })
+            ?? throw new ArgumentException($"{nameof(JobRequirementVo.JobRequirementName)} not found");
     }
 
     public void Insert(JobRequirementVo JobRequirement)

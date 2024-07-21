@@ -10,7 +10,6 @@ public class PaymentOfferFactory(IUnitOfWork uow)
     private readonly PaymentFrequencyRepository _paymentFrequencyRepository = new(uow);
     private readonly CurrencyRepository _currencyRepository = new(uow);
 
-
     public PaymentOffer CreatePaymentOffer(PaymentOfferDto dto)
     {
         PaymentFrequencyVo paymentFrequencyVo =
