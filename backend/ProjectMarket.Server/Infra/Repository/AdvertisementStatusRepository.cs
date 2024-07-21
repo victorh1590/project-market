@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using ProjectMarket.Server.Data.Model.VO;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
@@ -7,20 +7,20 @@ public class AdvertisementStatusRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<AdvertisementStatusVO> GetAll()
+    public IEnumerable<AdvertisementStatusVo> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT AdvertisementStatusName FROM AdvertisementStatus";
-        return _uow.Connection.Query<AdvertisementStatusVO>(query);
+        return _uow.Connection.Query<AdvertisementStatusVo>(query);
     }
 
-    public AdvertisementStatusVO? GetByAdvertisementStatusName(string name)
+    public AdvertisementStatusVo? GetByAdvertisementStatusName(string name)
     {
         string query = "SELECT AdvertisementStatusName FROM AdvertisementStatus WHERE AdvertisementStatusName = @AdvertisementStatusName";
-        return _uow.Connection.QueryFirstOrDefault<AdvertisementStatusVO>(query, new { AdvertisementStatusName = name });
+        return _uow.Connection.QueryFirstOrDefault<AdvertisementStatusVo>(query, new { AdvertisementStatusName = name });
     }
 
-    public void Insert(AdvertisementStatusVO AdvertisementStatus)
+    public void Insert(AdvertisementStatusVo AdvertisementStatus)
     {
         string query = 
             "INSERT INTO AdvertisementStatus (AdvertisementStatusName) VALUES (@AdvertisementStatusName)";
@@ -28,7 +28,7 @@ public class AdvertisementStatusRepository(IUnitOfWork uow)
         _uow.Connection.Execute(query, AdvertisementStatus);
     }
 
-    public void Update(AdvertisementStatusVO AdvertisementStatus)
+    public void Update(AdvertisementStatusVo AdvertisementStatus)
     {
         string query = 
             "UPDATE AdvertisementStatus " + 
@@ -37,7 +37,7 @@ public class AdvertisementStatusRepository(IUnitOfWork uow)
         _uow.Connection.Execute(query, AdvertisementStatus);
     }
 
-    public void Delete(AdvertisementStatusVO AdvertisementStatus)
+    public void Delete(AdvertisementStatusVo AdvertisementStatus)
     {
         string query = "DELETE CASCADE FROM AdvertisementStatus WHERE AdvertisementStatusName = @AdvertisementStatusName";
         _uow.Connection.Execute(query, AdvertisementStatus);

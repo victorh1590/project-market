@@ -1,7 +1,6 @@
 using FluentValidation;
 using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.ValueObjects;
-using ProjectMarket.Server.Data.Model.VO;
 using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
@@ -15,7 +14,7 @@ public class ProjectAdvertisement
     public DateTime? Deadline { get; set; }
     public PaymentOffer PaymentOffer { get; set; }
     public Customer Customer { get; set; }
-    public AdvertisementStatusVO Status { get; set; }
+    public AdvertisementStatusVo Status { get; set; }
     public List<KnowledgeAreaVo> Subjects { get; set; }
     public List<JobRequirementVo>? Requirements { get; set; }
 
@@ -26,7 +25,7 @@ public class ProjectAdvertisement
         DateTime? deadline,
         PaymentOffer paymentOffer, 
         Customer customer, 
-        AdvertisementStatusVO status, 
+        AdvertisementStatusVo status, 
         List<KnowledgeAreaVo> subjects,
         List<JobRequirementVo>? requirements) 
     {

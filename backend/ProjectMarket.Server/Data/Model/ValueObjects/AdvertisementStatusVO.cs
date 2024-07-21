@@ -1,15 +1,21 @@
 using FluentValidation;
 using ProjectMarket.Server.Data.Validators;
 
-namespace ProjectMarket.Server.Data.Model.VO;
+namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
-public struct AdvertisementStatusVO {
-    required public string AdvertisementStatusName { get; set; }
+public struct AdvertisementStatusVo {
+    public required string AdvertisementStatusName { get; set; }
 
-    public AdvertisementStatusVO(string name) {
+    public AdvertisementStatusVo(string name) {
         AdvertisementStatusName = name;
 
-        var validator = new AdvertisementStatusValidator();
-        validator.ValidateAndThrow(this);
+        this.Validate();
     }
+}
+
+public static class AdvertisementStatusExtensions {
+    private static AdvertisementStatusValidator Validator { get; } = new();
+
+    public static void Validate(this AdvertisementStatusVo advertisementStatus) => 
+        Validator.ValidateAndThrow(advertisementStatus);
 }

@@ -1,9 +1,9 @@
 using FluentValidation;
-using ProjectMarket.Server.Data.Model.VO;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 
 namespace ProjectMarket.Server.Data.Validators;
 
-public class AdvertisementStatusValidator : AbstractValidator<AdvertisementStatusVO>
+public class AdvertisementStatusValidator : AbstractValidator<AdvertisementStatusVo>
 {
     public AdvertisementStatusValidator()
     {

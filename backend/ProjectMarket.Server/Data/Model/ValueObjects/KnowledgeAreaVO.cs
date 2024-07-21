@@ -9,7 +9,13 @@ public struct KnowledgeAreaVo {
     public KnowledgeAreaVo(string name) {
         KnowledgeAreaName = name;
 
-        var validator = new KnowledgeAreaValidator();
-        validator.ValidateAndThrow(this);
+        this.Validate();
     }
+}
+
+public static class KnowledgeAreaExtensions {
+    private static KnowledgeAreaValidator Validator { get; } = new();
+
+    public static void Validate(this KnowledgeAreaVo knowledgeArea) => 
+        Validator.ValidateAndThrow(knowledgeArea);
 }
