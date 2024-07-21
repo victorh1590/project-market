@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Dto;
+using ProjectMarket.Server.Data.Model.Dto.EntityDto;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Infra.Repository;
 
@@ -44,7 +45,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
             }
             catch (ValidationException)
             {
-                return BadRequest("Body is on a invalid state.");
+                return BadRequest("Body is in a invalid state.");
             }
             catch(SqlException) 
             {

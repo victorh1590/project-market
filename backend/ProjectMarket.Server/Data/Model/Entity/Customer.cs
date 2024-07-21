@@ -1,5 +1,6 @@
 using FluentValidation;
 using ProjectMarket.Server.Data.Model.Dto;
+using ProjectMarket.Server.Data.Model.Dto.EntityDto;
 using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Validators;
 

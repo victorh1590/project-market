@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Infra.Repository;
@@ -7,26 +8,26 @@ public class CurrencyRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<CurrencyVO> GetAll()
+    public IEnumerable<CurrencyVo> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT CurrencyName, Prefix FROM Currency";
-        return _uow.Connection.Query<CurrencyVO>(query);
+        return _uow.Connection.Query<CurrencyVo>(query);
     }
 
-    public CurrencyVO? GetByCurrencyName(string name)
+    public CurrencyVo? GetByCurrencyName(string name)
     {
         string query = "SELECT CurrencyName, Prefix FROM Currency WHERE CurrencyName = @CurrencyName";
-        return _uow.Connection.QueryFirstOrDefault<CurrencyVO>(query, new { CurrencyName = name });
+        return _uow.Connection.QueryFirstOrDefault<CurrencyVo>(query, new { CurrencyName = name });
     }
 
-    public void Insert(CurrencyVO Currency)
+    public void Insert(CurrencyVo Currency)
     {
         string query = "INSERT INTO Currency (CurrencyName, Prefix) VALUES (@CurrencyName, @Prefix)";
         _uow.Connection.Execute(query, Currency);
     }
 
-    public void Update(CurrencyVO Currency)
+    public void Update(CurrencyVo Currency)
     {
         string query = "UPDATE Currency SET CurrencyName = @CurrencyName, Prefix = @Prefix WHERE CurrencyName = @CurrencyName";
         _uow.Connection.Execute(query, Currency);

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Infra.Repository;
@@ -7,26 +8,26 @@ public class PaymentFrequencyRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<PaymentFrequencyVO> GetAll()
+    public IEnumerable<PaymentFrequencyVo> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency";
-        return _uow.Connection.Query<PaymentFrequencyVO>(query);
+        return _uow.Connection.Query<PaymentFrequencyVo>(query);
     }
 
-    public PaymentFrequencyVO? GetByPaymentFrequencyName(string name)
+    public PaymentFrequencyVo? GetByPaymentFrequencyName(string name)
     {
         string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
-        return _uow.Connection.QueryFirstOrDefault<PaymentFrequencyVO>(query, new { PaymentFrequencyName = name });
+        return _uow.Connection.QueryFirstOrDefault<PaymentFrequencyVo>(query, new { PaymentFrequencyName = name });
     }
 
-    public void Insert(PaymentFrequencyVO PaymentFrequency)
+    public void Insert(PaymentFrequencyVo PaymentFrequency)
     {
         string query = "INSERT INTO PaymentFrequency (Description, Suffix) VALUES (@Description, @Suffix)";
         _uow.Connection.Execute(query, PaymentFrequency);
     }
 
-    public void Update(PaymentFrequencyVO PaymentFrequency)
+    public void Update(PaymentFrequencyVo PaymentFrequency)
     {
         string query = 
             "UPDATE PaymentFrequency " +

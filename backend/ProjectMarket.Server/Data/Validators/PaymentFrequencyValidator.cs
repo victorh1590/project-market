@@ -1,10 +1,9 @@
 using FluentValidation;
-using ProjectMarket.Server.Data.Model.Entity;
-using ProjectMarket.Server.Data.Model.VO;
+using ProjectMarket.Server.Data.Model.Interface;
 
 namespace ProjectMarket.Server.Data.Validators;
 
-public class PaymentFrequencyValidator : AbstractValidator<PaymentFrequencyVO>
+public class PaymentFrequencyValidator : AbstractValidator<IPaymentFrequency>
 {
     public PaymentFrequencyValidator()
     {

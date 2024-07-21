@@ -1,9 +1,10 @@
 using FluentValidation;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Data.Validators;
 
-public class CurrencyValidator : AbstractValidator<CurrencyVO>
+public class CurrencyValidator : AbstractValidator<ICurrency>
 {
     public CurrencyValidator()
     {
