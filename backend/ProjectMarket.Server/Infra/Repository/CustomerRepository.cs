@@ -1,8 +1,5 @@
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Npgsql;
 using ProjectMarket.Server.Data.Model.Entity;
-using ProjectMarket.Server.Data.Model.Interface;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
@@ -21,34 +18,34 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
     {
         string query = "SELECT * FROM Customer WHERE CustomerId = @CustomerId";
         return uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id }) 
-               ?? throw new ArgumentException($"{nameof(ICustomer.CustomerId)} not found");
+               ?? throw new ArgumentException($"{nameof(Customer.CustomerId)} not found");
     }
 
-    public Customer Insert(ICustomer Customer)
+    public Customer Insert(Customer customer)
     {
         string query = 
             "INSERT INTO Customer (Name, Email, Password, RegistrationDate) " +
             "VALUES (@Name, @Email, @Password, @RegistrationDate) " + 
             "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
 
-       return uow.Connection.QuerySingle<Customer>(query, Customer);
+       return uow.Connection.QuerySingle<Customer>(query, customer);
     }
 
-    public Customer Update(ICustomer Customer)
+    public Customer Update(Customer customer)
     {
         string query = 
             "UPDATE Customer " + 
             "SET Name = @Name, Email = @Email, Password = @Password, RegistrationDate = @RegistrationDate " + 
             "WHERE CustomerId = @CustomerId " +
             "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
-        return uow.Connection.QuerySingle<Customer>(query, Customer);
+        return uow.Connection.QuerySingle<Customer>(query, customer);
     }
 
-    public bool Delete(ICustomer Customer)
+    public bool Delete(Customer customer)
     {
         string query = 
             "DELETE CASCADE FROM Customer WHERE CustomerId = @CustomerId " +
             "RETURNING CustomerId";
-        return uow.Connection.Execute(query, Customer) == 1;
+        return uow.Connection.Execute(query, customer) == 1;
     }
 }

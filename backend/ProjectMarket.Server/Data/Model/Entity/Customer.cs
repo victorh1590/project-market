@@ -1,13 +1,10 @@
 using FluentValidation;
-using ProjectMarket.Server.Data.Model.Dto;
-using ProjectMarket.Server.Data.Model.Dto.EntityDto;
-using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
 
-public class Customer : ICustomer
+public class Customer
 {
     public int? CustomerId { get; init; }
     public string Name { get; set; }
@@ -31,21 +28,21 @@ public class Customer : ICustomer
         this.Validate();
     }
     
-    public static Customer CreateCustomer(CustomerDto dto)
-    {
-        return new Customer(
-            dto.CustomerId, 
-            dto.Name, 
-            dto.Email, 
-            dto.Password, 
-            dto.RegistrationDate
-        );
-    }
+    // public static Customer CreateCustomer(CustomerDto dto)
+    // {
+    //     return new Customer(
+    //         dto.CustomerId, 
+    //         dto.Name, 
+    //         dto.Email, 
+    //         dto.Password, 
+    //         dto.RegistrationDate
+    //     );
+    // }
 }
 
 public static class CustomerExtension {
     private static CustomerValidator Validator { get; } = new();
 
-    public static void Validate(this ICustomer customer) => 
+    public static void Validate(this Customer customer) => 
         Validator.ValidateAndThrow(customer);
 }

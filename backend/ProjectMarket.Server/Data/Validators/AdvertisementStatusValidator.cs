@@ -7,11 +7,22 @@ public class AdvertisementStatusValidator : AbstractValidator<AdvertisementStatu
 {
     public AdvertisementStatusValidator()
     {
-        const int nameMaximumLength = 64;
-
         RuleFor(advertisementStatus => advertisementStatus.AdvertisementStatusName)
+            .SetValidator(new AdvertisementStatusNameValidator())
+            .WithName("AdvertisementStatusName");
+    }
+}
+
+public class AdvertisementStatusNameValidator : AbstractValidator<string>
+{
+    private static int NameMaximumLength => 64;
+
+    public AdvertisementStatusNameValidator()
+    {
+
+        RuleFor(advertisementStatusName => advertisementStatusName)
             .NotEmpty()
-            .MaximumLength(nameMaximumLength)
+            .MaximumLength(NameMaximumLength)
             .WithName("AdvertisementStatusName");
     }
 }

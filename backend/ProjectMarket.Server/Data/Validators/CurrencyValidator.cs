@@ -10,7 +10,6 @@ namespace ProjectMarket.Server.Data.Validators
             RuleFor(currency => currency.CurrencyName)
                 .SetValidator(new CurrencyNameValidator())
                 .WithName("CurrencyName");
-
             RuleFor(currency => currency.Prefix)
                 .SetValidator(new CurrencyPrefixValidator())
                 .WithName("Prefix");

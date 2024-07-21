@@ -1,13 +1,12 @@
 using FluentValidation;
 using ProjectMarket.Server.Data.Model.Dto;
-using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Model.VO;
 using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class ProjectAdvertisement : IProjectAdvertisement
+public class ProjectAdvertisement
 {
     public int? ProjectAdvertisementId { get; init; }
     public string Title { get; set; }
@@ -45,20 +44,20 @@ public class ProjectAdvertisement : IProjectAdvertisement
         validator.ValidateAndThrow(this);
     }
 
-    public ProjectAdvertisement(ProjectAdvertisementDto dto) 
-    {
-        ProjectAdvertisementId = dto.ProjectAdvertisementId;
-        Title = dto.Title;
-        Description = dto.Description;
-        Deadline = dto.Deadline;
-        PaymentOffer = dto.PaymentOffer;
-        Customer = dto.Customer;
-        Status = dto.Status;
-        Subjects = dto.Subjects;
-        Requirements = dto.Requirements;
-
-        this.Validate();
-    }
+    // public ProjectAdvertisement(ProjectAdvertisementDto dto) 
+    // {
+    //     ProjectAdvertisementId = dto.ProjectAdvertisementId;
+    //     Title = dto.Title;
+    //     Description = dto.Description;
+    //     Deadline = dto.Deadline;
+    //     PaymentOffer = dto.PaymentOffer;
+    //     Customer = dto.Customer;
+    //     Status = dto.Status;
+    //     Subjects = dto.Subjects;
+    //     Requirements = dto.Requirements;
+    //
+    //     this.Validate();
+    // }
 }
 
 public static class ProjectAdvertisementExtensions {

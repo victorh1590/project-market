@@ -1,8 +1,5 @@
 ﻿using Dapper;
-using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
-using ProjectMarket.Server.Data.Model.Interface;
-using ProjectMarket.Server.Data.Model.ValueObjects;
 
 namespace ProjectMarket.Server.Infra.Repository;
 

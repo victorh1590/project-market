@@ -39,8 +39,8 @@ public class PaymentOfferDtoValidator : AbstractValidator<PaymentOfferDto>
     private static bool IgnoreTrailingZeros => false;
     public PaymentOfferDtoValidator()
     {
-        RuleFor(paymentOffer => paymentOffer.PaymentOfferId)
-            .GreaterThan(0)
+        RuleFor(paymentOffer => paymentOffer.PaymentOfferId ?? 0)
+            .SetValidator(new PaymentOfferIdValidator())
             .WithName("PaymentOfferId")
             .Unless(paymentOffer => paymentOffer.PaymentOfferId == null);
         RuleFor(paymentOffer => paymentOffer.Value)
@@ -55,5 +55,15 @@ public class PaymentOfferDtoValidator : AbstractValidator<PaymentOfferDto>
             .NotNull()
             .SetValidator(new CurrencyNameValidator())
             .WithName("Currency");
+    }
+}
+
+public class PaymentOfferIdValidator : AbstractValidator<int> 
+{   
+    public PaymentOfferIdValidator()
+    {
+        RuleFor(paymentOfferId => paymentOfferId)
+            .GreaterThan(0)
+            .WithName("PaymentOfferId");
     }
 }

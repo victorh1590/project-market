@@ -7,8 +7,6 @@ public class JobRequirementValidator : AbstractValidator<JobRequirementVo>
 {
     public JobRequirementValidator()
     {
-        const int nameMaximumLength = 64;
-
         RuleFor(jobRequirement => jobRequirement.JobRequirementName)
             .SetValidator(new JobRequirementNameValidator())
             .WithName("JobRequirementName");
