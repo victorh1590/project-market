@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Dto;
-using ProjectMarket.Server.Data.Model.Dto.EntityDto;
 using ProjectMarket.Server.Data.Model.Entity;
+using ProjectMarket.Server.Data.Model.Factory;
 using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Application.Controller;
@@ -39,8 +39,9 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
         {
             try
             {
-                dto.Validate();
-                inserted = _customerRepository.Insert(dto);
+                CustomerFactory factory = new();
+                Customer customer = factory.CreateCustomer(dto);
+                inserted = _customerRepository.Insert(customer);
                 _customerRepository.uow.Commit();
             }
             catch (ValidationException)
@@ -69,7 +70,8 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
             try 
             {
                 _customerRepository.GetByCustomerId(id);
-                Customer customer = Customer.CreateCustomer(dto);
+                CustomerFactory factory = new();
+                Customer customer = factory.CreateCustomer(dto);
                 _customerRepository.Update(customer);
                 _customerRepository.uow.Commit();
             }

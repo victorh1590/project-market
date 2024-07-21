@@ -13,13 +13,13 @@ public class ProjectAdvertisementDto(
     DateTime openedOn)
 {
     public int? ProjectAdvertisementId { get; init; } = id;
-    public string Title { get;} = title;
-    public string? Description { get;} = description;
-    public DateTime OpenedOn { get;} = openedOn;
-    public DateTime? Deadline { get;} = deadline;
-    public int PaymentOfferId { get;} = paymentOfferId;
-    public int CustomerId { get;} = customerId;
-    public string StatusName { get;} = statusName;
-    public List<string> SubjectNames { get;} = subjectNames;
-    public List<string>? RequirementNames { get;} = requirementNames;
+    public string Title { get; set; } = title;
+    public string? Description { get; set; } = description;
+    public DateTime OpenedOn { get; set; } = openedOn;
+    public DateTime? Deadline { get; set; } = deadline;
+    public int PaymentOfferId { get; set; } = paymentOfferId;
+    public int CustomerId { get; set; } = customerId;
+    public string StatusName { get; set; } = statusName;
+    public List<string> SubjectNames { get; set; } = subjectNames;
+    public List<string>? RequirementNames { get; set; } = requirementNames;
 }
