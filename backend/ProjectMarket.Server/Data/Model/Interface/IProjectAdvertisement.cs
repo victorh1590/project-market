@@ -15,5 +15,5 @@ public interface IProjectAdvertisement
     Customer Customer { get;}
     AdvertisementStatusVO Status { get;}
     List<KnowledgeAreaVo> Subjects { get;}
-    List<JobRequirementVO>? Requirements { get;}
+    List<JobRequirementVo>? Requirements { get;}
 }

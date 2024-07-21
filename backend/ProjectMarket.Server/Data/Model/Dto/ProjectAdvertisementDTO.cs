@@ -14,7 +14,7 @@ public class ProjectAdvertisementDto(
     Customer customer,
     AdvertisementStatusVO status,
     List<KnowledgeAreaVo> subjects,
-    List<JobRequirementVO>? requirements,
+    List<JobRequirementVo>? requirements,
     DateTime openedOn) : IProjectAdvertisement
 {
     public int? ProjectAdvertisementId { get; init; } = id;
@@ -26,5 +26,5 @@ public class ProjectAdvertisementDto(
     public Customer Customer { get;} = customer;
     public AdvertisementStatusVO Status { get;} = status;
     public List<KnowledgeAreaVo> Subjects { get;} = subjects;
-    public List<JobRequirementVO>? Requirements { get;} = requirements;
+    public List<JobRequirementVo>? Requirements { get;} = requirements;
 }

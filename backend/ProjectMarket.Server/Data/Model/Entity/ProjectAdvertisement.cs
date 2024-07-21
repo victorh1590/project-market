@@ -18,7 +18,7 @@ public class ProjectAdvertisement : IProjectAdvertisement
     public Customer Customer { get; set; }
     public AdvertisementStatusVO Status { get; set; }
     public List<KnowledgeAreaVo> Subjects { get; set; }
-    public List<JobRequirementVO>? Requirements { get; set; }
+    public List<JobRequirementVo>? Requirements { get; set; }
 
     public ProjectAdvertisement(
         int? id, 
@@ -29,7 +29,7 @@ public class ProjectAdvertisement : IProjectAdvertisement
         Customer customer, 
         AdvertisementStatusVO status, 
         List<KnowledgeAreaVo> subjects,
-        List<JobRequirementVO>? requirements) 
+        List<JobRequirementVo>? requirements) 
     {
         ProjectAdvertisementId = id;
         Title = title;

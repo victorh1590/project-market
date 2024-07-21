@@ -1,7 +1,5 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
 using ProjectMarket.Server.Data.Validators;
-using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
