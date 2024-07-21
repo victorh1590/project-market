@@ -1,12 +1,12 @@
 using FluentValidation;
 using ProjectMarket.Server.Data.Validators;
 
-namespace ProjectMarket.Server.Data.Model.VO;
+namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
-public struct KnowledgeAreaVO {
-    required public string KnowledgeAreaName { get; set; }
+public struct KnowledgeAreaVo {
+    public required string KnowledgeAreaName { get; set; }
 
-    public KnowledgeAreaVO(string name) {
+    public KnowledgeAreaVo(string name) {
         KnowledgeAreaName = name;
 
         var validator = new KnowledgeAreaValidator();

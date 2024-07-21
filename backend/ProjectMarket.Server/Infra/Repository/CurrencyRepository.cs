@@ -15,10 +15,11 @@ public class CurrencyRepository(IUnitOfWork uow)
         return _uow.Connection.Query<CurrencyVo>(query);
     }
 
-    public CurrencyVo? GetByCurrencyName(string name)
+    public CurrencyVo GetByCurrencyName(string name)
     {
         string query = "SELECT CurrencyName, Prefix FROM Currency WHERE CurrencyName = @CurrencyName";
-        return _uow.Connection.QueryFirstOrDefault<CurrencyVo>(query, new { CurrencyName = name });
+        return _uow.Connection.QuerySingleOrDefault<CurrencyVo?>(query, new { CurrencyName = name })
+                ?? throw new ArgumentException($"{nameof(CurrencyVo.CurrencyName)} not found");
     }
 
     public void Insert(CurrencyVo Currency)

@@ -5,8 +5,8 @@ namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
 public struct PaymentFrequencyVo
 {
-    public string PaymentFrequencyName { get; init; }
-    public string Suffix { get; set; }
+    public required string PaymentFrequencyName { get; init; }
+    public required string Suffix { get; set; }
 
     public PaymentFrequencyVo(string name, string suffix) {
         PaymentFrequencyName = name;

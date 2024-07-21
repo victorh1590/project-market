@@ -15,10 +15,11 @@ public class PaymentFrequencyRepository(IUnitOfWork uow)
         return _uow.Connection.Query<PaymentFrequencyVo>(query);
     }
 
-    public PaymentFrequencyVo? GetByPaymentFrequencyName(string name)
+    public PaymentFrequencyVo GetByPaymentFrequencyName(string name)
     {
         string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
-        return _uow.Connection.QueryFirstOrDefault<PaymentFrequencyVo>(query, new { PaymentFrequencyName = name });
+        return _uow.Connection.QuerySingleOrDefault<PaymentFrequencyVo?>(query, new { PaymentFrequencyName = name })
+                    ?? throw new ArgumentException($"{nameof(PaymentFrequencyVo.PaymentFrequencyName)} not found");
     }
 
     public void Insert(PaymentFrequencyVo PaymentFrequency)

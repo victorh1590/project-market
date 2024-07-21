@@ -1,11 +1,10 @@
 using FluentValidation;
-using ProjectMarket.Server.Data.Model.Interface;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class PaymentOffer : IPaymentOffer<PaymentFrequencyVo, CurrencyVo>
+public class PaymentOffer
 {
     public int? PaymentOfferId { get; init; }
     public decimal Value { get; set; }

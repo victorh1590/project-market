@@ -1,4 +1,5 @@
 using Dapper;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Infra.Repository;
@@ -7,26 +8,26 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
 {
     private readonly IUnitOfWork _uow = uow;
 
-    public IEnumerable<KnowledgeAreaVO> GetAll()
+    public IEnumerable<KnowledgeAreaVo> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT KnowledgeAreaName FROM KnowledgeArea";
-        return _uow.Connection.Query<KnowledgeAreaVO>(query);
+        return _uow.Connection.Query<KnowledgeAreaVo>(query);
     }
 
-    public KnowledgeAreaVO? GetByKnowledgeAreaName(string name)
+    public KnowledgeAreaVo? GetByKnowledgeAreaName(string name)
     {
         string query = "SELECT KnowledgeAreaName FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
-        return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVO>(query, new { KnowledgeAreaName = name });
+        return _uow.Connection.QueryFirstOrDefault<KnowledgeAreaVo>(query, new { KnowledgeAreaName = name });
     }
 
-    public void Insert(KnowledgeAreaVO KnowledgeArea)
+    public void Insert(KnowledgeAreaVo KnowledgeArea)
     {
         string query = "INSERT INTO KnowledgeArea (KnowledgeAreaName) VALUES (@KnowledgeAreaName)";
         _uow.Connection.Execute(query, KnowledgeArea);
     }
 
-    public void Update(KnowledgeAreaVO KnowledgeArea)
+    public void Update(KnowledgeAreaVo KnowledgeArea)
     {
         string query = "UPDATE KnowledgeArea SET KnowledgeAreaName = @KnowledgeAreaName WHERE KnowledgeAreaName = @KnowledgeAreaName";
         _uow.Connection.Execute(query, KnowledgeArea);

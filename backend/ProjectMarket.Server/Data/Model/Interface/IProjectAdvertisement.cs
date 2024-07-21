@@ -1,4 +1,5 @@
 ﻿using ProjectMarket.Server.Data.Model.Entity;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Model.VO;
 
 namespace ProjectMarket.Server.Data.Model.Interface;
@@ -13,6 +14,6 @@ public interface IProjectAdvertisement
     PaymentOffer PaymentOffer { get;}
     Customer Customer { get;}
     AdvertisementStatusVO Status { get;}
-    List<KnowledgeAreaVO> Subjects { get;}
+    List<KnowledgeAreaVo> Subjects { get;}
     List<JobRequirementVO>? Requirements { get;}
 }

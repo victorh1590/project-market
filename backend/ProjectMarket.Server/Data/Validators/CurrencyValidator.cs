@@ -1,22 +1,45 @@
 using FluentValidation;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 
-namespace ProjectMarket.Server.Data.Validators;
-
-public class CurrencyValidator : AbstractValidator<CurrencyVo>
+namespace ProjectMarket.Server.Data.Validators
 {
-    public CurrencyValidator()
+    public class CurrencyValidator : AbstractValidator<CurrencyVo>
     {
-        const int nameMaximumLength = 64;
-        const int prefixMaximumLength = 8;
+        public CurrencyValidator()
+        {
+            RuleFor(currency => currency.CurrencyName)
+                .SetValidator(new CurrencyNameValidator())
+                .WithName("CurrencyName");
 
-        RuleFor(currency => currency.CurrencyName)
-            .NotEmpty()
-            .MaximumLength(nameMaximumLength)
-            .WithName("CurrencyName");
-        RuleFor(currency => currency.Prefix)
-            .NotEmpty()
-            .MaximumLength(prefixMaximumLength)
-            .WithName("Prefix");
+            RuleFor(currency => currency.Prefix)
+                .SetValidator(new CurrencyPrefixValidator())
+                .WithName("Prefix");
+        }
+    }
+
+    public class CurrencyNameValidator : AbstractValidator<string>
+    {
+        private static int NameMaximumLength => 64;
+    
+        public CurrencyNameValidator()
+        {
+            RuleFor(currencyName => currencyName)
+                .NotEmpty()
+                .MaximumLength(NameMaximumLength)
+                .WithName("CurrencyName");
+        }
+    }
+
+    public class CurrencyPrefixValidator : AbstractValidator<string>
+    {
+        private static int PrefixMaximumLength => 8;
+
+        public CurrencyPrefixValidator()
+        {
+            RuleFor(prefix => prefix)
+                .NotEmpty()
+                .MaximumLength(PrefixMaximumLength)
+                .WithName("Prefix");
+        }
     }
 }

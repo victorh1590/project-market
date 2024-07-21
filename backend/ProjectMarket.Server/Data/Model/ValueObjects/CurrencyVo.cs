@@ -7,20 +7,15 @@ namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
 public struct CurrencyVo
 {
-    public string CurrencyName { get; init; }
-    public string Prefix { get; set; }
+    public required string CurrencyName { get; init; }
+    public required string Prefix { get; set; }
 
-    public CurrencyVo(string name, string prefix) {
+    public CurrencyVo(string name, string prefix)
+    {
         CurrencyName = name;
         Prefix = prefix;
 
         this.Validate();
-    }
-
-    public static CurrencyVo? CreateCurrencyVo(string currencyName, [FromServices] IUnitOfWork uow)
-    {
-        CurrencyRepository currencyRepository = new(uow);
-        return currencyRepository.GetByCurrencyName(currencyName);
     }
 }
 

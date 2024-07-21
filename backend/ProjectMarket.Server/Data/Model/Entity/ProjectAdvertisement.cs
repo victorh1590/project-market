@@ -1,6 +1,7 @@
 using FluentValidation;
 using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Interface;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Data.Model.VO;
 using ProjectMarket.Server.Data.Validators;
 
@@ -16,7 +17,7 @@ public class ProjectAdvertisement : IProjectAdvertisement
     public PaymentOffer PaymentOffer { get; set; }
     public Customer Customer { get; set; }
     public AdvertisementStatusVO Status { get; set; }
-    public List<KnowledgeAreaVO> Subjects { get; set; }
+    public List<KnowledgeAreaVo> Subjects { get; set; }
     public List<JobRequirementVO>? Requirements { get; set; }
 
     public ProjectAdvertisement(
@@ -27,7 +28,7 @@ public class ProjectAdvertisement : IProjectAdvertisement
         PaymentOffer paymentOffer, 
         Customer customer, 
         AdvertisementStatusVO status, 
-        List<KnowledgeAreaVO> subjects,
+        List<KnowledgeAreaVo> subjects,
         List<JobRequirementVO>? requirements) 
     {
         ProjectAdvertisementId = id;

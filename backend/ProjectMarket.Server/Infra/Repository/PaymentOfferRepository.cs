@@ -1,23 +1,30 @@
 ﻿using Dapper;
+using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
+using ProjectMarket.Server.Data.Model.Interface;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
 public class PaymentOfferRepository(IUnitOfWork uow)
 {
-    private readonly IUnitOfWork _uow = uow;
-
+    private readonly CurrencyRepository _currencyRepository = new(uow);
+    private readonly PaymentFrequencyRepository _paymentFrequencyRepository = new(uow);
+    
     public IEnumerable<PaymentOffer> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM PaymentOffer";
-        return _uow.Connection.Query<PaymentOffer>(query);
+        return uow.Connection.Query<PaymentOffer>(query);
     }
 
-    public PaymentOffer? GetByPaymentOfferId(int id)
+    public PaymentOffer GetByPaymentOfferId(int id)
     {
         string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
-        return _uow.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferId = id });
+        return uow.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferId = id }) 
+                              ?? throw new ArgumentException($"{nameof(PaymentOffer.PaymentOfferId)} not found");
+        // PaymentFrequencyVo paymentFrequency = _paymentFrequencyRepository.GetByPaymentFrequencyName(dto.PaymentFrequency);
+        // CurrencyVo currency = _currencyRepository.GetByCurrencyName(dto.Currency);
     }
 
     public void Insert(PaymentOffer PaymentOffer)
@@ -25,7 +32,7 @@ public class PaymentOfferRepository(IUnitOfWork uow)
         string query = 
             "INSERT INTO PaymentOffer (Value, PaymentFrequencyName, CurrencyName) " + 
             "VALUES (@Value, @PaymentFrequencyName, @CurrencyName)";
-        _uow.Connection.Execute(query, new {
+        uow.Connection.Execute(query, new {
             PaymentOffer.Value,
             PaymentOffer.PaymentFrequency.PaymentFrequencyName,
             PaymentOffer.Currency.CurrencyName
@@ -38,7 +45,7 @@ public class PaymentOfferRepository(IUnitOfWork uow)
             "UPDATE PaymentOffer " +
             "SET Value = @Value, PaymentFrequencyName = @PaymentFrequencyName, @CurrencyName = CurrencyName " +
             "WHERE PaymentOfferId = @PaymentOfferId";
-        _uow.Connection.Execute(query, new {
+        uow.Connection.Execute(query, new {
             PaymentOffer.Value,
             PaymentOffer.PaymentFrequency.PaymentFrequencyName,
             PaymentOffer.Currency.CurrencyName
@@ -48,6 +55,6 @@ public class PaymentOfferRepository(IUnitOfWork uow)
     public void Delete(int id)
     {
         string query = "DELETE CASCADE FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
-        _uow.Connection.Execute(query, new { PaymentOfferId = id });
+        uow.Connection.Execute(query, new { PaymentOfferId = id });
     }
 }
