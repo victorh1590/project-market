@@ -3,7 +3,6 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-
 public class Customer
 {
     public int? CustomerId { get; init; }
@@ -27,17 +26,6 @@ public class Customer
 
         this.Validate();
     }
-    
-    // public static Customer CreateCustomer(CustomerDto dto)
-    // {
-    //     return new Customer(
-    //         dto.CustomerId, 
-    //         dto.Name, 
-    //         dto.Email, 
-    //         dto.Password, 
-    //         dto.RegistrationDate
-    //     );
-    // }
 }
 
 public static class CustomerExtension {

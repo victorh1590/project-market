@@ -21,13 +21,13 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
         {
             return Ok(_customerRepository.GetByCustomerId(id));
         }
-        catch (ArgumentException)
+        catch (Exception e)
         {
-            return NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found.");
-        }
-        catch(Exception)
-        {
-            return BadRequest($"{nameof(Customer)} couldn't be retrieved.");
+            return e switch
+            {
+                ArgumentException => NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found."),
+                _ => BadRequest($"{nameof(Customer)} couldn't be retrieved.")
+            };
         }
     }
 
@@ -44,19 +44,15 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
                 inserted = _customerRepository.Insert(customer);
                 _customerRepository.uow.Commit();
             }
-            catch (ValidationException)
-            {
-                return BadRequest("Body is in a invalid state.");
-            }
-            catch(SqlException) 
+            catch (Exception e)
             {
                 _customerRepository.uow.Rollback();
-                return BadRequest("Error saving customer.");
-            }
-            catch(Exception)
-            {
-                _customerRepository.uow.Rollback();
-                return BadRequest($"{nameof(Customer)} couldn't be inserted.");
+                return (e) switch
+                {
+                    ValidationException => BadRequest("Body is in a invalid state."),
+                    SqlException => BadRequest("Error saving customer."),
+                    _ => BadRequest($"{nameof(Customer)} couldn't be inserted.")
+                };
             }
         }
         return CreatedAtAction(nameof(GetCustomerById), new { id = inserted.CustomerId }, inserted);
@@ -67,7 +63,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     {
         using(_customerRepository.uow) 
         {
-            try 
+            try
             {
                 _customerRepository.GetByCustomerId(id);
                 CustomerFactory factory = new();
@@ -75,23 +71,16 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
                 _customerRepository.Update(customer);
                 _customerRepository.uow.Commit();
             }
-            catch(ArgumentException)
-            {
-                return NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found.");
-            }
-            catch (ValidationException)
-            {
-                return BadRequest("Body is on a invalid state.");
-            }
-            catch(SqlException)
+            catch (Exception e)
             {
                 _customerRepository.uow.Rollback();
-                return BadRequest("Error updating customer.");
-            }
-            catch(Exception)
-            {
-                _customerRepository.uow.Rollback();
-                return BadRequest($"{nameof(Customer)} couldn't be updated.");
+                return e switch
+                {
+                    ArgumentException => NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found."),
+                    ValidationException => BadRequest("Body is on a invalid state."),
+                    SqlException => BadRequest("Error updating customer."),
+                    _ => BadRequest($"{nameof(Customer)} couldn't be updated.")
+                };
             }
         }
         return NoContent();
