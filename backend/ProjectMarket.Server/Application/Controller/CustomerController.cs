@@ -35,18 +35,18 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     public ActionResult<Customer> PostCustomer([FromBody] CustomerDto dto)
     {
         Customer inserted;
-        using(_customerRepository.uow) 
+        using(_customerRepository.UnitOfWork) 
         {
             try
             {
                 CustomerFactory factory = new();
                 Customer customer = factory.CreateCustomer(dto);
                 inserted = _customerRepository.Insert(customer);
-                _customerRepository.uow.Commit();
+                _customerRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _customerRepository.uow.Rollback();
+                _customerRepository.UnitOfWork.Rollback();
                 return (e) switch
                 {
                     ValidationException => BadRequest("Body is in a invalid state."),
@@ -61,7 +61,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     [HttpPut("{id:int}")]
     public ActionResult<Customer> UpdateCustomer([FromRoute] int id, [FromBody] CustomerDto dto)
     {
-        using(_customerRepository.uow) 
+        using(_customerRepository.UnitOfWork) 
         {
             try
             {
@@ -69,11 +69,11 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
                 CustomerFactory factory = new();
                 Customer customer = factory.CreateCustomer(dto);
                 _customerRepository.Update(customer);
-                _customerRepository.uow.Commit();
+                _customerRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _customerRepository.uow.Rollback();
+                _customerRepository.UnitOfWork.Rollback();
                 return e switch
                 {
                     ArgumentException => NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found."),

@@ -3,21 +3,21 @@ using ProjectMarket.Server.Data.Model.Entity;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
-public class CustomerRepository(IUnitOfWork unityOfWork)
+public class CustomerRepository(IUnitOfWork unitOfWork)
 {
-    public readonly IUnitOfWork uow = unityOfWork;
+    public readonly IUnitOfWork UnitOfWork = unitOfWork;
 
     public IEnumerable<Customer> GetAll()
     {
         // TODO Use pagination instead.
         string query = "SELECT * FROM Customer";
-        return uow.Connection.Query<Customer>(query);
+        return UnitOfWork.Connection.Query<Customer>(query);
     }
 
     public Customer GetByCustomerId(int id)
     {
         string query = "SELECT * FROM Customer WHERE CustomerId = @CustomerId";
-        return uow.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id }) 
+        return UnitOfWork.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id }) 
                ?? throw new ArgumentException($"{nameof(Customer.CustomerId)} not found");
     }
 
@@ -28,7 +28,7 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
             "VALUES (@Name, @Email, @Password, @RegistrationDate) " + 
             "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
 
-       return uow.Connection.QuerySingle<Customer>(query, customer);
+       return UnitOfWork.Connection.QuerySingle<Customer>(query, customer);
     }
 
     public Customer Update(Customer customer)
@@ -38,7 +38,7 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
             "SET Name = @Name, Email = @Email, Password = @Password, RegistrationDate = @RegistrationDate " + 
             "WHERE CustomerId = @CustomerId " +
             "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
-        return uow.Connection.QuerySingle<Customer>(query, customer);
+        return UnitOfWork.Connection.QuerySingle<Customer>(query, customer);
     }
 
     public bool Delete(Customer customer)
@@ -46,6 +46,6 @@ public class CustomerRepository(IUnitOfWork unityOfWork)
         string query = 
             "DELETE CASCADE FROM Customer WHERE CustomerId = @CustomerId " +
             "RETURNING CustomerId";
-        return uow.Connection.Execute(query, customer) == 1;
+        return UnitOfWork.Connection.Execute(query, customer) == 1;
     }
 }
