@@ -66,7 +66,7 @@ public class PaymentOfferRepository
 
     public void Delete(int id)
     {
-        string query = "DELETE CASCADE FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
+        string query = "DELETE FROM PaymentOffer CASCADE WHERE PaymentOfferId = @PaymentOfferId";
         UnitOfWork.Connection.Execute(query, new { PaymentOfferId = id });
     }
 }

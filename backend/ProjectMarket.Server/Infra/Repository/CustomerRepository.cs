@@ -10,42 +10,39 @@ public class CustomerRepository(IUnitOfWork unitOfWork)
     public IEnumerable<Customer> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT * FROM Customer";
+        const string query = "SELECT * FROM Customer";
         return UnitOfWork.Connection.Query<Customer>(query);
     }
 
     public Customer GetCustomerById(int id)
     {
-        string query = "SELECT * FROM Customer WHERE CustomerId = @CustomerId";
+        const string query = "SELECT * FROM Customer WHERE CustomerId = @CustomerId";
         return UnitOfWork.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id }) 
                ?? throw new ArgumentException($"{nameof(Customer.CustomerId)} not found");
     }
 
     public Customer Insert(Customer customer)
     {
-        string query = 
-            "INSERT INTO Customer (Name, Email, Password, RegistrationDate) " +
-            "VALUES (@Name, @Email, @Password, @RegistrationDate) " + 
-            "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
+        const string query = "INSERT INTO Customer (Name, Email, Password, RegistrationDate) " +
+                             "VALUES (@Name, @Email, @Password, @RegistrationDate) " + 
+                             "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
 
-       return UnitOfWork.Connection.QuerySingle<Customer>(query, customer);
+        return UnitOfWork.Connection.QuerySingle<Customer>(query, customer);
     }
 
     public Customer Update(Customer customer)
     {
-        string query = 
-            "UPDATE Customer " + 
-            "SET Name = @Name, Email = @Email, Password = @Password, RegistrationDate = @RegistrationDate " + 
-            "WHERE CustomerId = @CustomerId " +
-            "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
+        const string query = "UPDATE Customer " + 
+                             "SET Name = @Name, Email = @Email, Password = @Password, RegistrationDate = @RegistrationDate " + 
+                             "WHERE CustomerId = @CustomerId " +
+                             "RETURNING CustomerId, Name, Email, Password, RegistrationDate";
         return UnitOfWork.Connection.QuerySingle<Customer>(query, customer);
     }
 
     public bool Delete(Customer customer)
     {
-        string query = 
-            "DELETE CASCADE FROM Customer WHERE CustomerId = @CustomerId " +
-            "RETURNING CustomerId";
+        const string query = "DELETE FROM Customer CASCADE WHERE CustomerId = @CustomerId " +
+                             "RETURNING CustomerId";
         return UnitOfWork.Connection.Execute(query, customer) == 1;
     }
 }
