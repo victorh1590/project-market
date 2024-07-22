@@ -14,7 +14,7 @@ public class PaymentFrequencyRepository(IUnitOfWork uow)
         return _uow.Connection.Query<PaymentFrequencyVo>(query);
     }
 
-    public PaymentFrequencyVo GetByPaymentFrequencyName(string name)
+    public PaymentFrequencyVo GetPaymentFrequencyByName(string name)
     {
         string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
         return _uow.Connection.QuerySingleOrDefault<PaymentFrequencyVo?>(query, new { PaymentFrequencyName = name })

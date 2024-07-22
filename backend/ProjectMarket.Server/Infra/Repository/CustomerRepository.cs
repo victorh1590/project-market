@@ -14,7 +14,7 @@ public class CustomerRepository(IUnitOfWork unitOfWork)
         return UnitOfWork.Connection.Query<Customer>(query);
     }
 
-    public Customer GetByCustomerId(int id)
+    public Customer GetCustomerById(int id)
     {
         string query = "SELECT * FROM Customer WHERE CustomerId = @CustomerId";
         return UnitOfWork.Connection.QueryFirstOrDefault<Customer>(query, new { CustomerId = id }) 

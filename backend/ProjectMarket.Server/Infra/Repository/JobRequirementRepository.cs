@@ -14,7 +14,7 @@ public class JobRequirementRepository(IUnitOfWork uow)
         return _uow.Connection.Query<JobRequirementVo>(query);
     }
 
-    public JobRequirementVo GetByJobRequirementName(string name)
+    public JobRequirementVo GetJobRequirementByName(string name)
     {
         string query = "SELECT JobRequirementName FROM JobRequirement WHERE JobRequirementName = @JobRequirementName";
         return _uow.Connection.QuerySingleOrDefault(query, new { JobRequirementName = name })

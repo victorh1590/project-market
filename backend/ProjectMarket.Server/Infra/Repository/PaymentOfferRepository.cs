@@ -24,7 +24,7 @@ public class PaymentOfferRepository
         return UnitOfWork.Connection.Query<PaymentOffer>(query);
     }
 
-    public PaymentOffer GetByPaymentOfferById(int id)
+    public PaymentOffer GetPaymentOfferById(int id)
     {
         string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
         return UnitOfWork.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferId = id }) 
@@ -33,29 +33,35 @@ public class PaymentOfferRepository
         // CurrencyVo currency = _currencyRepository.GetByCurrencyName(dto.Currency);
     }
 
-    public PaymentOffer Insert(PaymentOffer PaymentOffer)
+    public PaymentOffer Insert(PaymentOffer paymentOffer)
     {
         string query = 
             "INSERT INTO PaymentOffer (Value, PaymentFrequencyName, CurrencyName) " + 
-            "VALUES (@Value, @PaymentFrequencyName, @CurrencyName)";
-        UnitOfWork.Connection.Execute(query, new {
-            PaymentOffer.Value,
-            PaymentOffer.PaymentFrequency.PaymentFrequencyName,
-            PaymentOffer.Currency.CurrencyName
-        });
+            "VALUES (@Value, @PaymentFrequencyName, @CurrencyName) " +
+            "RETURNING PaymentOfferId, Value, PaymentFrequencyName, CurrencyName";
+
+        return UnitOfWork.Connection.QuerySingle<PaymentOffer>(query, paymentOffer);
+        // UnitOfWork.Connection.Execute(query, new {
+        //     paymentOffer.Value,
+        //     paymentOffer.PaymentFrequency.PaymentFrequencyName,
+        //     paymentOffer.Currency.CurrencyName
+        // });
     }
 
-    public void Update(PaymentOffer PaymentOffer)
+    public PaymentOffer Update(PaymentOffer paymentOffer)
     {
         string query = 
             "UPDATE PaymentOffer " +
             "SET Value = @Value, PaymentFrequencyName = @PaymentFrequencyName, @CurrencyName = CurrencyName " +
-            "WHERE PaymentOfferId = @PaymentOfferId";
-        UnitOfWork.Connection.Execute(query, new {
-            PaymentOffer.Value,
-            PaymentOffer.PaymentFrequency.PaymentFrequencyName,
-            PaymentOffer.Currency.CurrencyName
-        });
+            "WHERE PaymentOfferId = @PaymentOfferId " +
+            "RETURNING PaymentOfferId, Value, PaymentFrequencyName, CurrencyName";
+
+        return UnitOfWork.Connection.QuerySingle<PaymentOffer>(query, paymentOffer);
+        // UnitOfWork.Connection.Execute(query, new {
+        //     paymentOffer.Value,
+        //     paymentOffer.PaymentFrequency.PaymentFrequencyName,
+        //     paymentOffer.Currency.CurrencyName
+        // });
     }
 
     public void Delete(int id)

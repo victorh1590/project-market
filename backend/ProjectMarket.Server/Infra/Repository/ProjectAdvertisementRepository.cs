@@ -14,7 +14,7 @@ public class ProjectAdvertisementRepository(IUnitOfWork uow)
         return _uow.Connection.Query<ProjectAdvertisement>(query);
     }
 
-    public ProjectAdvertisement? GetByProjectAdvertisementId(int id)
+    public ProjectAdvertisement? GetProjectAdvertisementById(int id)
     {
         string query = "SELECT * FROM ProjectAdvertisement WHERE ProjectAdvertisementId = @ProjectAdvertisementId";
         return _uow.Connection.QueryFirstOrDefault<ProjectAdvertisement>(query, new { ProjectAdvertisementId = id });

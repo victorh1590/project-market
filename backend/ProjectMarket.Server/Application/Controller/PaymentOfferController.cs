@@ -10,16 +10,16 @@ namespace ProjectMarket.Server.Application.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class PaymentOfferController(IUnitOfWork uow) : ControllerBase
+public class PaymentOfferController(IUnitOfWork unitOfWork) : ControllerBase
 {
-    private readonly PaymentOfferRepository _paymentOfferRepository = new(uow);
+    private readonly PaymentOfferRepository _paymentOfferRepository = new(unitOfWork);
 
     [HttpGet("{id:int}")]
     public ActionResult<PaymentOffer> GetPaymentOfferById(int id)
     {
         try
         {
-            return Ok(_paymentOfferRepository.GetByPaymentOfferById(id));
+            return Ok(_paymentOfferRepository.GetPaymentOfferById(id));
         }
         catch (Exception e)
         {
@@ -35,18 +35,18 @@ public class PaymentOfferController(IUnitOfWork uow) : ControllerBase
     public ActionResult<PaymentOffer> PostPaymentOffer([FromBody] PaymentOfferDto dto)
     {
         PaymentOffer inserted;
-        using(_paymentOfferRepository.uow) 
+        using(_paymentOfferRepository.UnitOfWork) 
         {
             try
             {
-                PaymentOfferFactory factory = new();
-                PaymentOffer PaymentOffer = factory.CreatePaymentOffer(dto);
-                inserted = _paymentOfferRepository.Insert(PaymentOffer);
-                _paymentOfferRepository.uow.Commit();
+                PaymentOfferFactory factory = new(unitOfWork);
+                PaymentOffer paymentOffer = factory.CreatePaymentOffer(dto);
+                inserted = _paymentOfferRepository.Insert(paymentOffer);
+                _paymentOfferRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _paymentOfferRepository.uow.Rollback();
+                _paymentOfferRepository.UnitOfWork.Rollback();
                 return (e) switch
                 {
                     ValidationException => BadRequest("Body is in a invalid state."),
@@ -61,19 +61,19 @@ public class PaymentOfferController(IUnitOfWork uow) : ControllerBase
     [HttpPut("{id:int}")]
     public ActionResult<PaymentOffer> UpdatePaymentOffer([FromRoute] int id, [FromBody] PaymentOfferDto dto)
     {
-        using(_paymentOfferRepository.uow) 
+        using(_paymentOfferRepository.UnitOfWork) 
         {
             try
             {
-                _paymentOfferRepository.GetByPaymentOfferById(id);
-                PaymentOfferFactory factory = new(uow);
-                PaymentOffer PaymentOffer = factory.CreatePaymentOffer(dto);
-                _paymentOfferRepository.Update(PaymentOffer);
-                _paymentOfferRepository.uow.Commit();
+                _paymentOfferRepository.GetPaymentOfferById(id);
+                PaymentOfferFactory factory = new(unitOfWork);
+                PaymentOffer paymentOffer = factory.CreatePaymentOffer(dto);
+                _paymentOfferRepository.Update(paymentOffer);
+                _paymentOfferRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _paymentOfferRepository.uow.Rollback();
+                _paymentOfferRepository.UnitOfWork.Rollback();
                 return e switch
                 {
                     ArgumentException => NotFound($"{nameof(PaymentOffer)} with {nameof(id)} {id} not found."),

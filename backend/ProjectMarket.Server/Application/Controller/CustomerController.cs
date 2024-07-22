@@ -19,7 +19,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     {
         try
         {
-            return Ok(_customerRepository.GetByCustomerId(id));
+            return Ok(_customerRepository.GetCustomerById(id));
         }
         catch (Exception e)
         {
@@ -65,7 +65,7 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
         {
             try
             {
-                _customerRepository.GetByCustomerId(id);
+                _customerRepository.GetCustomerById(id);
                 CustomerFactory factory = new();
                 Customer customer = factory.CreateCustomer(dto);
                 _customerRepository.Update(customer);

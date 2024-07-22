@@ -14,7 +14,7 @@ public class KnowledgeAreaRepository(IUnitOfWork uow)
         return _uow.Connection.Query<KnowledgeAreaVo>(query);
     }
 
-    public KnowledgeAreaVo GetByKnowledgeAreaByName(string name)
+    public KnowledgeAreaVo GetKnowledgeAreaByName(string name)
     {
         string query = "SELECT KnowledgeAreaName FROM KnowledgeArea WHERE KnowledgeAreaName = @KnowledgeAreaName";
         return _uow.Connection.QuerySingleOrDefault(query, new { KnowledgeAreaName = name })

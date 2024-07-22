@@ -14,7 +14,7 @@ public class AdvertisementStatusRepository(IUnitOfWork uow)
         return _uow.Connection.Query<AdvertisementStatusVo>(query);
     }
 
-    public AdvertisementStatusVo GetByAdvertisementStatusByName(string name)
+    public AdvertisementStatusVo GetAdvertisementStatusByName(string name)
     {
         string query = "SELECT AdvertisementStatusName FROM AdvertisementStatus WHERE AdvertisementStatusName = @AdvertisementStatusName";
         return _uow.Connection.QuerySingleOrDefault(query, new { AdvertisementStatusName = name })

@@ -15,14 +15,14 @@ public class ProjectAdvertisementFactory(IUnitOfWork uow)
     
     public ProjectAdvertisement CreateProjectAdvertisement(ProjectAdvertisementDto dto)
     {
-        PaymentOffer paymentOffer = _paymentOfferRepository.GetByPaymentOfferById(dto.PaymentOfferId);
-        Customer customer = _customerRepository.GetByCustomerId(dto.CustomerId);
+        PaymentOffer paymentOffer = _paymentOfferRepository.GetPaymentOfferById(dto.PaymentOfferId);
+        Customer customer = _customerRepository.GetCustomerById(dto.CustomerId);
         AdvertisementStatusVo advertisementStatus = 
-            _advertisementStatusRepository.GetByAdvertisementStatusByName(dto.StatusName);
+            _advertisementStatusRepository.GetAdvertisementStatusByName(dto.StatusName);
         List<KnowledgeAreaVo> knowledgeAreaList = [];
         dto.SubjectNames.ForEach(subject =>
         {
-            knowledgeAreaList.Add(_knowledgeAreaRepository.GetByKnowledgeAreaByName(subject));
+            knowledgeAreaList.Add(_knowledgeAreaRepository.GetKnowledgeAreaByName(subject));
         });
         List<JobRequirementVo>? jobRequirementsList = null;
         if (dto.RequirementNames != null)
@@ -30,7 +30,7 @@ public class ProjectAdvertisementFactory(IUnitOfWork uow)
             jobRequirementsList = [];
             dto.RequirementNames.ForEach(requirement =>
             {
-                jobRequirementsList.Add(_jobRequirementRepository.GetByJobRequirementName(requirement));
+                jobRequirementsList.Add(_jobRequirementRepository.GetJobRequirementByName(requirement));
             });
         }
 

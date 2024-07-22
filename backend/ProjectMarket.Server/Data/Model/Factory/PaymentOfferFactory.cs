@@ -13,8 +13,8 @@ public class PaymentOfferFactory(IUnitOfWork uow)
     public PaymentOffer CreatePaymentOffer(PaymentOfferDto dto)
     {
         PaymentFrequencyVo paymentFrequencyVo =
-            _paymentFrequencyRepository.GetByPaymentFrequencyName(dto.PaymentFrequencyName);
-        CurrencyVo currencyVo = _currencyRepository.GetByCurrencyName(dto.CurrencyName);
+            _paymentFrequencyRepository.GetPaymentFrequencyByName(dto.PaymentFrequencyName);
+        CurrencyVo currencyVo = _currencyRepository.GetCurrencyByName(dto.CurrencyName);
         PaymentOffer paymentOffer = new(dto.PaymentOfferId, dto.Value, paymentFrequencyVo, currencyVo);
         return paymentOffer;
     }

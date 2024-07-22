@@ -14,7 +14,7 @@ public class CurrencyRepository(IUnitOfWork unitOfWork)
         return UnitOfWork.Connection.Query<CurrencyVo>(query);
     }
 
-    public CurrencyVo GetByCurrencyName(string name)
+    public CurrencyVo GetCurrencyByName(string name)
     {
         string query = "SELECT CurrencyName, Prefix FROM Currency WHERE CurrencyName = @CurrencyName";
         return UnitOfWork.Connection.QuerySingleOrDefault<CurrencyVo?>(query, new { CurrencyName = name })
