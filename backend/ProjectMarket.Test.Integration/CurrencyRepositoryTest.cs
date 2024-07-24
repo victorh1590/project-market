@@ -1,6 +1,6 @@
-using System.Data.Common;
+// CLI: dotnet test --logger "console;verbosity=detailed"
+
 using Microsoft.Extensions.Configuration;
-using Npgsql;
 using ProjectMarket.Server.Infra.Db;
 using Testcontainers.PostgreSql;
 using Xunit.Abstractions;
@@ -31,12 +31,14 @@ public class CurrencyRepositoryTest : IAsyncLifetime
     public void ExecuteCommand()
     {
         ConfigurationBuilder builder = new ConfigurationBuilder();
-        builder.Properties.Add("CONNECTIONSTRING__POSTGRESQ", _postgreSqlContainer.GetConnectionString());
+        builder.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["CONNECTIONSTRING__POSTGRESQL"] = _postgreSqlContainer.GetConnectionString()
+        });
         IConfiguration configuration = builder.Build();
+        _testOutputHelper.WriteLine(configuration["CONNECTIONSTRING__POSTGRESQL"]);
         UnitOfWork unitOfWork = new UnitOfWork(configuration);
-        
-        _testOutputHelper.WriteLine(configuration["CONNECTIONSTRING__POSTGRESQ"]);
-        
+
         // using (DbConnection connection = new NpgsqlConnection(_postgreSqlContainer.GetConnectionString()))
         // {
         //     using (DbCommand command = new NpgsqlCommand())
