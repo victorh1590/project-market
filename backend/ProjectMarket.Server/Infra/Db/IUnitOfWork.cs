@@ -8,6 +8,4 @@ public interface IUnitOfWork : IDisposable
     public void Begin();
     public void Commit();
     public void Rollback();
-    public void Dispose();
-
 }
