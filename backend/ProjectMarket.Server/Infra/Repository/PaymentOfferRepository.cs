@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using ProjectMarket.Server.Data.Model.Entity;
+using ProjectMarket.Server.Infra.Db;
 
 namespace ProjectMarket.Server.Infra.Repository;
 

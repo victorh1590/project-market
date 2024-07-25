@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.Factory;
+using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Application.Controller;

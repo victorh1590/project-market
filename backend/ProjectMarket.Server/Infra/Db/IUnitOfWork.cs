@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace ProjectMarket.Server;
+namespace ProjectMarket.Server.Infra.Db;
 
 public interface IUnitOfWork : IDisposable
 {
