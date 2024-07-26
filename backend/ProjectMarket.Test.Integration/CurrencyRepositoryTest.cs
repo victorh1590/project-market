@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +33,7 @@ namespace ProjectMarket.Test.Integration
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly PostgreSqlContainer _postgreSqlContainer;
-        private IConfiguration _configuration;
+        private IConfiguration? _configuration;
 
         public CurrencyRepositoryTest(ITestOutputHelper testOutputHelper)
         {
@@ -77,7 +74,8 @@ namespace ProjectMarket.Test.Integration
                 .ConfigureRunner(rb => rb
                     .AddPostgres()
                     .WithGlobalConnectionString(configuration["CONNECTIONSTRING__POSTGRESQL"])
-                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations())
+                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations()
+                )
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
         }
@@ -85,13 +83,13 @@ namespace ProjectMarket.Test.Integration
         [Fact]
         public void ExecuteCommand()
         {
-            _testOutputHelper.WriteLine(_configuration["CONNECTIONSTRING__POSTGRESQL"]);
-            using (var unitOfWork = new UnitOfWork(_configuration)) {
+            _testOutputHelper.WriteLine(_configuration?["CONNECTIONSTRING__POSTGRESQL"]);
+            using (var unitOfWork = new UnitOfWork(_configuration!)) {
                 var currencyRepository = new CurrencyRepository(unitOfWork);
                 currencyRepository.UnitOfWork.Begin();
 
                 var command = currencyRepository.UnitOfWork.Connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Items";
+                command.CommandText = "SELECT * FROM public.\"Items\"";
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
