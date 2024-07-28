@@ -1,38 +1,28 @@
+using ProjectMarket.Server.Infra.Db;
+using ProjectMarket.Server.Infra.Repository;
+
 namespace ProjectMarket.Server.Infra.DependencyInjection;
 
 using System.Reflection;
 using FluentMigrator.Runner;
 
-public static class MigrationsServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
-    
     public static IServiceCollection AddMigrations(this IServiceCollection services, IConfiguration configuration)
     {
         Assembly[] assemblies = GetAssembliesContainingNamespace("ProjectMarket.Server.Infra.Migrations");
-        if (services != null)
-        {
-            services
-                    // Add common FluentMigrator services
-                    .AddFluentMigratorCore()
-                    .ConfigureRunner(rb => rb
-                        // Add Postgres support to FluentMigrator
-                        .AddPostgres()
-                        // Set the connection string
-                        .WithGlobalConnectionString(configuration["CONNECTIONSTRING__POSTGRESQL"])
-                        // Define the assembly containing the migrations
-                        .ScanIn(assemblies).For.Migrations())
-                    // Enable logging to console in the FluentMigrator way
-                    .AddLogging(lb => lb.AddFluentMigratorConsole());
-            // Build the service provider
-            // .BuildServiceProvider(false);
-
-            return services;
-        }
-
+        services.AddFluentMigratorCore()
+            .ConfigureRunner(rb => rb
+                .AddPostgres()
+                .WithGlobalConnectionString(configuration["CONNECTIONSTRING__POSTGRESQL"])
+                .ScanIn(assemblies).For.Migrations())
+            .AddLogging(lb => lb.AddFluentMigratorConsole());
+        // .BuildServiceProvider(false);
+        return services;
         throw new ArgumentNullException(nameof(services));
     }
 
-    static Assembly[] GetAssembliesContainingNamespace(string targetNamespace)
+    private static Assembly[] GetAssembliesContainingNamespace(string targetNamespace)
     {
         List<Assembly> matchingAssemblies = [];
 
@@ -42,7 +32,6 @@ public static class MigrationsServiceCollectionExtensions
             {
                 // Load types from the assembly
                 var types = assembly.GetTypes();
-
                 // Check if any type in the assembly belongs to the target namespace
                 if (types.Any(t => t.Namespace == targetNamespace))
                 {
@@ -61,8 +50,34 @@ public static class MigrationsServiceCollectionExtensions
                 }
             }
         }
-
         return [.. matchingAssemblies];
-
+    }
+    
+    public static IServiceCollection AddUnitOfWork(this IServiceCollection services, DbmsName dbmsName)
+    {
+        services.AddSingleton(provider =>
+        {
+            var configuration = provider.GetRequiredService<IConfiguration>();
+            return new UnitOfWorkFactory(configuration, dbmsName);
+        });
+        services.AddScoped(provider =>
+        {
+            var factory = provider.GetRequiredService<UnitOfWorkFactory>();
+            return factory.CreateUnitOfWork();
+        });
+        return services;
+    }
+    
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<AdvertisementStatusRepository>();
+        services.AddScoped<CurrencyRepository>();
+        services.AddScoped<CustomerRepository>();
+        services.AddScoped<JobRequirementRepository>();
+        services.AddScoped<KnowledgeAreaRepository>();
+        services.AddScoped<PaymentFrequencyRepository>();
+        services.AddScoped<PaymentOfferRepository>();
+        services.AddScoped<ProjectAdvertisementRepository>();
+        return services;
     }
 }

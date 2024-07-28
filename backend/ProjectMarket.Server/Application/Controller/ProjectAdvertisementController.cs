@@ -4,24 +4,23 @@ using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.Factory;
-using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
-using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Application.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class ProjectAdvertisementController(IUnitOfWork unitOfWork, Compiler compiler) : ControllerBase
+public class ProjectAdvertisementController(
+    ProjectAdvertisementRepository projectAdvertisementRepository,
+    ProjectAdvertisementFactory projectAdvertisementFactory) : ControllerBase
 {
-    private readonly ProjectAdvertisementRepository _projectAdvertisementRepository = new(unitOfWork);
 
     [HttpGet("{id:int}")]
     public ActionResult<ProjectAdvertisement> GetProjectAdvertisementById(int id)
     {
         try
         {
-            return Ok(_projectAdvertisementRepository.GetProjectAdvertisementById(id));
+            return Ok(projectAdvertisementRepository.GetProjectAdvertisementById(id));
         }
         catch (Exception e)
         {
@@ -37,18 +36,17 @@ public class ProjectAdvertisementController(IUnitOfWork unitOfWork, Compiler com
     public ActionResult<ProjectAdvertisement> PostProjectAdvertisement([FromBody] ProjectAdvertisementDto dto)
     {
         ProjectAdvertisement inserted;
-        using(_projectAdvertisementRepository.UnitOfWork) 
+        using(projectAdvertisementRepository.UnitOfWork) 
         {
             try
             {
-                ProjectAdvertisementFactory factory = new(unitOfWork, compiler);
-                ProjectAdvertisement projectAdvertisement = factory.CreateProjectAdvertisement(dto);
-                inserted = _projectAdvertisementRepository.Insert(projectAdvertisement);
-                _projectAdvertisementRepository.UnitOfWork.Commit();
+                var projectAdvertisement = projectAdvertisementFactory.CreateProjectAdvertisement(dto);
+                inserted = projectAdvertisementRepository.Insert(projectAdvertisement);
+                projectAdvertisementRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _projectAdvertisementRepository.UnitOfWork.Rollback();
+                projectAdvertisementRepository.UnitOfWork.Rollback();
                 return (e) switch
                 {
                     ValidationException => BadRequest("Body is in a invalid state."),
@@ -63,19 +61,18 @@ public class ProjectAdvertisementController(IUnitOfWork unitOfWork, Compiler com
     [HttpPut("{id:int}")]
     public ActionResult<ProjectAdvertisement> UpdateProjectAdvertisement([FromRoute] int id, [FromBody] ProjectAdvertisementDto dto)
     {
-        using(_projectAdvertisementRepository.UnitOfWork) 
+        using(projectAdvertisementRepository.UnitOfWork) 
         {
             try
             {
-                _projectAdvertisementRepository.GetProjectAdvertisementById(id);
-                ProjectAdvertisementFactory factory = new(unitOfWork, compiler);
-                ProjectAdvertisement paymentOffer = factory.CreateProjectAdvertisement(dto);
-                _projectAdvertisementRepository.Update(paymentOffer);
-                _projectAdvertisementRepository.UnitOfWork.Commit();
+                projectAdvertisementRepository.GetProjectAdvertisementById(id);
+                var projectAdvertisement = projectAdvertisementFactory.CreateProjectAdvertisement(dto);
+                projectAdvertisementRepository.Update(projectAdvertisement);
+                projectAdvertisementRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _projectAdvertisementRepository.UnitOfWork.Rollback();
+                projectAdvertisementRepository.UnitOfWork.Rollback();
                 return e switch
                 {
                     ArgumentException => NotFound($"{nameof(ProjectAdvertisement)} with {nameof(id)} {id} not found."),

@@ -4,24 +4,22 @@ using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.Factory;
-using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
-using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Application.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class PaymentOfferController(IUnitOfWork unitOfWork, Compiler compiler) : ControllerBase
+public class PaymentOfferController(
+    PaymentOfferRepository paymentOfferRepository, 
+    PaymentOfferFactory paymentOfferFactory) : ControllerBase
 {
-    private readonly PaymentOfferRepository _paymentOfferRepository = new(unitOfWork, compiler);
-
     [HttpGet("{id:int}")]
     public ActionResult<PaymentOffer> GetPaymentOfferById(int id)
     {
         try
         {
-            return Ok(_paymentOfferRepository.GetPaymentOfferById(id));
+            return Ok(paymentOfferRepository.GetPaymentOfferById(id));
         }
         catch (Exception e)
         {
@@ -37,18 +35,17 @@ public class PaymentOfferController(IUnitOfWork unitOfWork, Compiler compiler) :
     public ActionResult<PaymentOffer> PostPaymentOffer([FromBody] PaymentOfferDto dto)
     {
         PaymentOffer inserted;
-        using(_paymentOfferRepository.UnitOfWork) 
+        using(paymentOfferRepository.UnitOfWork) 
         {
             try
             {
-                PaymentOfferFactory factory = new(unitOfWork, compiler);
-                PaymentOffer paymentOffer = factory.CreatePaymentOffer(dto);
-                inserted = _paymentOfferRepository.Insert(paymentOffer);
-                _paymentOfferRepository.UnitOfWork.Commit();
+                PaymentOffer paymentOffer = paymentOfferFactory.CreatePaymentOffer(dto);
+                inserted = paymentOfferRepository.Insert(paymentOffer);
+                paymentOfferRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _paymentOfferRepository.UnitOfWork.Rollback();
+                paymentOfferRepository.UnitOfWork.Rollback();
                 return (e) switch
                 {
                     ValidationException => BadRequest("Body is in a invalid state."),
@@ -63,19 +60,18 @@ public class PaymentOfferController(IUnitOfWork unitOfWork, Compiler compiler) :
     [HttpPut("{id:int}")]
     public ActionResult<PaymentOffer> UpdatePaymentOffer([FromRoute] int id, [FromBody] PaymentOfferDto dto)
     {
-        using(_paymentOfferRepository.UnitOfWork) 
+        using(paymentOfferRepository.UnitOfWork) 
         {
             try
             {
-                _paymentOfferRepository.GetPaymentOfferById(id);
-                PaymentOfferFactory factory = new(unitOfWork, compiler);
-                PaymentOffer paymentOffer = factory.CreatePaymentOffer(dto);
-                _paymentOfferRepository.Update(paymentOffer);
-                _paymentOfferRepository.UnitOfWork.Commit();
+                paymentOfferRepository.GetPaymentOfferById(id);
+                PaymentOffer paymentOffer = paymentOfferFactory.CreatePaymentOffer(dto);
+                paymentOfferRepository.Update(paymentOffer);
+                paymentOfferRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _paymentOfferRepository.UnitOfWork.Rollback();
+                paymentOfferRepository.UnitOfWork.Rollback();
                 return e switch
                 {
                     ArgumentException => NotFound($"{nameof(PaymentOffer)} with {nameof(id)} {id} not found."),

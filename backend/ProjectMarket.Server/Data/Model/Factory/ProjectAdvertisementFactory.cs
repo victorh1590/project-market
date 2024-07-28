@@ -1,30 +1,27 @@
 ﻿using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.ValueObjects;
-using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
-using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Data.Model.Factory;
 
-public class ProjectAdvertisementFactory(IUnitOfWork uow, Compiler compiler)
+public class ProjectAdvertisementFactory(
+    PaymentOfferRepository paymentOfferRepository,
+    CustomerRepository customerRepository,
+    AdvertisementStatusRepository advertisementStatusRepository,
+    KnowledgeAreaRepository knowledgeAreaRepository,
+    JobRequirementRepository jobRequirementRepository)
 {
-    private readonly PaymentOfferRepository _paymentOfferRepository = new(uow, compiler);
-    private readonly CustomerRepository _customerRepository = new(uow);
-    private readonly AdvertisementStatusRepository _advertisementStatusRepository = new(uow);
-    private readonly KnowledgeAreaRepository _knowledgeAreaRepository = new(uow);
-    private readonly JobRequirementRepository _jobRequirementRepository = new(uow);
-    
     public ProjectAdvertisement CreateProjectAdvertisement(ProjectAdvertisementDto dto)
     {
-        PaymentOffer paymentOffer = _paymentOfferRepository.GetPaymentOfferById(dto.PaymentOfferId);
-        Customer customer = _customerRepository.GetCustomerById(dto.CustomerId);
+        PaymentOffer paymentOffer = paymentOfferRepository.GetPaymentOfferById(dto.PaymentOfferId);
+        Customer customer = customerRepository.GetCustomerById(dto.CustomerId);
         AdvertisementStatusVo advertisementStatus = 
-            _advertisementStatusRepository.GetAdvertisementStatusByName(dto.StatusName);
+            advertisementStatusRepository.GetAdvertisementStatusByName(dto.StatusName);
         List<KnowledgeAreaVo> knowledgeAreaList = [];
         dto.SubjectNames.ForEach(subject =>
         {
-            knowledgeAreaList.Add(_knowledgeAreaRepository.GetKnowledgeAreaByName(subject));
+            knowledgeAreaList.Add(knowledgeAreaRepository.GetKnowledgeAreaByName(subject));
         });
         List<JobRequirementVo>? jobRequirementsList = null;
         if (dto.RequirementNames != null)
@@ -32,7 +29,7 @@ public class ProjectAdvertisementFactory(IUnitOfWork uow, Compiler compiler)
             jobRequirementsList = [];
             dto.RequirementNames.ForEach(requirement =>
             {
-                jobRequirementsList.Add(_jobRequirementRepository.GetJobRequirementByName(requirement));
+                jobRequirementsList.Add(jobRequirementRepository.GetJobRequirementByName(requirement));
             });
         }
 

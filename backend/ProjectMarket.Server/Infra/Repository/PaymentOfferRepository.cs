@@ -5,19 +5,9 @@ using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
-public class PaymentOfferRepository
+public class PaymentOfferRepository(IUnitOfWork unitOfWork, CurrencyRepository currencyRepository, PaymentFrequencyRepository paymentFrequencyRepository)
 {
-    public readonly IUnitOfWork UnitOfWork;
-
-    private readonly CurrencyRepository _currencyRepository;
-    private readonly PaymentFrequencyRepository _paymentFrequencyRepository;
-
-    public PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
-    {
-        UnitOfWork = unitOfWork;
-        _currencyRepository = new CurrencyRepository(UnitOfWork, compiler);
-        _paymentFrequencyRepository = new PaymentFrequencyRepository(UnitOfWork);
-    }
+    public readonly IUnitOfWork UnitOfWork = unitOfWork;
     
     public IEnumerable<PaymentOffer> GetAll()
     {
@@ -31,8 +21,8 @@ public class PaymentOfferRepository
         string query = "SELECT * FROM PaymentOffer WHERE PaymentOfferId = @PaymentOfferId";
         return UnitOfWork.Connection.QueryFirstOrDefault<PaymentOffer>(query, new { PaymentOfferId = id }) 
                               ?? throw new ArgumentException($"{nameof(PaymentOffer.PaymentOfferId)} not found");
-        // PaymentFrequencyVo paymentFrequency = _paymentFrequencyRepository.GetByPaymentFrequencyName(dto.PaymentFrequency);
-        // CurrencyVo currency = _currencyRepository.GetByCurrencyName(dto.Currency);
+        // PaymentFrequencyVo paymentFrequency = paymentFrequencyRepository.GetByPaymentFrequencyName(dto.PaymentFrequency);
+        // CurrencyVo currency = currencyRepository.GetByCurrencyName(dto.Currency);
     }
 
     public PaymentOffer Insert(PaymentOffer paymentOffer)

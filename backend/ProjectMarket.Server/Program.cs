@@ -1,5 +1,6 @@
 using ProjectMarket.Server.Infra.DependencyInjection;
 using FluentMigrator.Runner;
+using ProjectMarket.Server.Data.Model.Factory;
 using ProjectMarket.Server.Infra.Db;
 using SqlKata.Compilers;
 
@@ -27,9 +28,14 @@ switch (configuration["Database:DbmsName"]?.ToUpperInvariant())
     case nameof(DbmsName.POSTGRESQL):
     {
         builder.Services.AddSingleton<PostgresCompiler>();
+        builder.Services.AddUnitOfWork(DbmsName.POSTGRESQL);
         break;
     }
 }
+
+builder.Services.AddRepositories();
+builder.Services.AddScoped<ProjectAdvertisementFactory>();
+builder.Services.AddScoped<PaymentOfferFactory>();
 
 var app = builder.Build();
 
