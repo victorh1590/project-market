@@ -55,12 +55,12 @@ public static class ServiceCollectionExtensions
     
     public static IServiceCollection AddUnitOfWork(this IServiceCollection services, DbmsName dbmsName)
     {
-        services.AddSingleton(provider =>
+        services.AddSingleton<UnitOfWorkFactory>(provider =>
         {
             var configuration = provider.GetRequiredService<IConfiguration>();
             return new UnitOfWorkFactory(configuration, dbmsName);
         });
-        services.AddScoped(provider =>
+        services.AddScoped<IUnitOfWork>(provider =>
         {
             var factory = provider.GetRequiredService<UnitOfWorkFactory>();
             return factory.CreateUnitOfWork();
