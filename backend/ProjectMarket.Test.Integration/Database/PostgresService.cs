@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using ProjectMarket.Test.Integration.Database.Interfaces;
 
 namespace ProjectMarket.Test.Integration;
 

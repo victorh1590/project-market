@@ -1,11 +1,10 @@
 ﻿using System.Reflection;
-using Microsoft.Extensions.Configuration;
 
-namespace ProjectMarket.Test.Integration;
+namespace ProjectMarket.Test.Integration.Database.Interfaces;
 
 public interface IMigration
 {
-    public String ConnectionString { get; init; }
+    public String ConnectionString { get; }
     Assembly InitialConfigurationAssembly { get; set; }
     void RebuildMigrationProvider(List<Assembly>? assemblies);
     void ExecuteMigration(int number);

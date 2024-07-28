@@ -1,4 +1,6 @@
-﻿namespace ProjectMarket.Test.Integration.Database;
+﻿using ProjectMarket.Test.Integration.Database.Interfaces;
+
+namespace ProjectMarket.Test.Integration.Database;
 
 public class PostgresServiceFactory
 {
