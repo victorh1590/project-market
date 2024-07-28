@@ -1,6 +1,6 @@
-﻿namespace ProjectMarket.Test.Integration;
+﻿namespace ProjectMarket.Test.Integration.Database;
 
-public static class PostgresServiceFactory
+public class PostgresServiceFactory
 {
     public static async Task<PostgresService?> CreateServiceAsync()
     {
