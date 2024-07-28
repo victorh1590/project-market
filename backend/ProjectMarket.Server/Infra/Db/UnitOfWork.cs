@@ -8,8 +8,9 @@ public sealed class UnitOfWork : IUnitOfWork
     public IDbConnection Connection { get; }
     private IDbTransaction? _transaction;
 
-    public UnitOfWork(IConfiguration configuration) {
-        Connection = new NpgsqlConnection(configuration["CONNECTIONSTRING__POSTGRESQL"]);
+    public UnitOfWork(IConfiguration configuration, IDbConnection connection)
+    {
+        Connection = connection;
         Connection.Open();
     }
     public void Begin() {

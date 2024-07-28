@@ -6,7 +6,7 @@ public interface IMigration
 {
     public String ConnectionString { get; }
     Assembly InitialConfigurationAssembly { get; set; }
-    void RebuildMigrationProvider(List<Assembly>? assemblies);
+    void RebuildMigrationProvider(Assembly assembly);
     void ExecuteMigration(int number);
     void ExecuteAllMigrations();
 }

@@ -6,7 +6,7 @@ using ProjectMarket.Server.Infra.Repository;
 namespace ProjectMarket.Server.Infra.Migrations;
 
 [Migration(4)]
-public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : Migration {
+public class _4_CreateProjectAdvertisementTable(IConfiguration? configuration = null) : Migration {
     public override void Up()
 	{
         Create.Table("ProjectAdvertisement")
@@ -65,7 +65,7 @@ public class _4_CreateProjectAdvertisementTable(IConfiguration configuration) : 
             .FromTable("ProjectAdvertisementKnowledgeArea").ForeignColumn("KnowledgeAreaName")
             .ToTable("KnowledgeArea").PrimaryColumn("KnowledgeAreaName");
             
-        if(configuration.GetValue<bool>("Database:UseSeedData")) {
+        if(configuration?.GetValue<bool>("Database:UseSeedData") ?? false) {
             DeleteAllRows();
 
             int projectadvertisementId = 0;

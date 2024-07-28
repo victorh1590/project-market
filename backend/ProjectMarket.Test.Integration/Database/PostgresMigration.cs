@@ -19,10 +19,10 @@ namespace ProjectMarket.Test.Integration.Database
             ServiceProvider = CreateServices([InitialConfigurationAssembly]);
         }
 
-        public void RebuildMigrationProvider(List<Assembly>? assemblies)
+        public void RebuildMigrationProvider(Assembly assembly)
         {
             ServiceProvider.Dispose();
-            if (assemblies != null) ServiceProvider = CreateServices([InitialConfigurationAssembly, ..assemblies]);
+            ServiceProvider = CreateServices([InitialConfigurationAssembly, assembly]);
         }
 
         public void ExecuteMigration(int number)

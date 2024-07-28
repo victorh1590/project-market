@@ -1,5 +1,7 @@
 using ProjectMarket.Server.Infra.DependencyInjection;
 using FluentMigrator.Runner;
+using ProjectMarket.Server.Infra.Db;
+using SqlKata.Compilers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,15 @@ builder.Services.AddMigrations(configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+switch (configuration["Database:DbmsName"]?.ToUpperInvariant())
+{
+    case nameof(DbmsName.POSTGRESQL):
+    {
+        builder.Services.AddSingleton<PostgresCompiler>();
+        break;
+    }
+}
 
 var app = builder.Build();
 

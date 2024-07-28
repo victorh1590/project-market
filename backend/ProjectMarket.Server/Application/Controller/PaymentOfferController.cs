@@ -6,14 +6,15 @@ using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.Factory;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Application.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class PaymentOfferController(IUnitOfWork unitOfWork) : ControllerBase
+public class PaymentOfferController(IUnitOfWork unitOfWork, Compiler compiler) : ControllerBase
 {
-    private readonly PaymentOfferRepository _paymentOfferRepository = new(unitOfWork);
+    private readonly PaymentOfferRepository _paymentOfferRepository = new(unitOfWork, compiler);
 
     [HttpGet("{id:int}")]
     public ActionResult<PaymentOffer> GetPaymentOfferById(int id)
@@ -40,7 +41,7 @@ public class PaymentOfferController(IUnitOfWork unitOfWork) : ControllerBase
         {
             try
             {
-                PaymentOfferFactory factory = new(unitOfWork);
+                PaymentOfferFactory factory = new(unitOfWork, compiler);
                 PaymentOffer paymentOffer = factory.CreatePaymentOffer(dto);
                 inserted = _paymentOfferRepository.Insert(paymentOffer);
                 _paymentOfferRepository.UnitOfWork.Commit();
@@ -67,7 +68,7 @@ public class PaymentOfferController(IUnitOfWork unitOfWork) : ControllerBase
             try
             {
                 _paymentOfferRepository.GetPaymentOfferById(id);
-                PaymentOfferFactory factory = new(unitOfWork);
+                PaymentOfferFactory factory = new(unitOfWork, compiler);
                 PaymentOffer paymentOffer = factory.CreatePaymentOffer(dto);
                 _paymentOfferRepository.Update(paymentOffer);
                 _paymentOfferRepository.UnitOfWork.Commit();

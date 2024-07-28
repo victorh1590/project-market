@@ -4,7 +4,7 @@ using FluentMigrator.SqlServer;
 namespace ProjectMarket.Server.Infra.Migrations;
 
 [Migration(3)]
-public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migration {
+public class _3_CreatePaymentOfferTable(IConfiguration? configuration = null) : Migration {
     public override void Up()
 	{
         // MaxValue = 1_000_000_000_000_000.00
@@ -25,7 +25,7 @@ public class _3_CreatePaymentOfferTable(IConfiguration configuration) : Migratio
             .FromTable("PaymentOffer").ForeignColumn("CurrencyName")
             .ToTable("Currency").PrimaryColumn("CurrencyName");
 
-        if(configuration.GetValue<bool>("Database:UseSeedData")) {
+        if(configuration?.GetValue<bool>("Database:UseSeedData") ?? false) {
             DeleteAllRows();
 
             Insert.IntoTable("PaymentOffer")

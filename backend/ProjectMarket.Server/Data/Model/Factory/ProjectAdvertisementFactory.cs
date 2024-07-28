@@ -3,12 +3,13 @@ using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Data.Model.Factory;
 
-public class ProjectAdvertisementFactory(IUnitOfWork uow)
+public class ProjectAdvertisementFactory(IUnitOfWork uow, Compiler compiler)
 {
-    private readonly PaymentOfferRepository _paymentOfferRepository = new(uow);
+    private readonly PaymentOfferRepository _paymentOfferRepository = new(uow, compiler);
     private readonly CustomerRepository _customerRepository = new(uow);
     private readonly AdvertisementStatusRepository _advertisementStatusRepository = new(uow);
     private readonly KnowledgeAreaRepository _knowledgeAreaRepository = new(uow);

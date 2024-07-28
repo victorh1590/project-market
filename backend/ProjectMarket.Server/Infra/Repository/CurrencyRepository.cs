@@ -1,18 +1,23 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
+using SqlKata;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
-public class CurrencyRepository(IUnitOfWork unitOfWork)
+public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 {
     public readonly IUnitOfWork UnitOfWork = unitOfWork;
 
     public IEnumerable<CurrencyVo> GetAll()
     {
+        var query = compiler.Compile(new Query("Currency").Select("CurrencyName", "Prefix"))
+                    ?? throw new InvalidDataException($"{nameof(CurrencyRepository)} Failed to compile query");
         // TODO Use pagination instead.
-        string query = "SELECT CurrencyName, Prefix FROM Currency";
-        return UnitOfWork.Connection.Query<CurrencyVo>(query);
+        // string query = "SELECT CurrencyName, Prefix FROM Currency";
+        return UnitOfWork.Connection.Query<CurrencyVo>(query.Sql);
     }
 
     public CurrencyVo GetCurrencyByName(string name)

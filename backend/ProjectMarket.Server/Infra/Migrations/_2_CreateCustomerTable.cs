@@ -4,7 +4,7 @@ using FluentMigrator.SqlServer;
 namespace ProjectMarket.Server.Infra.Migrations;
 
 [Migration(2)]
-public class _2_CreateCustomerTable(IConfiguration configuration) : Migration {
+public class _2_CreateCustomerTable(IConfiguration? configuration = null) : Migration {
 
     public override void Up()
 	{
@@ -17,7 +17,7 @@ public class _2_CreateCustomerTable(IConfiguration configuration) : Migration {
             .WithColumn("Password").AsString(bcryptHashSize).NotNullable()
             .WithColumn("RegistrationDate").AsDateTime().NotNullable();
 
-        if(configuration.GetValue<bool>("Database:UseSeedData")) {
+        if(configuration?.GetValue<bool>("Database:UseSeedData") ?? false) {
 
             DeleteAllRows();
 

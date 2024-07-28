@@ -2,5 +2,9 @@
 
 public enum DbmsName
 {
-    
+    POSTGRESQL,
+    MYSQL,
+    SQLSERVER,
+    REDDIS,
+    MONGODB
 }

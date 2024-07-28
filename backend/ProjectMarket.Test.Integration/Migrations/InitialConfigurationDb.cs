@@ -2,7 +2,7 @@
 
 namespace ProjectMarket.Test.Integration.Migrations;
 
-[Migration(1)]
+[Migration(0)]
 public class InitialConfigurationDb : Migration
 {
     public override void Up()

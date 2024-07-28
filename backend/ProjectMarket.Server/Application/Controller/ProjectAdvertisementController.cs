@@ -6,12 +6,13 @@ using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.Factory;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Application.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class ProjectAdvertisementController(IUnitOfWork unitOfWork) : ControllerBase
+public class ProjectAdvertisementController(IUnitOfWork unitOfWork, Compiler compiler) : ControllerBase
 {
     private readonly ProjectAdvertisementRepository _projectAdvertisementRepository = new(unitOfWork);
 
@@ -40,7 +41,7 @@ public class ProjectAdvertisementController(IUnitOfWork unitOfWork) : Controller
         {
             try
             {
-                ProjectAdvertisementFactory factory = new(unitOfWork);
+                ProjectAdvertisementFactory factory = new(unitOfWork, compiler);
                 ProjectAdvertisement projectAdvertisement = factory.CreateProjectAdvertisement(dto);
                 inserted = _projectAdvertisementRepository.Insert(projectAdvertisement);
                 _projectAdvertisementRepository.UnitOfWork.Commit();
@@ -67,7 +68,7 @@ public class ProjectAdvertisementController(IUnitOfWork unitOfWork) : Controller
             try
             {
                 _projectAdvertisementRepository.GetProjectAdvertisementById(id);
-                ProjectAdvertisementFactory factory = new(unitOfWork);
+                ProjectAdvertisementFactory factory = new(unitOfWork, compiler);
                 ProjectAdvertisement paymentOffer = factory.CreateProjectAdvertisement(dto);
                 _projectAdvertisementRepository.Update(paymentOffer);
                 _projectAdvertisementRepository.UnitOfWork.Commit();

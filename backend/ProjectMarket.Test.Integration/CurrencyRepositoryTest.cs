@@ -23,7 +23,6 @@ public class CurrencyRepositoryTest
     public async Task OneTimeSetUpAsync()
     {
         _postgresService = await PostgresServiceFactory.CreateServiceAsync() ?? throw new InvalidOperationException();
-        _postgresService.Migration.ExecuteAllMigrations();
 
         const DbmsName databaseName = DbmsName.POSTGRESQL;
         var builder = new ConfigurationBuilder();
@@ -34,7 +33,8 @@ public class CurrencyRepositoryTest
                 }).Build();
 
         _unitOfWorkFactory = new UnitOfWorkFactory(configuration, databaseName);
-        _postgresService.Migration.RebuildMigrationProvider(new List<Assembly> { typeof(_1_CreateVOTables).Assembly });
+        _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
+        _postgresService.Migration.ExecuteMigration(1);
     }
 
     [OneTimeTearDown]
@@ -47,7 +47,7 @@ public class CurrencyRepositoryTest
     public void SetUp()
     {
         var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork();
-        _repository = new CurrencyRepository(unitOfWork);
+        _repository = new CurrencyRepository(unitOfWork, _compiler);
         _repository.UnitOfWork.Begin();
     }
 

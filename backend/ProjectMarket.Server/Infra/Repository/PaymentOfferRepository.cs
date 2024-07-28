@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Infra.Db;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
@@ -11,10 +12,10 @@ public class PaymentOfferRepository
     private readonly CurrencyRepository _currencyRepository;
     private readonly PaymentFrequencyRepository _paymentFrequencyRepository;
 
-    public PaymentOfferRepository(IUnitOfWork unitOfWork)
+    public PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
     {
         UnitOfWork = unitOfWork;
-        _currencyRepository = new CurrencyRepository(UnitOfWork);
+        _currencyRepository = new CurrencyRepository(UnitOfWork, compiler);
         _paymentFrequencyRepository = new PaymentFrequencyRepository(UnitOfWork);
     }
     
