@@ -25,7 +25,7 @@ public class CurrencyRepositoryTest
         var configuration = 
             builder.AddInMemoryCollection(new Dictionary<string, string?> 
                 {
-                    ["CONNECTIONSTRING__POSTGRESQL"] = _postgresService.Migration.ConnectionString
+                    [$"CONNECTIONSTRING__{databaseName.ToString().ToUpperInvariant()}"] = _postgresService.Migration.ConnectionString
                 }).Build();
 
         _unitOfWorkFactory = new UnitOfWorkFactory(configuration, databaseName);
