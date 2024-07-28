@@ -8,7 +8,7 @@ using FluentMigrator.Runner;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMigrations(this IServiceCollection services, IConfiguration configuration)
+    public static void AddMigrations(this IServiceCollection services, IConfiguration configuration)
     {
         Assembly[] assemblies = GetAssembliesContainingNamespace("ProjectMarket.Server.Infra.Migrations");
         services.AddFluentMigratorCore()
@@ -18,8 +18,6 @@ public static class ServiceCollectionExtensions
                 .ScanIn(assemblies).For.Migrations())
             .AddLogging(lb => lb.AddFluentMigratorConsole());
         // .BuildServiceProvider(false);
-        return services;
-        throw new ArgumentNullException(nameof(services));
     }
 
     private static Assembly[] GetAssembliesContainingNamespace(string targetNamespace)
@@ -53,7 +51,7 @@ public static class ServiceCollectionExtensions
         return [.. matchingAssemblies];
     }
     
-    public static IServiceCollection AddUnitOfWork(this IServiceCollection services, DbmsName dbmsName)
+    public static void AddUnitOfWork(this IServiceCollection services, DbmsName dbmsName)
     {
         services.AddSingleton<UnitOfWorkFactory>(provider =>
         {
@@ -65,10 +63,9 @@ public static class ServiceCollectionExtensions
             var factory = provider.GetRequiredService<UnitOfWorkFactory>();
             return factory.CreateUnitOfWork();
         });
-        return services;
     }
     
-    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    public static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<AdvertisementStatusRepository>();
         services.AddScoped<CurrencyRepository>();
@@ -78,6 +75,5 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PaymentFrequencyRepository>();
         services.AddScoped<PaymentOfferRepository>();
         services.AddScoped<ProjectAdvertisementRepository>();
-        return services;
     }
 }
