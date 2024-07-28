@@ -1,4 +1,5 @@
 ﻿using DotNet.Testcontainers.Containers;
+using ProjectMarket.Test.Integration.Database.Interfaces;
 using Testcontainers.PostgreSql;
 
 namespace ProjectMarket.Test.Integration;

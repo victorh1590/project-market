@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ProjectMarket.Test.Integration.Database.Interfaces;
 
-namespace ProjectMarket.Test.Integration;
+namespace ProjectMarket.Test.Integration.Database;
 
 public class PostgresService
 {

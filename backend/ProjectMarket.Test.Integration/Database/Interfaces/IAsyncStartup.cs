@@ -1,4 +1,4 @@
-﻿namespace ProjectMarket.Test.Integration;
+﻿namespace ProjectMarket.Test.Integration.Database.Interfaces;
 
 public interface IAsyncStartup
 {
