@@ -1,72 +1,58 @@
 using Microsoft.Extensions.Configuration;
+using NUnit.Framework;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
-using Xunit.Abstractions;
-using Xunit.Sdk;
+using SqlKata;
+using SqlKata.Compilers;
+using SqlKata.Extensions;
 
 namespace ProjectMarket.Test.Integration
 {
-    public class CurrencyRepositoryTest : IAsyncLifetime
+    [TestFixture]
+    public class CurrencyRepositoryTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-        private PostgresService? _postgresService;
+        private PostgresService _postgresService;
+        private UnitOfWorkFactory _unitOfWorkFactory;
         
-        public CurrencyRepositoryTest(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
-
+        [OneTimeSetUp]
         public async Task InitializeAsync()
         {
-            _postgresService = await PostgresServiceFactory.CreateServiceAsync();
-            _postgresService?.Migration.ExecuteAllMigrations();
-        }
+            _postgresService = await PostgresServiceFactory.CreateServiceAsync() ?? throw new InvalidOperationException();
+            _postgresService.Migration.ExecuteAllMigrations();
 
-        public async Task DisposeAsync()
-        {
-            if (_postgresService != null)
-            {
-                await _postgresService.Database.DisposeAsync();
-            }
-        }
-
-        // public Task DisposeAsync()
-        // {
-        //     // return _postgreSqlContainer.DisposeAsync().AsTask();
-        // }
-
-       
-
-        [Fact]
-        public void ExecuteCommand()
-        {
-
-            
-            if (_postgresService == null) return;
-            ConfigurationBuilder builder = new ConfigurationBuilder();
+            const DbmsName databaseName = DbmsName.POSTGRESQL;
+            var builder = new ConfigurationBuilder();
             var configuration = 
-                builder.AddInMemoryCollection(
-                    new Dictionary<string, string?> 
+                builder.AddInMemoryCollection(new Dictionary<string, string?> 
                     {
                         ["CONNECTIONSTRING__POSTGRESQL"] = _postgresService.Migration.ConnectionString
-                    }
-                )
-                .Build();
-            
-            _testOutputHelper.WriteLine(_postgresService.ConnectionString);
-            _testOutputHelper.WriteLine(nameof(_postgresService.ConnectionString));
-            using var unitOfWork = new UnitOfWork(configuration);
+                    }).Build();
+
+            _unitOfWorkFactory = new UnitOfWorkFactory(configuration, databaseName);
+        }
+
+        [OneTimeTearDown]
+        public async Task DisposeAsync()
+        {
+            await _postgresService.Database.DisposeAsync();
+        }
+
+        [Test]
+        public void ExecuteCommand()
+        {
+            TestContext.WriteLine(_postgresService.ConnectionString);
+            using var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork();
             var currencyRepository = new CurrencyRepository(unitOfWork);
             currencyRepository.UnitOfWork.Begin();
-
+            var compiler = new PostgresCompiler();
+            var query = compiler.Compile(new Query("Items").Select("*"));
+            TestContext.WriteLine(query.ToString());
             var command = currencyRepository.UnitOfWork.Connection.CreateCommand();
-            command.CommandText = "SELECT * FROM public.\"Items\"";
-            using (var reader = command.ExecuteReader())
+            command.CommandText = query.Sql;
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                while (reader.Read())
-                {
-                    _testOutputHelper.WriteLine("{0}\t{1}", reader.GetInt32(0), reader.GetString(1));
-                }
+                TestContext.WriteLine("{0}\t{1}", reader.GetInt32(0), reader.GetString(1));
             }
         }
     }

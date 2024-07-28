@@ -2,7 +2,7 @@
 
 namespace ProjectMarket.Test.Integration;
 
-public interface IDbResource : IAsyncLifetime
+public interface IDbResource : IAsyncDisposable, IAsyncStartup
 {
     IDatabaseContainer DatabaseContainer { get; }
 }
