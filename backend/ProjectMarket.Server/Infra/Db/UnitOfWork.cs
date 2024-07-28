@@ -8,7 +8,7 @@ public sealed class UnitOfWork : IUnitOfWork
     public IDbConnection Connection { get; }
     private IDbTransaction? _transaction;
 
-    public UnitOfWork(IConfiguration configuration, IDbConnection connection)
+    public UnitOfWork(IDbConnection connection)
     {
         Connection = connection;
         Connection.Open();
