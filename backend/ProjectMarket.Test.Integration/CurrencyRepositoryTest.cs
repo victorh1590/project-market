@@ -1,13 +1,10 @@
-using System.Collections.ObjectModel;
 using System.Reflection;
 using Dapper;
 using DbUp;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
-using ProjectMarket.Server.Infra.DependencyInjection;
 using ProjectMarket.Server.Infra.Repository;
 using ProjectMarket.Test.Integration.Database;
 using SqlKata;
