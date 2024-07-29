@@ -1,7 +1,9 @@
-using Microsoft.Extensions.Configuration;
+using System.Reflection;
+using DbUp;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using ProjectMarket.Server.Infra.Db;
+using ProjectMarket.Server.Infra.DependencyInjection;
 using ProjectMarket.Server.Infra.Repository;
 using ProjectMarket.Test.Integration.Database;
 using SqlKata;
@@ -15,25 +17,23 @@ public class CurrencyRepositoryTest
 {
     private PostgresService _postgresService;
     private UnitOfWorkFactory _unitOfWorkFactory;
-    private PostgresCompiler _compiler = new();
+    private readonly PostgresCompiler _compiler = new();
     private CurrencyRepository _repository;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUpAsync()
     {
         _postgresService = await PostgresServiceFactory.CreateServiceAsync() ?? throw new InvalidOperationException();
-
-        const DbmsName databaseName = DbmsName.POSTGRESQL;
-        var builder = new ConfigurationBuilder();
-        var configuration = 
-            builder.AddInMemoryCollection(new Dictionary<string, string?> 
-                {
-                    [$"CONNECTIONSTRING__{databaseName.ToString().ToUpperInvariant()}"] = _postgresService.Migration.ConnectionString
-                }).Build();
-
-        _unitOfWorkFactory = new UnitOfWorkFactory(configuration, databaseName);
+        _unitOfWorkFactory = new UnitOfWorkFactory(_postgresService.Configuration, _postgresService.DbmsName);
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
         _postgresService.Migration.ExecuteMigration(1);
+        
+        DeployChanges.To
+            .PostgresqlDatabase(_postgresService.ConnectionString)
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+            .LogToConsole()
+            .Build()
+            .PerformUpgrade();
     }
 
     [OneTimeTearDown]
@@ -84,7 +84,7 @@ public class CurrencyRepositoryTest
     
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
-    {
+    {        
         var result = _repository.GetAll();
         var json = JsonConvert.SerializeObject(result);
         TestContext.WriteLine(json);

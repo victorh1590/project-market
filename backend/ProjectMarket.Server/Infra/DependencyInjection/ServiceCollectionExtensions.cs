@@ -1,5 +1,6 @@
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.DependencyInjection;
 
@@ -64,7 +65,7 @@ public static class ServiceCollectionExtensions
             return factory.CreateUnitOfWork();
         });
     }
-    
+
     public static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<AdvertisementStatusRepository>();

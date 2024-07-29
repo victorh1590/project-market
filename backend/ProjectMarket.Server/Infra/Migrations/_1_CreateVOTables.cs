@@ -23,7 +23,7 @@ public class _1_CreateVOTables(IConfiguration? configuration = null) : Migration
             .WithColumn("PaymentFrequencyName").AsString(32).PrimaryKey("pk_payment_frequency").NotNullable()
             .WithColumn("Suffix").AsString(32).Unique().NotNullable();
 
-        // if(configuration?.GetValue<bool>("Database:UseSeedData") ?? false) {
+        if(configuration?.GetValue<bool>("Database:UseSeedData") ?? false) {
             DeleteAllRows();
 
             Insert.IntoTable("AdvertisementStatus").Row(new { AdvertisementStatusName = "Open" });
@@ -52,7 +52,7 @@ public class _1_CreateVOTables(IConfiguration? configuration = null) : Migration
             Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Hourly", Suffix = "per hour" });
             Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Daily", Suffix = "per day" });
             Insert.IntoTable("PaymentFrequency").Row(new { PaymentFrequencyName = "Once", Suffix = "when project is done" });
-        // }
+        }
 	}
 
 	public override void Down()

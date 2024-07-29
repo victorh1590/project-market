@@ -5,7 +5,7 @@ using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
-public class PaymentOfferRepository(IUnitOfWork unitOfWork, CurrencyRepository currencyRepository, PaymentFrequencyRepository paymentFrequencyRepository)
+public class PaymentOfferRepository(IUnitOfWork unitOfWork)
 {
     public readonly IUnitOfWork UnitOfWork = unitOfWork;
     

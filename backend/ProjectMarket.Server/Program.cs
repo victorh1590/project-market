@@ -23,15 +23,8 @@ builder.Services.AddMigrations(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-switch (configuration["Database:DbmsName"]?.ToUpperInvariant())
-{
-    case nameof(DbmsName.POSTGRESQL):
-    {
-        builder.Services.AddSingleton<PostgresCompiler>();
-        builder.Services.AddUnitOfWork(DbmsName.POSTGRESQL);
-        break;
-    }
-}
+builder.Services.AddSingleton<PostgresCompiler>();
+builder.Services.AddUnitOfWork(DbmsName.POSTGRESQL);
 
 builder.Services.AddRepositories();
 builder.Services.AddScoped<ProjectAdvertisementFactory>();
