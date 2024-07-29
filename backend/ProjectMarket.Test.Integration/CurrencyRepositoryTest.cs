@@ -1,7 +1,11 @@
+using System.Collections.ObjectModel;
 using System.Reflection;
+using Dapper;
 using DbUp;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.DependencyInjection;
 using ProjectMarket.Server.Infra.Repository;
@@ -82,11 +86,73 @@ public class CurrencyRepositoryTest
         // _repository.Insert();
     }
     
+    [Order(1)]
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var result = _repository.GetAll();
-        var json = JsonConvert.SerializeObject(result);
-        TestContext.WriteLine(json);
+        var expectedObj = new List<CurrencyVo>
+        {
+            new() { CurrencyName = "Dollar", Prefix = "$"},
+            new() { CurrencyName = "Euro", Prefix = "€" },
+            new() { CurrencyName = "Yen", Prefix = "¥" }
+        };
+        var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
+        
+        var resultObj = _repository.GetAll();
+        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
+        TestContext.WriteLine(resultJson);
+
+        Assert.That(resultJson, Is.EqualTo(expectedJson));
+    }
+    
+    [Order(2)]
+    [Test(Description = "Repository should insert specified rows")]
+    public void InsertTest()
+    {
+        CurrencyVo toInsert = new() { CurrencyName = "Rupee", Prefix = "₹" };
+        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
+        var expectedAllObj = new List<CurrencyVo>
+        {
+            new() { CurrencyName = "Dollar", Prefix = "$"},
+            new() { CurrencyName = "Euro", Prefix = "€" },
+            new() { CurrencyName = "Yen", Prefix = "¥" },
+            new() { CurrencyName = "Rupee", Prefix = "₹"}
+        };
+        var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
+
+        var resultObj = _repository.Insert(toInsert);
+        _repository.UnitOfWork.Commit();
+        
+        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
+        TestContext.WriteLine(resultJson);
+
+        Assert.That(resultJson, Is.EqualTo(expectedJson));
+
+        var resultAllObj = _repository.GetAll();
+        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
+
+        Assert.That(resultAllJson, Is.EqualTo(expectedAllJson));
+    }
+    
+    [Order(3)]
+    [Test(Description = "Repository should delete specified rows")]
+    public void DeleteTest()
+    {
+        CurrencyVo toRemove = new() { CurrencyName = "Euro", Prefix = "€" };
+
+        var expectedAllObj = new List<CurrencyVo>
+        {
+            new() { CurrencyName = "Dollar", Prefix = "$"},
+            new() { CurrencyName = "Yen", Prefix = "¥" },
+            new() { CurrencyName = "Rupee", Prefix = "₹"}
+        };
+        var resultObj = _repository.Delete(toRemove.CurrencyName);
+        _repository.UnitOfWork.Commit();
+
+        TestContext.WriteLine($"Delete returned: {resultObj}");
+        Assert.That(resultObj, Is.EqualTo(true));
+
+        var resultAllObj = _repository.GetAll().AsList();
+        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
     }
 }

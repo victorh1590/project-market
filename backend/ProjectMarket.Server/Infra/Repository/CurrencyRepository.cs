@@ -13,24 +13,28 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public IEnumerable<CurrencyVo> GetAll()
     {
-        var query = compiler.Compile(new Query("Currency").Select("CurrencyName", "Prefix"))
-                    ?? throw new InvalidDataException($"{nameof(CurrencyRepository)} Failed to compile query");
+        // var query = compiler.Compile(new Query("Currency").Select("CurrencyName", "Prefix"))
+        //             ?? throw new InvalidDataException($"{nameof(CurrencyRepository)} Failed to compile query");
         // TODO Use pagination instead.
-        // string query = "SELECT CurrencyName, Prefix FROM Currency";
-        return UnitOfWork.Connection.Query<CurrencyVo>(query.Sql);
+        string query = "SELECT \"CurrencyName\", \"Prefix\" FROM \"Currency\"";
+        return UnitOfWork.Connection.Query<CurrencyVo>(query);
     }
 
     public CurrencyVo GetCurrencyByName(string name)
     {
-        string query = "SELECT CurrencyName, Prefix FROM Currency WHERE CurrencyName = @CurrencyName";
+        string query = "SELECT CurrencyName, Prefix " +
+                       "FROM Currency WHERE CurrencyName = @CurrencyName";
         return UnitOfWork.Connection.QuerySingleOrDefault<CurrencyVo?>(query, new { CurrencyName = name })
                 ?? throw new ArgumentException($"{nameof(CurrencyVo.CurrencyName)} not found");
     }
 
-    public void Insert(CurrencyVo Currency)
+    public CurrencyVo Insert(CurrencyVo currency)
     {
-        string query = "INSERT INTO Currency (CurrencyName, Prefix) VALUES (@CurrencyName, @Prefix)";
-        UnitOfWork.Connection.Execute(query, Currency);
+        string query = "INSERT INTO \"Currency\" (\"CurrencyName\", \"Prefix\") " +
+                       "VALUES (@CurrencyName, @Prefix) " +
+                       "RETURNING \"CurrencyName\", \"Prefix\"";
+        
+        return UnitOfWork.Connection.QuerySingle<CurrencyVo>(query, currency);
     }
 
     public void Update(CurrencyVo Currency)
@@ -39,9 +43,9 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
         UnitOfWork.Connection.Execute(query, Currency);
     }
 
-    public void Delete(string name)
+    public bool Delete(string name)
     {
-        string query = "DELETE CASCADE FROM Currency WHERE CurrencyName = @CurrencyName";
-        UnitOfWork.Connection.Execute(query, new { CurrencyName = name });
+        string query = "DELETE FROM \"Currency\" CASCADE WHERE \"CurrencyName\" = @CurrencyName RETURNING true";
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new { CurrencyName = name });
     }
 }
