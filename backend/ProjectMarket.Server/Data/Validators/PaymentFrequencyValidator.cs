@@ -24,6 +24,7 @@ public class PaymentFrequencyNameValidator : AbstractValidator<string>
     {
 
         RuleFor(paymentFrequencyName => paymentFrequencyName)
+            .NotNull()
             .NotEmpty()
             .MaximumLength(NameMaximumLength)
             .WithName("PaymentFrequencyName");
@@ -38,6 +39,7 @@ public class PaymentFrequencySuffixValidator : AbstractValidator<string>
     {
         
         RuleFor(suffix => suffix)
+            .NotNull()
             .NotEmpty()
             .MaximumLength(SuffixMaximumLength)
             .WithName("Suffix");

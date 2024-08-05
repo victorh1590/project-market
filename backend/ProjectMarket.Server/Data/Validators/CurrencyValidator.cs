@@ -23,6 +23,7 @@ namespace ProjectMarket.Server.Data.Validators
         public CurrencyNameValidator()
         {
             RuleFor(currencyName => currencyName)
+                .NotNull()
                 .NotEmpty()
                 .MaximumLength(NameMaximumLength)
                 .WithName("CurrencyName");
@@ -36,6 +37,7 @@ namespace ProjectMarket.Server.Data.Validators
         public CurrencyPrefixValidator()
         {
             RuleFor(prefix => prefix)
+                .NotNull()
                 .NotEmpty()
                 .MaximumLength(PrefixMaximumLength)
                 .WithName("Prefix");

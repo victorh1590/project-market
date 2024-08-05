@@ -16,6 +16,7 @@ public class PaymentOfferValidator : AbstractValidator<PaymentOffer>
             .WithName("PaymentOfferId")
             .Unless(paymentOffer => paymentOffer.PaymentOfferId == null);
         RuleFor(paymentOffer => paymentOffer.Value)
+            .NotNull()
             .InclusiveBetween(0.0M, MaximumValue)
             .PrecisionScale(ValueMaxSize, ValuePrecision, IgnoreTrailingZeros)
             .WithName("Value");

@@ -22,6 +22,7 @@ public class KnowledgeAreaNameValidator : AbstractValidator<string>
     {
 
         RuleFor(knowledgeAreaName => knowledgeAreaName)
+            .NotNull()
             .NotEmpty()
             .MaximumLength(NameMaximumLength)
             .WithName("KnowledgeAreaName");

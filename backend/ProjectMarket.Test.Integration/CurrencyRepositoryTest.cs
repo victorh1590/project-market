@@ -1,9 +1,11 @@
 using System.Reflection;
 using Dapper;
 using DbUp;
+using FluentValidation;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using ProjectMarket.Server.Data.Model.ValueObjects;
+using ProjectMarket.Server.Data.Validators;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
 using ProjectMarket.Test.Integration.Database;
@@ -151,5 +153,51 @@ public class CurrencyRepositoryTest
 
         var resultAllObj = _repository.GetAll().AsList();
         Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+    }
+    
+    [Order(4)]
+    [Test(Description = "Repository should return specified row")]
+    public void GetCurrencyByNameTest()
+    {
+        const string toSearch = "Rupee";
+        var expectedObj = new CurrencyVo() { CurrencyName = "Rupee", Prefix = "₹" };
+
+        var resultObj = _repository.GetCurrencyByName(toSearch);
+
+        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
+        TestContext.WriteLine($"Get By Name Returned: {resultJson}");
+        Assert.That(resultObj, Is.EqualTo(expectedObj));
+    }
+    
+    [Order(5)]
+    [Test(Description = "Repository should update specified row")]
+    public void UpdateTest()
+    {
+        const string toUpdate = "Rupee";
+        var update = new CurrencyVo() { CurrencyName = "Yuan", Prefix = "\u00a5" };
+        
+        var expectedAllObj = new List<CurrencyVo>
+        {
+            new() { CurrencyName = "Dollar", Prefix = "$"},
+            new() { CurrencyName = "Yen", Prefix = "¥" },
+            new() { CurrencyName = "Yuan", Prefix = "\u00a5" }
+        };
+
+        var resultObj = _repository.Update(toUpdate, update);
+        _repository.UnitOfWork.Commit();
+
+        TestContext.WriteLine($"Update Returned: {resultObj}");
+        Assert.That(resultObj, Is.EqualTo(true));
+        
+        var resultAllObj = _repository.GetAll().AsList();
+        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+    }
+    
+    [Order(6)]
+    [Test(Description = "Repository should return Exception when row don't exist")]
+    public void GetCurrencyByNameFailWithExceptionTest()
+    {
+        const string toSearch = "Pounds";
+        Assert.That(() => _repository.GetCurrencyByName(toSearch), Throws.ArgumentException);
     }
 }

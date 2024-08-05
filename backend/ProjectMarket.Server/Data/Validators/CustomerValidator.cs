@@ -15,10 +15,11 @@ public class CustomerValidator : AbstractValidator<Customer>
             .GreaterThan(0)
             .WithName("CustomerId")
             .Unless(customer => customer.CustomerId == null);
-        RuleFor(customer => customer.Name).NotEmpty().WithName("Name");
-        RuleFor(customer => customer.Email).NotEmpty().EmailAddress().WithName("Email");
-        RuleFor(customer => customer.Password).Length(BCryptHashSize).WithName("Password");
+        RuleFor(customer => customer.Name).NotNull().NotEmpty().WithName("Name");
+        RuleFor(customer => customer.Email).NotNull().NotEmpty().EmailAddress().WithName("Email");
+        RuleFor(customer => customer.Password).NotNull().Length(BCryptHashSize).WithName("Password");
         RuleFor(customer => customer.RegistrationDate)
+            .NotNull()
             .InclusiveBetween(FirstValidDate, DateTime.Now)
             .WithName("RegistrationDate");
     }

@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.ComponentModel.DataAnnotations;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
@@ -22,10 +23,18 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public CurrencyVo GetCurrencyByName(string name)
     {
-        string query = "SELECT CurrencyName, Prefix " +
-                       "FROM Currency WHERE CurrencyName = @CurrencyName";
-        return UnitOfWork.Connection.QuerySingleOrDefault<CurrencyVo?>(query, new { CurrencyName = name })
-                ?? throw new ArgumentException($"{nameof(CurrencyVo.CurrencyName)} not found");
+        string query = "SELECT \"CurrencyName\", \"Prefix\" " +
+                       "FROM \"Currency\" WHERE \"CurrencyName\" = @CurrencyName";
+        try
+        {
+            var record = UnitOfWork.Connection.QuerySingle<CurrencyRecord>(query, new { CurrencyName = name });
+            CurrencyVo result = new(record);
+            return result;
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException($"{nameof(CurrencyVo.CurrencyName)} \'{name}\' not found");
+        }
     }
 
     public CurrencyVo Insert(CurrencyVo currency)
@@ -37,10 +46,15 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
         return UnitOfWork.Connection.QuerySingle<CurrencyVo>(query, currency);
     }
 
-    public void Update(CurrencyVo Currency)
+    public bool Update(string name, CurrencyVo Currency)
     {
-        string query = "UPDATE Currency SET CurrencyName = @CurrencyName, Prefix = @Prefix WHERE CurrencyName = @CurrencyName";
-        UnitOfWork.Connection.Execute(query, Currency);
+        string query = "UPDATE \"Currency\" SET \"CurrencyName\" = @CurrencyName, \"Prefix\" = @Prefix WHERE \"CurrencyName\" = @CurrencyNameToUpdate RETURNING true";
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new
+        {
+            CurrencyNameToUpdate = name,
+            CurrencyName = Currency.CurrencyName,
+            Prefix = Currency.Prefix
+        });
     }
 
     public bool Delete(string name)

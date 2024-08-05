@@ -21,6 +21,7 @@ public class AdvertisementStatusNameValidator : AbstractValidator<string>
     {
 
         RuleFor(advertisementStatusName => advertisementStatusName)
+            .NotNull()
             .NotEmpty()
             .MaximumLength(NameMaximumLength)
             .WithName("AdvertisementStatusName");

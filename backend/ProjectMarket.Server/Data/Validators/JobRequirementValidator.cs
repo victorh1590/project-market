@@ -21,6 +21,7 @@ public class JobRequirementNameValidator : AbstractValidator<string>
     {
 
         RuleFor(jobRequirementName => jobRequirementName)
+            .NotNull()
             .NotEmpty()
             .MaximumLength(NameMaximumLength)
             .WithName("JobRequirementName");

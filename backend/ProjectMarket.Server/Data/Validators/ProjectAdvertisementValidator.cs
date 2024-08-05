@@ -15,6 +15,7 @@ public class ProjectAdvertisementValidator : AbstractValidator<ProjectAdvertisem
             .WithName("ProjectAdvertisementId")
             .Unless(projectAdvertisement => projectAdvertisement.ProjectAdvertisementId == null);
         RuleFor(projectAdvertisement => projectAdvertisement.Title)
+            .NotNull()
             .NotEmpty()
             .MaximumLength(128)
             .WithName("Title");
@@ -23,6 +24,7 @@ public class ProjectAdvertisementValidator : AbstractValidator<ProjectAdvertisem
             .WithName("Description")
             .Unless(projectAdvertisement => string.IsNullOrEmpty(projectAdvertisement.Description));
         RuleFor(projectAdvertisement => projectAdvertisement.OpenedOn)
+            .NotNull()
             .InclusiveBetween(FirstValidDate, DateTime.Now)
             .LessThan(projectAdvertisement => projectAdvertisement.Deadline)
             .WithName("OpenedOn");
