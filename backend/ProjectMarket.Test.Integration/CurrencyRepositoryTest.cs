@@ -194,7 +194,7 @@ public class CurrencyRepositoryTest
     }
     
     [Order(6)]
-    [Test(Description = "Repository should return Exception when row don't exist")]
+    [Test(Description = "Repository should throw Exception when row don't exist")]
     public void GetCurrencyByNameFailWithExceptionTest()
     {
         const string toSearch = "Pounds";
