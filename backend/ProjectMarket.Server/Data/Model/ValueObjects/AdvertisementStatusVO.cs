@@ -3,6 +3,8 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
+public record AdvertisementStatusRecord(string AdvertisementStatusName);
+
 public struct AdvertisementStatusVo {
     public required string AdvertisementStatusName { get; set; }
 
@@ -11,6 +13,8 @@ public struct AdvertisementStatusVo {
 
         this.Validate();
     }
+    
+    public AdvertisementStatusVo(AdvertisementStatusRecord record) : this(record.AdvertisementStatusName) {}
 }
 
 public static class AdvertisementStatusExtensions {

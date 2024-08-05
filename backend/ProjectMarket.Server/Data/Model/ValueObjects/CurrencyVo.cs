@@ -18,9 +18,7 @@ public struct CurrencyVo
         this.Validate();
     }
 
-    public CurrencyVo(CurrencyRecord record) : this(record.CurrencyName, record.Prefix)
-    {
-    }
+    public CurrencyVo(CurrencyRecord record) : this(record.CurrencyName, record.Prefix) {}
 }
 
 public static class CurrencyExtensions {

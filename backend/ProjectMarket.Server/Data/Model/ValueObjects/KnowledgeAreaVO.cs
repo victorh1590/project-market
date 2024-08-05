@@ -3,6 +3,8 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
+public record KnowledgeAreaRecord(string KnowledgeAreaName);
+
 public struct KnowledgeAreaVo {
     public required string KnowledgeAreaName { get; set; }
 
@@ -11,6 +13,8 @@ public struct KnowledgeAreaVo {
 
         this.Validate();
     }
+
+    public KnowledgeAreaVo(KnowledgeAreaRecord record) : this(record.KnowledgeAreaName) {}
 }
 
 public static class KnowledgeAreaExtensions {

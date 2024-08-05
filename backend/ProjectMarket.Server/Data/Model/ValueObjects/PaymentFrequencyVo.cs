@@ -3,6 +3,8 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.ValueObjects;
 
+public record PaymentFrequencyRecord(string PaymentFrequencyName, string Suffix);
+
 public struct PaymentFrequencyVo
 {
     public required string PaymentFrequencyName { get; init; }
@@ -14,6 +16,8 @@ public struct PaymentFrequencyVo
 
         this.Validate();
     }
+    
+    public PaymentFrequencyVo(PaymentFrequencyRecord record) : this(record.PaymentFrequencyName, record.Suffix) {}
 }
 
 public static class PaymentFrequencyExtensions {
