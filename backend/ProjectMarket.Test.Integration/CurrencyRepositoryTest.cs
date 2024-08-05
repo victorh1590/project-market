@@ -190,11 +190,13 @@ public class CurrencyRepositoryTest
         Assert.That(resultObj, Is.EqualTo(true));
         
         var resultAllObj = _repository.GetAll().AsList();
+        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
+        TestContext.WriteLine(resultAllJson);
         Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
     }
     
     [Order(6)]
-    [Test(Description = "Repository should throw Exception when row don't exist")]
+    [Test(Description = "Repository should throw Exception when row doesn't exist")]
     public void GetCurrencyByNameFailWithExceptionTest()
     {
         const string toSearch = "Pounds";
