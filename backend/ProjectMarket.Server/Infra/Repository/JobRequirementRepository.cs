@@ -1,11 +1,13 @@
-﻿using Dapper;
-using ProjectMarket.Server.Data.Model.ValueObjects;
+﻿using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
-public class JobRequirementRepository(IUnitOfWork uow)
+public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
 {
+    public readonly IUnitOfWork UnitOfWork = unitOfWork;
+    
     public IEnumerable<JobRequirementVo> GetAll()
     {
         // TODO Use pagination instead.

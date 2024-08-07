@@ -1,0 +1,1 @@
+﻿INSERT INTO "JobRequirement" ("JobRequirementName") VALUES ('Python'), ('C#'), ('Go'), ('Power BI');

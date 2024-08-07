@@ -10,7 +10,6 @@ public struct JobRequirementVo {
 
     public JobRequirementVo(string name) {
         JobRequirementName = name;
-
         this.Validate();
     }
 

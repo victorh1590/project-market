@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Dapper;
-using Microsoft.Data.SqlClient;
+﻿using Dapper;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
-using SqlKata;
 using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.Repository;

@@ -1,11 +1,9 @@
 using System.Reflection;
 using Dapper;
 using DbUp;
-using FluentValidation;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using ProjectMarket.Server.Data.Model.ValueObjects;
-using ProjectMarket.Server.Data.Validators;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
 using ProjectMarket.Test.Integration.Database;
@@ -16,7 +14,7 @@ using ProjectMarket.Server.Infra.Migrations;
 namespace ProjectMarket.Test.Integration;
 
 [TestFixture]
-public class CurrencyRepositoryTest
+public class CurrencyRepositoryTests
 {
     private PostgresService _postgresService;
     private UnitOfWorkFactory _unitOfWorkFactory;
@@ -57,32 +55,6 @@ public class CurrencyRepositoryTest
     public void TearDown()
     {
         _repository.UnitOfWork.Dispose();
-    }
-    
-    [NUnit.Framework.Ignore(reason: "This is just an example")]
-    [Test]
-    public void ExecuteCommand()
-    {
-        TestContext.WriteLine(_postgresService.ConnectionString);
-        var compiler = new PostgresCompiler();
-        var query = compiler.Compile(new Query("Items").Select("*"));
-        TestContext.WriteLine(query.ToString());
-        var command = _repository.UnitOfWork.Connection.CreateCommand();
-        command.CommandText = query.Sql;
-        using var reader = command.ExecuteReader();
-        while (reader.Read())
-        {
-            TestContext.WriteLine("{0}\t{1}", reader.GetInt32(0), reader.GetString(1));
-        }
-    }
-    
-    [NUnit.Framework.Ignore(reason: "Not Implemented")]
-    [Test(Description = "Repository should insert currency row without failling")]
-    public void InsertCurrencyTest()
-    {
-        var query = _compiler.Compile(new Query("Items").Select("*"));
-        TestContext.WriteLine(query.ToString());
-        // _repository.Insert();
     }
     
     [Order(1)]
