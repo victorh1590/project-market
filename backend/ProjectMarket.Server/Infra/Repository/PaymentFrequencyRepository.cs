@@ -1,43 +1,66 @@
 ﻿using Dapper;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
+using SqlKata.Compilers;
 
 namespace ProjectMarket.Server.Infra.Repository;
 
-public class PaymentFrequencyRepository(IUnitOfWork uow)
+public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 {
+    public readonly IUnitOfWork UnitOfWork = unitOfWork;
+    
     public IEnumerable<PaymentFrequencyVo> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency";
-        return uow.Connection.Query<PaymentFrequencyVo>(query);
+        string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
+                       "FROM \"PaymentFrequency\"";
+        return UnitOfWork.Connection.Query<PaymentFrequencyVo>(query);
     }
 
     public PaymentFrequencyVo GetPaymentFrequencyByName(string name)
     {
-        string query = "SELECT PaymentFrequencyName, Suffix FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
-        return uow.Connection.QuerySingleOrDefault<PaymentFrequencyVo?>(query, new { PaymentFrequencyName = name })
-                    ?? throw new ArgumentException($"{nameof(PaymentFrequencyVo.PaymentFrequencyName)} not found");
+        string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
+                       "FROM \"PaymentFrequency\" " +
+                       "WHERE \"PaymentFrequencyName\" = @PaymentFrequencyName";
+        try
+        {
+            var record = UnitOfWork.Connection.QuerySingle<PaymentFrequencyRecord>(query, new { PaymentFrequencyName = name });
+            PaymentFrequencyVo result = new(record);
+            return result;
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException($"{nameof(PaymentFrequencyVo.PaymentFrequencyName)} \'{name}\' not found");
+        }
     }
 
-    public void Insert(PaymentFrequencyVo PaymentFrequency)
+    public PaymentFrequencyVo Insert(PaymentFrequencyVo paymentFrequency)
     {
-        string query = "INSERT INTO PaymentFrequency (Description, Suffix) VALUES (@Description, @Suffix)";
-        uow.Connection.Execute(query, PaymentFrequency);
+        string query = "INSERT INTO \"PaymentFrequency\" (\"PaymentFrequencyName\", \"Suffix\") " +
+                       "VALUES (@PaymentFrequencyName, @Suffix) " +
+                       "RETURNING \"PaymentFrequencyName\", \"Suffix\"";
+        return UnitOfWork.Connection.QuerySingle<PaymentFrequencyVo>(query, paymentFrequency);
     }
 
-    public void Update(PaymentFrequencyVo PaymentFrequency)
+    public bool Update(string name, PaymentFrequencyVo paymentFrequency)
     {
-        string query = 
-            "UPDATE PaymentFrequency " +
-            "SET Description = @Description, Suffix = @Suffix " +
-            "WHERE PaymentFrequencyName = @PaymentFrequencyName";
-        uow.Connection.Execute(query, PaymentFrequency);
+        string query = "UPDATE \"PaymentFrequency\" " +
+                       "SET  \"PaymentFrequencyName\" = @PaymentFrequencyName, \"Suffix\" = @Suffix " +
+                       "WHERE  \"PaymentFrequencyName\" = @PaymentFrequencyNameToUpdate " +
+                       "RETURNING true";
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new
+        {
+            PaymentFrequencyNameToUpdate = name,
+            PaymentFrequencyName = paymentFrequency.PaymentFrequencyName,
+            Suffix = paymentFrequency.Suffix
+        });
     }
 
-    public void Delete(string name)
+    public bool Delete(string name)
     {
-        string query = "DELETE CASCADE FROM PaymentFrequency WHERE PaymentFrequencyName = @PaymentFrequencyName";
-        uow.Connection.Execute(query, new { PaymentFrequencyNamePaymentFrequencyName = name });
+        string query = "DELETE FROM \"PaymentFrequency\" CASCADE " +
+                       "WHERE  \"PaymentFrequencyName\" = @PaymentFrequencyName " +
+                       "RETURNING true";
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new { PaymentFrequencyNamePaymentFrequencyName = name });
     }
 }

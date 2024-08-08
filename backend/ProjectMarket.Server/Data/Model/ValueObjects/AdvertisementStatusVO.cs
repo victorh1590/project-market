@@ -6,11 +6,10 @@ namespace ProjectMarket.Server.Data.Model.ValueObjects;
 public record AdvertisementStatusRecord(string AdvertisementStatusName);
 
 public struct AdvertisementStatusVo {
-    public required string AdvertisementStatusName { get; set; }
+    public string AdvertisementStatusName { get; set; }
 
     public AdvertisementStatusVo(string name) {
         AdvertisementStatusName = name;
-
         this.Validate();
     }
     

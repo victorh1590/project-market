@@ -11,17 +11,17 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public IEnumerable<CurrencyVo> GetAll()
     {
-        // var query = compiler.Compile(new Query("Currency").Select("CurrencyName", "Prefix"))
-        //             ?? throw new InvalidDataException($"{nameof(CurrencyRepository)} Failed to compile query");
         // TODO Use pagination instead.
-        string query = "SELECT \"CurrencyName\", \"Prefix\" FROM \"Currency\"";
+        string query = "SELECT \"CurrencyName\", \"Prefix\" " +
+                       "FROM \"Currency\"";
         return UnitOfWork.Connection.Query<CurrencyVo>(query);
     }
 
     public CurrencyVo GetCurrencyByName(string name)
     {
         string query = "SELECT \"CurrencyName\", \"Prefix\" " +
-                       "FROM \"Currency\" WHERE \"CurrencyName\" = @CurrencyName";
+                       "FROM \"Currency\" " +
+                       "WHERE \"CurrencyName\" = @CurrencyName";
         try
         {
             var record = UnitOfWork.Connection.QuerySingle<CurrencyRecord>(query, new { CurrencyName = name });
@@ -43,20 +43,25 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
         return UnitOfWork.Connection.QuerySingle<CurrencyVo>(query, currency);
     }
 
-    public bool Update(string name, CurrencyVo Currency)
+    public bool Update(string name, CurrencyVo currency)
     {
-        string query = "UPDATE \"Currency\" SET \"CurrencyName\" = @CurrencyName, \"Prefix\" = @Prefix WHERE \"CurrencyName\" = @CurrencyNameToUpdate RETURNING true";
+        string query = "UPDATE \"Currency\" " +
+                       "SET \"CurrencyName\" = @CurrencyName, \"Prefix\" = @Prefix " +
+                       "WHERE \"CurrencyName\" = @CurrencyNameToUpdate " +
+                       "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new
         {
             CurrencyNameToUpdate = name,
-            CurrencyName = Currency.CurrencyName,
-            Prefix = Currency.Prefix
+            CurrencyName = currency.CurrencyName,
+            Prefix = currency.Prefix
         });
     }
 
     public bool Delete(string name)
     {
-        string query = "DELETE FROM \"Currency\" CASCADE WHERE \"CurrencyName\" = @CurrencyName RETURNING true";
+        string query = "DELETE FROM \"Currency\" CASCADE " +
+                       "WHERE \"CurrencyName\" = @CurrencyName " +
+                       "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new { CurrencyName = name });
     }
 }

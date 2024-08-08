@@ -6,7 +6,7 @@ namespace ProjectMarket.Server.Data.Model.ValueObjects;
 public record JobRequirementRecord(string JobRequirementName);
 
 public struct JobRequirementVo {
-    public required string JobRequirementName { get; init; }
+    public string JobRequirementName { get; init; }
 
     public JobRequirementVo(string name) {
         JobRequirementName = name;

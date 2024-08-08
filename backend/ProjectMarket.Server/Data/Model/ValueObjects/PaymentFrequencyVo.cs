@@ -7,8 +7,8 @@ public record PaymentFrequencyRecord(string PaymentFrequencyName, string Suffix)
 
 public struct PaymentFrequencyVo
 {
-    public required string PaymentFrequencyName { get; init; }
-    public required string Suffix { get; set; }
+    public string PaymentFrequencyName { get; init; }
+    public string Suffix { get; set; }
 
     public PaymentFrequencyVo(string name, string suffix) {
         PaymentFrequencyName = name;

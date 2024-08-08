@@ -1,4 +1,5 @@
-﻿using ProjectMarket.Server.Data.Model.ValueObjects;
+﻿using Dapper;
+using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
 using SqlKata.Compilers;
 
@@ -11,32 +12,54 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<JobRequirementVo> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT JobRequirementName FROM JobRequirement";
-        return uow.Connection.Query<JobRequirementVo>(query);
+        string query = "SELECT \"JobRequirementName\" " +
+                       "FROM \"JobRequirement\"";
+        return UnitOfWork.Connection.Query<JobRequirementVo>(query);
     }
 
     public JobRequirementVo GetJobRequirementByName(string name)
     {
-        string query = "SELECT JobRequirementName FROM JobRequirement WHERE JobRequirementName = @JobRequirementName";
-        return uow.Connection.QuerySingleOrDefault(query, new { JobRequirementName = name })
-            ?? throw new ArgumentException($"{nameof(JobRequirementVo.JobRequirementName)} not found");
+        string query = "SELECT \"JobRequirementName\" " +
+                       "FROM \"JobRequirement\" " +
+                       "WHERE \"JobRequirementName\" = @JobRequirementName";
+        try
+        {
+            var record = UnitOfWork.Connection.QuerySingle<JobRequirementRecord>(query, new { JobRequirementName = name });
+            JobRequirementVo result = new(record);
+            return result;
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException($"{nameof(JobRequirementVo.JobRequirementName)} \'{name}\' not found");
+        }
     }
 
-    public void Insert(JobRequirementVo JobRequirement)
+    public JobRequirementVo Insert(JobRequirementVo jobRequirement)
     {
-        string query = "INSERT INTO JobRequirement (JobRequirementName) VALUES (@JobRequirementName)";
-        uow.Connection.Execute(query, JobRequirement);
+        string query = "INSERT INTO \"JobRequirement\" (\"JobRequirementName\") " +
+                       "VALUES (@JobRequirementName) " +
+                       "RETURNING \"JobRequirementName\"";
+       return UnitOfWork.Connection.QuerySingle<JobRequirementVo>(query, jobRequirement);
     }
 
-    public void Update(JobRequirementVo JobRequirement)
+    public bool Update(string name, JobRequirementVo jobRequirement)
     {
-        string query = "UPDATE JobRequirement SET JobRequirementName = @JobRequirementName WHERE JobRequirementName = @JobRequirementName";
-        uow.Connection.Execute(query, JobRequirement);
+        string query = "UPDATE \"JobRequirement\" " +
+                       "SET \"JobRequirementName\" = @JobRequirementName " +
+                       "WHERE \"JobRequirementName\" = @JobRequirementNameToUpdate " +
+                       "RETURNING true";
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new
+        {
+            JobRequirementNameToUpdate = name,
+            JobRequirementName = jobRequirement.JobRequirementName
+        });
     }
 
-    public void Delete(string name)
+    public bool Delete(string name)
     {
-        string query = "DELETE CASCADE FROM JobRequirement WHERE JobRequirementName = @JobRequirementName";
-        uow.Connection.Execute(query, new { JobRequirementName = name });
+        string query = "DELETE FROM \"JobRequirement\" CASCADE " +
+                       "WHERE \"JobRequirementName\" = @JobRequirementName " +
+                       "RETURNING true";
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new { JobRequirementName = name });
     }
 }

@@ -6,7 +6,7 @@ namespace ProjectMarket.Server.Data.Model.ValueObjects;
 public record KnowledgeAreaRecord(string KnowledgeAreaName);
 
 public struct KnowledgeAreaVo {
-    public required string KnowledgeAreaName { get; set; }
+    public string KnowledgeAreaName { get; set; }
 
     public KnowledgeAreaVo(string name) {
         KnowledgeAreaName = name;
