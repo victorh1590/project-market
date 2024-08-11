@@ -27,13 +27,14 @@ public class CurrencyRepositoryTests
     {
         _postgresService = await PostgresServiceFactory.CreateServiceAsync() ?? throw new InvalidOperationException();
         _unitOfWorkFactory = new UnitOfWorkFactory(_postgresService.Configuration, _postgresService.DbmsName);
-        _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
+        _postgresService.Migration.RebuildMigrationProvider(typeof(_1_CreateVOTables).Assembly);
         _postgresService.Migration.ExecuteMigration(1);
-        
+
+        string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
-            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), s => s.StartsWith(GetType().Name))
-            .LogToConsole()
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), 
+                s => s.Contains(GetType().Name + scriptSuffix, StringComparison.OrdinalIgnoreCase))
             .Build()
             .PerformUpgrade();
     }
@@ -62,6 +63,8 @@ public class CurrencyRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
+        TestContext.WriteLine(GetType().Name);
+
         var expectedObj = new List<CurrencyVo>
         {
             new() { CurrencyName = "Dollar", Prefix = "$"},

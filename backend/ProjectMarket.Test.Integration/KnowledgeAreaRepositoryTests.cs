@@ -28,10 +28,11 @@ public class KnowledgeAreaRepositoryTests
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
         _postgresService.Migration.ExecuteMigration(1);
         
+        string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
-            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), s => s.StartsWith(GetType().Name))
-            .LogToConsole()
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), 
+                s => s.Contains(GetType().Name + scriptSuffix, StringComparison.OrdinalIgnoreCase))
             .Build()
             .PerformUpgrade();
     }
@@ -130,7 +131,7 @@ public class KnowledgeAreaRepositoryTests
     
     [Order(4)]
     [Test(Description = "Repository should return specified row")]
-    public void GetCurrencyByNameTest()
+    public void GetKnowledgeAreaByNameTest()
     {
         const string toSearch = "Data Analysis";
         var expectedObj = new KnowledgeAreaVo() { KnowledgeAreaName = "Data Analysis" };
@@ -171,7 +172,7 @@ public class KnowledgeAreaRepositoryTests
     
     [Order(6)]
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
-    public void GetCurrencyByNameFailWithExceptionTest()
+    public void GetKnowledgeAreaByNameFailWithExceptionTest()
     {
         const string toSearch = "Game Development";
         Assert.That(() => _repository.GetKnowledgeAreaByName(toSearch), Throws.ArgumentException);

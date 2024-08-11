@@ -27,10 +27,11 @@ public class PaymentFrequencyTests
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
         _postgresService.Migration.ExecuteMigration(1);
         
+        string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
-            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), s => s.StartsWith(GetType().Name))
-            .LogToConsole()
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), 
+                s => s.Contains(GetType().Name + scriptSuffix, StringComparison.OrdinalIgnoreCase))
             .Build()
             .PerformUpgrade();
     }
@@ -129,7 +130,7 @@ public class PaymentFrequencyTests
     
     [Order(4)]
     [Test(Description = "Repository should return specified row")]
-    public void GetCurrencyByNameTest()
+    public void GetPaymentFrequencyByNameTest()
     {
         const string toSearch = "Once";
         var expectedObj = new PaymentFrequencyVo() { PaymentFrequencyName = "Once" };
@@ -170,7 +171,7 @@ public class PaymentFrequencyTests
     
     [Order(6)]
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
-    public void GetCurrencyByNameFailWithExceptionTest()
+    public void GetPaymentFrequencyByNameFailWithExceptionTest()
     {
         const string toSearch = "Flexible";
         Assert.That(() => _repository.GetPaymentFrequencyByName(toSearch), Throws.ArgumentException);

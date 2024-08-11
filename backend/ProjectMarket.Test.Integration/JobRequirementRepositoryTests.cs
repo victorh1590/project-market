@@ -28,10 +28,11 @@ public class JobRequirementRepositoryTests
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
         _postgresService.Migration.ExecuteMigration(1);
         
+        string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
-            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), s => s.StartsWith(GetType().Name))
-            .LogToConsole()
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), 
+                s => s.Contains(GetType().Name + scriptSuffix, StringComparison.OrdinalIgnoreCase))
             .Build()
             .PerformUpgrade();
     }
@@ -131,7 +132,7 @@ public class JobRequirementRepositoryTests
     
     [Order(4)]
     [Test(Description = "Repository should return specified row")]
-    public void GetCurrencyByNameTest()
+    public void GetJobRequirementByNameTest()
     {
         const string toSearch = "C#";
         var expectedObj = new JobRequirementVo() { JobRequirementName = "C#" };
@@ -172,7 +173,7 @@ public class JobRequirementRepositoryTests
     
     [Order(6)]
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
-    public void GetCurrencyByNameFailWithExceptionTest()
+    public void GetJobRequirementByNameFailWithExceptionTest()
     {
         const string toSearch = "Golang";
         Assert.That(() => _repository.GetJobRequirementByName(toSearch), Throws.ArgumentException);

@@ -36,21 +36,19 @@ public class AdvertisementStatusRepository(IUnitOfWork unitOfWork, Compiler comp
 
     public AdvertisementStatusVo Insert(AdvertisementStatusVo advertisementStatus)
     {
-        string query = 
-            "INSERT INTO \"AdvertisementStatus\" (\"AdvertisementStatusName\") " +
-            "VALUES (@AdvertisementStatusName) " +
-            "RETURNING \"AdvertisementStatus\"";
+        string query = "INSERT INTO \"AdvertisementStatus\" (\"AdvertisementStatusName\") " +
+                       "VALUES (@AdvertisementStatusName) " +
+                       "RETURNING \"AdvertisementStatusName\"";
 
         return UnitOfWork.Connection.QuerySingle<AdvertisementStatusVo>(query, advertisementStatus);
     }
 
     public bool Update(string name, AdvertisementStatusVo advertisementStatus)
     {
-        string query = 
-            "UPDATE \"AdvertisementStatus\" " + 
-            "SET \"AdvertisementStatusName\" = @AdvertisementStatusName" +
-            "WHERE \"AdvertisementStatusName\" = @AdvertisementStatusNameToUpdate " +
-            "RETURNING true";
+        string query = "UPDATE \"AdvertisementStatus\" " + 
+                       "SET \"AdvertisementStatusName\" = @AdvertisementStatusName " +
+                       "WHERE \"AdvertisementStatusName\" = @AdvertisementStatusNameToUpdate " +
+                       "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new
         {
             AdvertisementStatusNameToUpdate = name,
@@ -60,7 +58,7 @@ public class AdvertisementStatusRepository(IUnitOfWork unitOfWork, Compiler comp
 
     public bool Delete(string name)
     {
-        string query = "DELETE FROM AdvertisementStatus CASCADE " +
+        string query = "DELETE FROM \"AdvertisementStatus\" CASCADE " +
                        "WHERE \"AdvertisementStatusName\" = @AdvertisementStatusName " +
                        "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new { AdvertisementStatusName = name });

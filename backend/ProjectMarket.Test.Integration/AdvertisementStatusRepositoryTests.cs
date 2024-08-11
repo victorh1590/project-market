@@ -28,10 +28,11 @@ public class AdvertisementStatusRepositoryTests
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
         _postgresService.Migration.ExecuteMigration(1);
         
+        string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
-            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), s => s.StartsWith(GetType().Name))
-            .LogToConsole()
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), 
+                s => s.Contains(GetType().Name + scriptSuffix, StringComparison.OrdinalIgnoreCase))
             .Build()
             .PerformUpgrade();
     }
@@ -87,7 +88,8 @@ public class AdvertisementStatusRepositoryTests
             new() { AdvertisementStatusName = "Closed" },
             new() { AdvertisementStatusName = "Open" },
             new() { AdvertisementStatusName = "On Standby" },
-            new() { AdvertisementStatusName = "Cancelled" }
+            new() { AdvertisementStatusName = "Cancelled" },
+            new() { AdvertisementStatusName = "Finished" }
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -130,7 +132,7 @@ public class AdvertisementStatusRepositoryTests
     
     [Order(4)]
     [Test(Description = "Repository should return specified row")]
-    public void GetCurrencyByNameTest()
+    public void GetAdvertisementStatusByNameTest()
     {
         const string toSearch = "Open";
         var expectedObj = new AdvertisementStatusVo() { AdvertisementStatusName = "Open" };
@@ -152,9 +154,9 @@ public class AdvertisementStatusRepositoryTests
         var expectedAllObj = new List<AdvertisementStatusVo>
         {
             new() { AdvertisementStatusName = "Open" },
-            new() { AdvertisementStatusName = "On Standby" },
             new() { AdvertisementStatusName = "Cancelled" },
-            new() { AdvertisementStatusName = "Finished" }
+            new() { AdvertisementStatusName = "Finished" },
+            new() { AdvertisementStatusName = "On Development" }
         };
 
         var resultObj = _repository.Update(toUpdate, update);
@@ -171,7 +173,7 @@ public class AdvertisementStatusRepositoryTests
     
     [Order(6)]
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
-    public void GetCurrencyByNameFailWithExceptionTest()
+    public void GetAdvertisementStatusByNameFailWithExceptionTest()
     {
         const string toSearch = "Merged";
         Assert.That(() => _repository.GetAdvertisementStatusByName(toSearch), Throws.ArgumentException);
