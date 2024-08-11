@@ -1,0 +1,1 @@
+﻿INSERT INTO "AdvertisementStatus" ("AdvertisementStatusName") VALUES ('Closed'), ('Open'), ('On Standby'), ('Cancelled');

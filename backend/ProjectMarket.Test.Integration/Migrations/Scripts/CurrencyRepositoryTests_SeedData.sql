@@ -1,0 +1,1 @@
+﻿INSERT INTO "Currency" ("CurrencyName", "Prefix") VALUES ('Dollar', '$'), ('Euro', '€'), ('Yen', '¥');
