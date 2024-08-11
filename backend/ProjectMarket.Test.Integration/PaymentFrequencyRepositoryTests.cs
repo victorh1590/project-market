@@ -12,7 +12,8 @@ using SqlKata.Compilers;
 
 namespace ProjectMarket.Test.Integration;
 
-public class PaymentFrequencyTests
+[TestFixture]
+public class PaymentFrequencyRepositoryTests
 {
     private PostgresService _postgresService;
     private UnitOfWorkFactory _unitOfWorkFactory;
@@ -87,7 +88,8 @@ public class PaymentFrequencyTests
             new() { PaymentFrequencyName = "Monthly", Suffix = "a month" },
             new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
             new() { PaymentFrequencyName = "Daily", Suffix = "per day" },
-            new() { PaymentFrequencyName = "Once", Suffix = "when project is done" }
+            new() { PaymentFrequencyName = "Once", Suffix = "when project is done" },
+            new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" }
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -127,20 +129,20 @@ public class PaymentFrequencyTests
         var resultAllObj = _repository.GetAll().AsList();
         Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
     }
-    
-    [Order(4)]
-    [Test(Description = "Repository should return specified row")]
-    public void GetPaymentFrequencyByNameTest()
-    {
-        const string toSearch = "Once";
-        var expectedObj = new PaymentFrequencyVo() { PaymentFrequencyName = "Once" };
-
-        var resultObj = _repository.GetPaymentFrequencyByName(toSearch);
-
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine($"Get By Name Returned: {resultJson}");
-        Assert.That(resultObj, Is.EqualTo(expectedObj));
-    }
+        
+        [Order(4)]
+        [Test(Description = "Repository should return specified row")]
+        public void GetPaymentFrequencyByNameTest()
+        {
+            const string toSearch = "Once";
+            var expectedObj = new PaymentFrequencyVo() { PaymentFrequencyName = "Once", Suffix = "when project is done" };
+            
+            var resultObj = _repository.GetPaymentFrequencyByName(toSearch);
+            
+            var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
+            TestContext.WriteLine($"Get By Name Returned: {resultJson}");
+            Assert.That(resultObj, Is.EqualTo(expectedObj));
+        }
     
     [Order(5)]
     [Test(Description = "Repository should update specified row")]
@@ -152,9 +154,9 @@ public class PaymentFrequencyTests
         var expectedAllObj = new List<PaymentFrequencyVo>
         {
             new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
-            new() { PaymentFrequencyName = "Monthly", Suffix = "each month" },
             new() { PaymentFrequencyName = "Once", Suffix = "when project is done" },
-            new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" }
+            new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" },
+            new() { PaymentFrequencyName = "Monthly", Suffix = "each month" }
         };
 
         var resultObj = _repository.Update(toUpdate, update);

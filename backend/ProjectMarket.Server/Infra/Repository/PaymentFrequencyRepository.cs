@@ -61,6 +61,6 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
         string query = "DELETE FROM \"PaymentFrequency\" CASCADE " +
                        "WHERE  \"PaymentFrequencyName\" = @PaymentFrequencyName " +
                        "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new { PaymentFrequencyNamePaymentFrequencyName = name });
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new { PaymentFrequencyName = name });
     }
 }

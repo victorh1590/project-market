@@ -8,7 +8,6 @@ using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
 using ProjectMarket.Test.Integration.Database;
-using SqlKata;
 using SqlKata.Compilers;
 using ProjectMarket.Server.Infra.Migrations;
 

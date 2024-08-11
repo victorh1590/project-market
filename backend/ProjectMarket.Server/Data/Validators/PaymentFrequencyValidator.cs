@@ -18,7 +18,7 @@ public class PaymentFrequencyValidator : AbstractValidator<PaymentFrequencyVo>
 
 public class PaymentFrequencyNameValidator : AbstractValidator<string>
 {
-    private static int NameMaximumLength => 64;
+    private static int NameMaximumLength => 32;
     
     public PaymentFrequencyNameValidator()
     {
@@ -33,7 +33,7 @@ public class PaymentFrequencyNameValidator : AbstractValidator<string>
 
 public class PaymentFrequencySuffixValidator : AbstractValidator<string>
 {
-    private static int SuffixMaximumLength => 8;
+    private static int SuffixMaximumLength => 32;
 
     public PaymentFrequencySuffixValidator()
     {
