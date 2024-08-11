@@ -62,10 +62,10 @@ public class KnowledgeAreaRepositoryTests
     {        
         var expectedObj = new List<KnowledgeAreaVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "AI"},
-            new() { KnowledgeAreaName = "System Development"}
+            new() { KnowledgeAreaName = "Web Development" },
+            new() { KnowledgeAreaName = "Data Analysis" },
+            new() { KnowledgeAreaName = "AI" },
+            new() { KnowledgeAreaName = "System Development" }
         };
         var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
         
@@ -84,10 +84,10 @@ public class KnowledgeAreaRepositoryTests
         var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
         var expectedAllObj = new List<KnowledgeAreaVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "AI"},
-            new() { KnowledgeAreaName = "System Development"}
+            new() { KnowledgeAreaName = "Web Development" },
+            new() { KnowledgeAreaName = "Data Analysis" },
+            new() { KnowledgeAreaName = "AI" },
+            new() { KnowledgeAreaName = "System Development" }
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -113,10 +113,10 @@ public class KnowledgeAreaRepositoryTests
 
         var expectedAllObj = new List<KnowledgeAreaVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "System Development"},
-            new() { KnowledgeAreaName = "Mobile Development"}
+            new() { KnowledgeAreaName = "Web Development" },
+            new() { KnowledgeAreaName = "Data Analysis" },
+            new() { KnowledgeAreaName = "System Development" },
+            new() { KnowledgeAreaName = "Mobile Development" }
         };
         var resultObj = _repository.Delete(toRemove.KnowledgeAreaName);
         _repository.UnitOfWork.Commit();
@@ -147,14 +147,14 @@ public class KnowledgeAreaRepositoryTests
     public void UpdateTest()
     {
         const string toUpdate = "System Development";
-        var update = new KnowledgeAreaVo() { KnowledgeAreaName = "Microcontrollers"};
+        var update = new KnowledgeAreaVo() { KnowledgeAreaName = "Microcontrollers" };
         
         var expectedAllObj = new List<KnowledgeAreaVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "Microcontrollers"},
-            new() { KnowledgeAreaName = "Mobile Development"}
+            new() { KnowledgeAreaName = "Web Development" },
+            new() { KnowledgeAreaName = "Data Analysis" },
+            new() { KnowledgeAreaName = "Microcontrollers" },
+            new() { KnowledgeAreaName = "Mobile Development" }
         };
 
         var resultObj = _repository.Update(toUpdate, update);

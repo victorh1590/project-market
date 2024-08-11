@@ -12,13 +12,12 @@ using SqlKata.Compilers;
 
 namespace ProjectMarket.Test.Integration;
 
-[TestFixture]
-public class AdvertisementStatusRepositoryTests
+public class PaymentFrequencyTests
 {
     private PostgresService _postgresService;
     private UnitOfWorkFactory _unitOfWorkFactory;
     private readonly PostgresCompiler _compiler = new();
-    private AdvertisementStatusRepository _repository;
+    private PaymentFrequencyRepository _repository;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUpAsync()
@@ -46,7 +45,7 @@ public class AdvertisementStatusRepositoryTests
     public void SetUp()
     {
         var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork();
-        _repository = new AdvertisementStatusRepository(unitOfWork, _compiler);
+        _repository = new PaymentFrequencyRepository(unitOfWork, _compiler);
         _repository.UnitOfWork.Begin();
     }
 
@@ -60,12 +59,12 @@ public class AdvertisementStatusRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var expectedObj = new List<AdvertisementStatusVo>
+        var expectedObj = new List<PaymentFrequencyVo>
         {
-            new() { AdvertisementStatusName = "Closed" },
-            new() { AdvertisementStatusName = "Open" },
-            new() { AdvertisementStatusName = "On Standby" },
-            new() { AdvertisementStatusName = "Cancelled" }
+            new() { PaymentFrequencyName = "Monthly", Suffix = "a month" },
+            new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
+            new() { PaymentFrequencyName = "Daily", Suffix = "per day" },
+            new() { PaymentFrequencyName = "Once", Suffix = "when project is done" }
         };
         var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
         
@@ -80,14 +79,14 @@ public class AdvertisementStatusRepositoryTests
     [Test(Description = "Repository should insert specified rows")]
     public void InsertTest()
     {
-        AdvertisementStatusVo toInsert = new() { AdvertisementStatusName = "Finished" };
+        PaymentFrequencyVo toInsert = new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" };
         var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
-        var expectedAllObj = new List<AdvertisementStatusVo>
+        var expectedAllObj = new List<PaymentFrequencyVo>
         {
-            new() { AdvertisementStatusName = "Closed" },
-            new() { AdvertisementStatusName = "Open" },
-            new() { AdvertisementStatusName = "On Standby" },
-            new() { AdvertisementStatusName = "Cancelled" }
+            new() { PaymentFrequencyName = "Monthly", Suffix = "a month" },
+            new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
+            new() { PaymentFrequencyName = "Daily", Suffix = "per day" },
+            new() { PaymentFrequencyName = "Once", Suffix = "when project is done" }
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -109,16 +108,16 @@ public class AdvertisementStatusRepositoryTests
     [Test(Description = "Repository should delete specified rows")]
     public void DeleteTest()
     {
-        AdvertisementStatusVo toRemove = new() { AdvertisementStatusName = "Closed" };
+        PaymentFrequencyVo toRemove = new() { PaymentFrequencyName = "Monthly", Suffix = "a month" };
 
-        var expectedAllObj = new List<AdvertisementStatusVo>
+        var expectedAllObj = new List<PaymentFrequencyVo>
         {
-            new() { AdvertisementStatusName = "Open" },
-            new() { AdvertisementStatusName = "On Standby" },
-            new() { AdvertisementStatusName = "Cancelled" },
-            new() { AdvertisementStatusName = "Finished" }
+            new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
+            new() { PaymentFrequencyName = "Daily", Suffix = "per day" },
+            new() { PaymentFrequencyName = "Once", Suffix = "when project is done" },
+            new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" }
         };
-        var resultObj = _repository.Delete(toRemove.AdvertisementStatusName);
+        var resultObj = _repository.Delete(toRemove.PaymentFrequencyName);
         _repository.UnitOfWork.Commit();
 
         TestContext.WriteLine($"Delete returned: {resultObj}");
@@ -132,10 +131,10 @@ public class AdvertisementStatusRepositoryTests
     [Test(Description = "Repository should return specified row")]
     public void GetCurrencyByNameTest()
     {
-        const string toSearch = "Open";
-        var expectedObj = new AdvertisementStatusVo() { AdvertisementStatusName = "Open" };
+        const string toSearch = "Once";
+        var expectedObj = new PaymentFrequencyVo() { PaymentFrequencyName = "Once" };
 
-        var resultObj = _repository.GetAdvertisementStatusByName(toSearch);
+        var resultObj = _repository.GetPaymentFrequencyByName(toSearch);
 
         var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
         TestContext.WriteLine($"Get By Name Returned: {resultJson}");
@@ -146,15 +145,15 @@ public class AdvertisementStatusRepositoryTests
     [Test(Description = "Repository should update specified row")]
     public void UpdateTest()
     {
-        const string toUpdate = "On Standby";
-        var update = new AdvertisementStatusVo() { AdvertisementStatusName = "On Development" };
+        const string toUpdate = "Daily";
+        var update = new PaymentFrequencyVo() { PaymentFrequencyName = "Monthly", Suffix = "each month" };
         
-        var expectedAllObj = new List<AdvertisementStatusVo>
+        var expectedAllObj = new List<PaymentFrequencyVo>
         {
-            new() { AdvertisementStatusName = "Open" },
-            new() { AdvertisementStatusName = "On Standby" },
-            new() { AdvertisementStatusName = "Cancelled" },
-            new() { AdvertisementStatusName = "Finished" }
+            new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
+            new() { PaymentFrequencyName = "Monthly", Suffix = "each month" },
+            new() { PaymentFrequencyName = "Once", Suffix = "when project is done" },
+            new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" }
         };
 
         var resultObj = _repository.Update(toUpdate, update);
@@ -173,7 +172,7 @@ public class AdvertisementStatusRepositoryTests
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
     public void GetCurrencyByNameFailWithExceptionTest()
     {
-        const string toSearch = "Merged";
-        Assert.That(() => _repository.GetAdvertisementStatusByName(toSearch), Throws.ArgumentException);
-    }
+        const string toSearch = "Flexible";
+        Assert.That(() => _repository.GetPaymentFrequencyByName(toSearch), Throws.ArgumentException);
+    } 
 }
