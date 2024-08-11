@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Dapper;
 using DbUp;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using ProjectMarket.Server.Data.Model.ValueObjects;
@@ -13,12 +14,13 @@ using SqlKata.Compilers;
 namespace ProjectMarket.Test.Integration;
 
 [TestFixture]
-public class JobRequirementRepositoryTests
+public class KnowledgeAreaRepositoryTests
 {
+    
     private PostgresService _postgresService;
     private UnitOfWorkFactory _unitOfWorkFactory;
     private readonly PostgresCompiler _compiler = new();
-    private JobRequirementRepository _repository;
+    private KnowledgeAreaRepository _repository;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUpAsync()
@@ -46,7 +48,7 @@ public class JobRequirementRepositoryTests
     public void SetUp()
     {
         var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork();
-        _repository = new JobRequirementRepository(unitOfWork, _compiler);
+        _repository = new KnowledgeAreaRepository(unitOfWork, _compiler);
         _repository.UnitOfWork.Begin();
     }
 
@@ -60,12 +62,12 @@ public class JobRequirementRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var expectedObj = new List<JobRequirementVo>
+        var expectedObj = new List<KnowledgeAreaVo>
         {
-            new() { JobRequirementName = "Python"},
-            new() { JobRequirementName = "C#"},
-            new() { JobRequirementName = "Go"},
-            new() { JobRequirementName = "Power BI"}
+            new() { KnowledgeAreaName = "Web Development"},
+            new() { KnowledgeAreaName = "Data Analysis"},
+            new() { KnowledgeAreaName = "AI"},
+            new() { KnowledgeAreaName = "System Development"}
         };
         var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
         
@@ -80,15 +82,14 @@ public class JobRequirementRepositoryTests
     [Test(Description = "Repository should insert specified rows")]
     public void InsertTest()
     {
-        JobRequirementVo toInsert = new() { JobRequirementName = "Excel" };
+        KnowledgeAreaVo toInsert = new() { KnowledgeAreaName = "Mobile Development" };
         var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
-        var expectedAllObj = new List<JobRequirementVo>
+        var expectedAllObj = new List<KnowledgeAreaVo>
         {
-            new() { JobRequirementName = "Python"},
-            new() { JobRequirementName = "C#"},
-            new() { JobRequirementName = "Go"},
-            new() { JobRequirementName = "Excel"},
-            new() { JobRequirementName = "Power BI"}
+            new() { KnowledgeAreaName = "Web Development"},
+            new() { KnowledgeAreaName = "Data Analysis"},
+            new() { KnowledgeAreaName = "AI"},
+            new() { KnowledgeAreaName = "System Development"}
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -110,16 +111,16 @@ public class JobRequirementRepositoryTests
     [Test(Description = "Repository should delete specified rows")]
     public void DeleteTest()
     {
-        JobRequirementVo toRemove = new() { JobRequirementName = "Go" };
+        KnowledgeAreaVo toRemove = new() { KnowledgeAreaName = "AI" };
 
-        var expectedAllObj = new List<JobRequirementVo>
+        var expectedAllObj = new List<KnowledgeAreaVo>
         {
-            new() { JobRequirementName = "Python"},
-            new() { JobRequirementName = "C#"},
-            new() { JobRequirementName = "Excel"},
-            new() { JobRequirementName = "Power BI"}
+            new() { KnowledgeAreaName = "Web Development"},
+            new() { KnowledgeAreaName = "Data Analysis"},
+            new() { KnowledgeAreaName = "System Development"},
+            new() { KnowledgeAreaName = "Mobile Development"}
         };
-        var resultObj = _repository.Delete(toRemove.JobRequirementName);
+        var resultObj = _repository.Delete(toRemove.KnowledgeAreaName);
         _repository.UnitOfWork.Commit();
 
         TestContext.WriteLine($"Delete returned: {resultObj}");
@@ -133,10 +134,10 @@ public class JobRequirementRepositoryTests
     [Test(Description = "Repository should return specified row")]
     public void GetCurrencyByNameTest()
     {
-        const string toSearch = "C#";
-        var expectedObj = new JobRequirementVo() { JobRequirementName = "C#" };
+        const string toSearch = "Data Analysis";
+        var expectedObj = new KnowledgeAreaVo() { KnowledgeAreaName = "Data Analysis" };
 
-        var resultObj = _repository.GetJobRequirementByName(toSearch);
+        var resultObj = _repository.GetKnowledgeAreaByName(toSearch);
 
         var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
         TestContext.WriteLine($"Get By Name Returned: {resultJson}");
@@ -147,15 +148,15 @@ public class JobRequirementRepositoryTests
     [Test(Description = "Repository should update specified row")]
     public void UpdateTest()
     {
-        const string toUpdate = "Power BI";
-        var update = new JobRequirementVo() { JobRequirementName = "PowerBI"};
+        const string toUpdate = "System Development";
+        var update = new KnowledgeAreaVo() { KnowledgeAreaName = "Microcontrollers"};
         
-        var expectedAllObj = new List<JobRequirementVo>
+        var expectedAllObj = new List<KnowledgeAreaVo>
         {
-            new() { JobRequirementName = "Python"},
-            new() { JobRequirementName = "C#"},
-            new() { JobRequirementName = "Excel"},
-            new() { JobRequirementName = "PowerBI"}
+            new() { KnowledgeAreaName = "Web Development"},
+            new() { KnowledgeAreaName = "Data Analysis"},
+            new() { KnowledgeAreaName = "Microcontrollers"},
+            new() { KnowledgeAreaName = "Mobile Development"}
         };
 
         var resultObj = _repository.Update(toUpdate, update);
@@ -174,8 +175,7 @@ public class JobRequirementRepositoryTests
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
     public void GetCurrencyByNameFailWithExceptionTest()
     {
-        const string toSearch = "Golang";
-        Assert.That(() => _repository.GetJobRequirementByName(toSearch), Throws.ArgumentException);
+        const string toSearch = "Game Development";
+        Assert.That(() => _repository.GetKnowledgeAreaByName(toSearch), Throws.ArgumentException);
     }
-
 }
