@@ -13,12 +13,12 @@ using SqlKata.Compilers;
 namespace ProjectMarket.Test.Integration;
 
 [TestFixture]
-public class KnowledgeAreaRepositoryTests
+public class AdvertisementStatusRepositoryTests
 {
-    private PostgresService _postgresService;
+     private PostgresService _postgresService;
     private UnitOfWorkFactory _unitOfWorkFactory;
     private readonly PostgresCompiler _compiler = new();
-    private KnowledgeAreaRepository _repository;
+    private AdvertisementStatusRepository _repository;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUpAsync()
@@ -46,7 +46,7 @@ public class KnowledgeAreaRepositoryTests
     public void SetUp()
     {
         var unitOfWork = _unitOfWorkFactory.CreateUnitOfWork();
-        _repository = new KnowledgeAreaRepository(unitOfWork, _compiler);
+        _repository = new AdvertisementStatusRepository(unitOfWork, _compiler);
         _repository.UnitOfWork.Begin();
     }
 
@@ -60,12 +60,12 @@ public class KnowledgeAreaRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var expectedObj = new List<KnowledgeAreaVo>
+        var expectedObj = new List<AdvertisementStatusVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "AI"},
-            new() { KnowledgeAreaName = "System Development"}
+            new() { AdvertisementStatusName = "Closed"},
+            new() { AdvertisementStatusName = "Open"},
+            new() { AdvertisementStatusName = "On Standby"},
+            new() { AdvertisementStatusName = "Cancelled"}
         };
         var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
         
@@ -80,14 +80,14 @@ public class KnowledgeAreaRepositoryTests
     [Test(Description = "Repository should insert specified rows")]
     public void InsertTest()
     {
-        KnowledgeAreaVo toInsert = new() { KnowledgeAreaName = "Mobile Development" };
+        AdvertisementStatusVo toInsert = new() { AdvertisementStatusName = "Finished" };
         var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
-        var expectedAllObj = new List<KnowledgeAreaVo>
+        var expectedAllObj = new List<AdvertisementStatusVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "AI"},
-            new() { KnowledgeAreaName = "System Development"}
+            new() { AdvertisementStatusName = "Closed"},
+            new() { AdvertisementStatusName = "Open"},
+            new() { AdvertisementStatusName = "On Standby"},
+            new() { AdvertisementStatusName = "Cancelled"}
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -109,16 +109,16 @@ public class KnowledgeAreaRepositoryTests
     [Test(Description = "Repository should delete specified rows")]
     public void DeleteTest()
     {
-        KnowledgeAreaVo toRemove = new() { KnowledgeAreaName = "AI" };
+        AdvertisementStatusVo toRemove = new() { AdvertisementStatusName = "Closed" };
 
-        var expectedAllObj = new List<KnowledgeAreaVo>
+        var expectedAllObj = new List<AdvertisementStatusVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "System Development"},
-            new() { KnowledgeAreaName = "Mobile Development"}
+            new() { AdvertisementStatusName = "Open"},
+            new() { AdvertisementStatusName = "On Standby"},
+            new() { AdvertisementStatusName = "Cancelled"},
+            new() { AdvertisementStatusName = "Finished"}
         };
-        var resultObj = _repository.Delete(toRemove.KnowledgeAreaName);
+        var resultObj = _repository.Delete(toRemove.AdvertisementStatusName);
         _repository.UnitOfWork.Commit();
 
         TestContext.WriteLine($"Delete returned: {resultObj}");
@@ -132,10 +132,10 @@ public class KnowledgeAreaRepositoryTests
     [Test(Description = "Repository should return specified row")]
     public void GetCurrencyByNameTest()
     {
-        const string toSearch = "Data Analysis";
-        var expectedObj = new KnowledgeAreaVo() { KnowledgeAreaName = "Data Analysis" };
+        const string toSearch = "Open";
+        var expectedObj = new AdvertisementStatusVo() { AdvertisementStatusName = "Open" };
 
-        var resultObj = _repository.GetKnowledgeAreaByName(toSearch);
+        var resultObj = _repository.GetAdvertisementStatusByName(toSearch);
 
         var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
         TestContext.WriteLine($"Get By Name Returned: {resultJson}");
@@ -146,15 +146,15 @@ public class KnowledgeAreaRepositoryTests
     [Test(Description = "Repository should update specified row")]
     public void UpdateTest()
     {
-        const string toUpdate = "System Development";
-        var update = new KnowledgeAreaVo() { KnowledgeAreaName = "Microcontrollers"};
+        const string toUpdate = "On Standby";
+        var update = new AdvertisementStatusVo() { AdvertisementStatusName = "On Development"};
         
-        var expectedAllObj = new List<KnowledgeAreaVo>
+        var expectedAllObj = new List<AdvertisementStatusVo>
         {
-            new() { KnowledgeAreaName = "Web Development"},
-            new() { KnowledgeAreaName = "Data Analysis"},
-            new() { KnowledgeAreaName = "Microcontrollers"},
-            new() { KnowledgeAreaName = "Mobile Development"}
+            new() { AdvertisementStatusName = "Open"},
+            new() { AdvertisementStatusName = "On Standby"},
+            new() { AdvertisementStatusName = "Cancelled"},
+            new() { AdvertisementStatusName = "Finished"}
         };
 
         var resultObj = _repository.Update(toUpdate, update);
@@ -173,7 +173,7 @@ public class KnowledgeAreaRepositoryTests
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
     public void GetCurrencyByNameFailWithExceptionTest()
     {
-        const string toSearch = "Game Development";
-        Assert.That(() => _repository.GetKnowledgeAreaByName(toSearch), Throws.ArgumentException);
+        const string toSearch = "Merged";
+        Assert.That(() => _repository.GetAdvertisementStatusByName(toSearch), Throws.ArgumentException);
     }
 }

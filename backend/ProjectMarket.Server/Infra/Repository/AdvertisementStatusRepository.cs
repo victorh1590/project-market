@@ -58,11 +58,11 @@ public class AdvertisementStatusRepository(IUnitOfWork unitOfWork, Compiler comp
         });
     }
 
-    public bool Delete(AdvertisementStatusVo advertisementStatus)
+    public bool Delete(string name)
     {
         string query = "DELETE FROM AdvertisementStatus CASCADE " +
                        "WHERE \"AdvertisementStatusName\" = @AdvertisementStatusName " +
                        "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, advertisementStatus);
+        return UnitOfWork.Connection.QuerySingle<bool>(query, new { AdvertisementStatusName = name });
     }
 }
