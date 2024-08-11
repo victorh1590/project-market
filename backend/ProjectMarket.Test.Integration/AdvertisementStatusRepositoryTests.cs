@@ -30,7 +30,7 @@ public class AdvertisementStatusRepositoryTests
         
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
-            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), s => s.StartsWith(GetType().Name))
             .LogToConsole()
             .Build()
             .PerformUpgrade();
