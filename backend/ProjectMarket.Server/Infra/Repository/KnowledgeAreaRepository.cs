@@ -38,7 +38,7 @@ public class KnowledgeAreaRepository(IUnitOfWork unitOfWork, Compiler compiler)
     {
         string query = "INSERT INTO \"KnowledgeArea\" (\"KnowledgeAreaName\") " +
                        "VALUES (@KnowledgeAreaName) " +
-                       "RETURNING \"KnowledgeName\"";
+                       "RETURNING \"KnowledgeAreaName\"";
         return UnitOfWork.Connection.QuerySingle<KnowledgeAreaVo>(query, knowledgeArea);
     }
 
@@ -50,7 +50,7 @@ public class KnowledgeAreaRepository(IUnitOfWork unitOfWork, Compiler compiler)
                        "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new
         {
-            KnowledgeAreaNameToUpadte = name,
+            KnowledgeAreaNameToUpdate = name,
             KnowledgeAreaName = knowledgeArea.KnowledgeAreaName
         });
     }

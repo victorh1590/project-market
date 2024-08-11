@@ -88,7 +88,8 @@ public class KnowledgeAreaRepositoryTests
             new() { KnowledgeAreaName = "Web Development" },
             new() { KnowledgeAreaName = "Data Analysis" },
             new() { KnowledgeAreaName = "AI" },
-            new() { KnowledgeAreaName = "System Development" }
+            new() { KnowledgeAreaName = "System Development" },
+            new() { KnowledgeAreaName = "Mobile Development" }
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -154,8 +155,8 @@ public class KnowledgeAreaRepositoryTests
         {
             new() { KnowledgeAreaName = "Web Development" },
             new() { KnowledgeAreaName = "Data Analysis" },
-            new() { KnowledgeAreaName = "Microcontrollers" },
-            new() { KnowledgeAreaName = "Mobile Development" }
+            new() { KnowledgeAreaName = "Mobile Development" },
+            new() { KnowledgeAreaName = "Microcontrollers" }
         };
 
         var resultObj = _repository.Update(toUpdate, update);

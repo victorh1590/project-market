@@ -88,8 +88,8 @@ public class JobRequirementRepositoryTests
             new() { JobRequirementName = "Python"},
             new() { JobRequirementName = "C#"},
             new() { JobRequirementName = "Go"},
-            new() { JobRequirementName = "Excel"},
-            new() { JobRequirementName = "Power BI"}
+            new() { JobRequirementName = "Power BI"},
+            new() { JobRequirementName = "Excel"}
         };
         var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
 
@@ -117,8 +117,8 @@ public class JobRequirementRepositoryTests
         {
             new() { JobRequirementName = "Python"},
             new() { JobRequirementName = "C#"},
-            new() { JobRequirementName = "Excel"},
-            new() { JobRequirementName = "Power BI"}
+            new() { JobRequirementName = "Power BI"},
+            new() { JobRequirementName = "Excel"}
         };
         var resultObj = _repository.Delete(toRemove.JobRequirementName);
         _repository.UnitOfWork.Commit();
