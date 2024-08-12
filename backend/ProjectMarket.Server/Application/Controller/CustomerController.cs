@@ -4,23 +4,22 @@ using Microsoft.Data.SqlClient;
 using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.Factory;
-using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Repository;
 
 namespace ProjectMarket.Server.Application.Controller;
 
 [ApiController]
 [Route("[controller]")]
-public class CustomersController(IUnitOfWork uow) : ControllerBase
+public class CustomersController(
+    CustomerRepository customerRepository,
+    CustomerFactory customerFactory) : ControllerBase
 {
-    private readonly CustomerRepository _customerRepository = new(uow);
-
     [HttpGet("{id:int}")]
     public ActionResult<Customer> GetCustomerById(int id)
     {
         try
         {
-            return Ok(_customerRepository.GetCustomerById(id));
+            return Ok(customerRepository.GetCustomerById(id));
         }
         catch (Exception e)
         {
@@ -36,19 +35,18 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     public ActionResult<Customer> PostCustomer([FromBody] CustomerDto dto)
     {
         Customer inserted;
-        using(_customerRepository.UnitOfWork) 
+        using(customerRepository.UnitOfWork) 
         {
             try
             {
-                _customerRepository.UnitOfWork.Begin();
-                CustomerFactory factory = new();
-                Customer customer = factory.CreateCustomer(dto);
-                inserted = _customerRepository.Insert(customer);
-                _customerRepository.UnitOfWork.Commit();
+                customerRepository.UnitOfWork.Begin();
+                Customer customer = customerFactory.CreateCustomer(dto);
+                inserted = customerRepository.Insert(customer);
+                customerRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _customerRepository.UnitOfWork.Rollback();
+                customerRepository.UnitOfWork.Rollback();
                 return (e) switch
                 {
                     ValidationException => BadRequest("Body is in a invalid state."),
@@ -63,20 +61,19 @@ public class CustomersController(IUnitOfWork uow) : ControllerBase
     [HttpPut("{id:int}")]
     public ActionResult<Customer> UpdateCustomer([FromRoute] int id, [FromBody] CustomerDto dto)
     {
-        using(_customerRepository.UnitOfWork) 
+        using(customerRepository.UnitOfWork) 
         {
             try
             {
-                _customerRepository.UnitOfWork.Begin();
-                _customerRepository.GetCustomerById(id);
-                CustomerFactory factory = new();
-                Customer customer = factory.CreateCustomer(dto);
-                _customerRepository.Update(customer);
-                _customerRepository.UnitOfWork.Commit();
+                customerRepository.UnitOfWork.Begin();
+                customerRepository.GetCustomerById(id);
+                Customer customer = customerFactory.CreateCustomer(dto);
+                customerRepository.Update(customer);
+                customerRepository.UnitOfWork.Commit();
             }
             catch (Exception e)
             {
-                _customerRepository.UnitOfWork.Rollback();
+                customerRepository.UnitOfWork.Rollback();
                 return e switch
                 {
                     ArgumentException => NotFound($"{nameof(Customer)} with {nameof(id)} {id} not found."),

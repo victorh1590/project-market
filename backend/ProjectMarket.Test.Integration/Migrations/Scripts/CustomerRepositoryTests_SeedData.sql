@@ -1,11 +1,10 @@
 ﻿INSERT INTO "Customer" ("Name", "Email", "Password", "RegistrationDate") VALUES
-    ('Adam', 'adam@example.com', '$2a$04$vo0GaDyEPfOb9f6gqviWh.UZLnabjN/cUEeBV5j21mLXSlngv4LyS', '2024-02-14 10:32:45'),
-    ('Alice Johnson', 'alice.johnson@example.com', '$2a$04$ythI9xOhEmXaHsCiJ.Jh0ugqBohSpFlkjJJlozkiBcoDqC1SmQS1.', '2024-03-05 14:21:12'),
-    ('Bob Smith', 'bob.smith@example.com', '$2a$04$iGLiwDHKP81cPawqX.vEh.y7XK0u1qwhz8Z1uIkLyLAoKCCUL7pOW', '2024-04-21 09:45:23'),
-    ('Charlie Brown', 'charlie.brown@example.com', '$2a$04$u9oWbsDKeAyV8a902.57iuMRtlDQOOtxyPfYWSz4RTdZ8.faFvyxW', '2024-05-30 17:54:09'),
-    ('David Wilson', 'david.wilson@example.com', '$2a$04$7Tch3wNL3rDZqbZo7tO9/u7iNZmz1Pqb52nmNcm4grzyz.7kvHQiS', '2024-06-18 08:12:34'),
-    ('Emma Davis', 'emma.davis@example.com', '$2a$04$ChRprKplMqJAKRD15N0vUuw.HK0LkxNLcrIMv88967J9N8tgDszba', '2024-07-10 13:46:51'),
-    ('Frank Miller', 'frank.miller@example.com', '$2a$04$Rb9XEaVTLhNlY75mpaVPaetbhY/UwcTUN.Jt/5FN6BNCex0RSOb9G', '2024-01-25 16:23:18'),
-    ('Grace Lee', 'grace.lee@example.com', '$2a$04$UNXL4rXerkg7YQnDJRJYPuPWVYDmyiSVifRnb8LvOaCMujhYn1naC', '2024-08-03 19:37:29'),
-    ('Henry Thompson', 'henry.thompson@example.com', '$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS', '2024-02-27 11:54:48'),
-    ('Ivy Martinez', 'ivy.martinez@example.com', '$2a$04$.a6d2TTE121rHPju9A16fumBMfjSqoMXsdRL7PL3Ye5IeWr2pR0x.', '2024-07-22 15:29:07');
+('Adam', 'adam@example.com', '\x24326124303424766f30476144794550664f623966366771766957682e555a4c6e61626a4e2f635545654256356a32316d4c58536c6e6776344c7953'::bytea, '2024-02-14 10:32:45'),
+('Alice Johnson', 'alice.johnson@example.com', '\x243261243034247974684939784f68456d5861487343694a2e4a6830756771426f685370466c6b6a4a4a6c6f7a6b6942636f44714331536d5153312e'::bytea, '2024-03-05 14:21:12'),
+('Bob Smith', 'bob.smith@example.com', '\x2432612430342469474c697744484b5038316350617771582e7645682e7937584b3075317177687a385a3175496b4c794c416f4b4343554c37704f57'::bytea, '2024-04-21 09:45:23'),
+('Charlie Brown', 'charlie.brown@example.com', '\x2432612430342475396f576273444b6541795638613930322e353769754d52746c44514f4f74787950665957537a345254645a382e66614676797857'::bytea, '2024-05-30 17:54:09'),
+('David Wilson', 'david.wilson@example.com', '\x243261243034243754636833774e4c3372445a71625a6f37744f392f7537694e5a6d7a3150716235326e6d4e636d3467727a797a2e376b7648516953'::bytea, '2024-06-18 08:12:34'),
+('Emma Davis', 'emma.davis@example.com', '\x2432612430342443685270724b706c4d714a414b524431354e30765575772e484b304c6b784e4c6372494d7638383936374a394e38746744737a6261'::bytea, '2024-07-10 13:46:51'),
+('Frank Miller', 'frank.miller@example.com', '\x2432612430342452623958456156544c684e6c5937356d706156506165746268592f55776354554e2e4a742f35464e36424e4365783052534f623947'::bytea, '2024-01-25 16:23:18'),
+('Grace Lee', 'grace.lee@example.com', '\x24326124303424554e584c34725865726b673759516e444a524a59507550575659446d796953566966526e62384c764f61434d756a68596e316e6143'::bytea, '2024-08-03 19:37:29'),
+('Henry Thompson', 'henry.thompson@example.com', '\x243261243034245142424e31576f38553436412f374f4a494153464375744836346945337334326e454534313171525869637861386a59516c6c5953'::bytea, '2024-02-27 11:54:48')

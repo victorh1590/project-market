@@ -3,7 +3,6 @@ using Dapper;
 using DbUp;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using ProjectMarket.Server.Data.Model.Dto;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Infra.Db;
 using ProjectMarket.Server.Infra.Migrations;
@@ -27,7 +26,7 @@ public class CustomerRepositoryTests
         _postgresService = await PostgresServiceFactory.CreateServiceAsync() ?? throw new InvalidOperationException();
         _unitOfWorkFactory = new UnitOfWorkFactory(_postgresService.Configuration, _postgresService.DbmsName);
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
-        _postgresService.Migration.ExecuteMigration(1);
+        _postgresService.Migration.ExecuteMigration(2);
         
         string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
@@ -74,6 +73,7 @@ public class CustomerRepositoryTests
             new(8, "Grace Lee", "grace.lee@example.com", "$2a$04$UNXL4rXerkg7YQnDJRJYPuPWVYDmyiSVifRnb8LvOaCMujhYn1naC", new DateTime(2024, 8, 3, 19, 37, 29)),
             new(9, "Henry Thompson", "henry.thompson@example.com", "$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS", new DateTime(2024, 2, 27, 11, 54, 48)),
         };
+        
         var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
         
         var resultObj = _repository.GetAll();
@@ -93,7 +93,14 @@ public class CustomerRepositoryTests
             "jack.white@example.com", 
             "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW", 
             new DateTime(2024,05,14,7,38,56));
-        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
+        var expectedJson = JsonConvert.SerializeObject(
+            new Customer(
+            10, 
+            "Jack White", 
+            "jack.white@example.com", 
+            "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW", 
+            new DateTime(2024,05,14,7,38,56)
+            ), Formatting.Indented);
         var expectedAllObj = new List<Customer>
         {
             new(1, "Adam", "adam@example.com", "$2a$04$vo0GaDyEPfOb9f6gqviWh.UZLnabjN/cUEeBV5j21mLXSlngv4LyS", new DateTime(2024, 2, 14, 10, 32, 45)),

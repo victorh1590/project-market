@@ -8,13 +8,13 @@ public class _2_CreateCustomerTable(IConfiguration? configuration = null) : Migr
 
     public override void Up()
 	{
-        const int bcryptHashSize = 72;
+        const int bcryptHashSize = 60;
 
         Create.Table("Customer")
             .WithColumn("CustomerId").AsInt32().PrimaryKey("pk_customer").Identity().NotNullable()
             .WithColumn("Name").AsString(64).Unique().NotNullable()
             .WithColumn("Email").AsString(128).NotNullable()
-            .WithColumn("Password").AsString(bcryptHashSize).NotNullable()
+            .WithColumn("Password").AsBinary(bcryptHashSize).NotNullable()
             .WithColumn("RegistrationDate").AsDateTime().NotNullable();
 
         if(configuration?.GetValue<bool>("Database:UseSeedData") ?? false) {

@@ -14,7 +14,6 @@ public class ProjectAdvertisementController(
     ProjectAdvertisementRepository projectAdvertisementRepository,
     ProjectAdvertisementFactory projectAdvertisementFactory) : ControllerBase
 {
-
     [HttpGet("{id:int}")]
     public ActionResult<ProjectAdvertisement> GetProjectAdvertisementById(int id)
     {
