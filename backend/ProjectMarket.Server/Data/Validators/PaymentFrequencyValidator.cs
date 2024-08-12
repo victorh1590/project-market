@@ -22,7 +22,6 @@ public class PaymentFrequencyNameValidator : AbstractValidator<string>
     
     public PaymentFrequencyNameValidator()
     {
-
         RuleFor(paymentFrequencyName => paymentFrequencyName)
             .NotNull()
             .NotEmpty()
@@ -37,7 +36,6 @@ public class PaymentFrequencySuffixValidator : AbstractValidator<string>
 
     public PaymentFrequencySuffixValidator()
     {
-        
         RuleFor(suffix => suffix)
             .NotNull()
             .NotEmpty()

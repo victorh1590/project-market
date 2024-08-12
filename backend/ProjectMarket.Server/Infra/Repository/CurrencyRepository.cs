@@ -36,10 +36,9 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public CurrencyVo Insert(CurrencyVo currency)
     {
-        string query = 
-            "INSERT INTO \"Currency\" (\"CurrencyName\", \"Prefix\") " +
-            "VALUES (@CurrencyName, @Prefix) " +
-            "RETURNING \"CurrencyName\", \"Prefix\"";
+        string query = "INSERT INTO \"Currency\" (\"CurrencyName\", \"Prefix\") " +
+                       "VALUES (@CurrencyName, @Prefix) " +
+                       "RETURNING \"CurrencyName\", \"Prefix\"";
         
         return UnitOfWork.Connection.QuerySingle<CurrencyVo>(query, currency);
     }
