@@ -23,11 +23,11 @@ public class CustomerValidator : AbstractValidator<Customer>
             .NotEmpty()
             .Must(arr => arr.Length == 60)
             .WithName("Password");
-        RuleFor(customer => customer.PasswordString)
-            .NotNull()
-            .Length(BCryptHashSize)
-            .Equal(customer => Encoding.UTF8.GetString(customer.Password))
-            .WithName("PasswordString");
+        // RuleFor(customer => customer.PasswordString)
+        //     .NotNull()
+        //     .Length(BCryptHashSize)
+        //     .Equal(customer => Encoding.UTF8.GetString(customer.Password))
+        //     .WithName("PasswordString");
         RuleFor(customer => customer.RegistrationDate)
             .NotNull()
             .InclusiveBetween(FirstValidDate, DateTime.Now)

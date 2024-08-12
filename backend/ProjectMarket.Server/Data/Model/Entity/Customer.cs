@@ -4,7 +4,8 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class Customer
+public record CustomerRecord(int CustomerId, string Name, string Email, byte[] Password, DateTime RegistrationDate);
+public class Customer : IEquatable<Customer>
 {
     public int? CustomerId { get; init; }
     public string Name { get; set; }
@@ -18,17 +19,17 @@ public class Customer
     public DateTime RegistrationDate { get; set; }
     
     public Customer(
-        int? CustomerId, 
-        string Name, 
-        string Email, 
-        byte[] Password, 
-        DateTime? RegistrationDate)
+        int? customerId, 
+        string name, 
+        string email, 
+        byte[] password, 
+        DateTime? registrationDate)
     {
-        this.CustomerId = CustomerId;
-        this.Name = Name;
-        this.Email = Email;
-        this.Password = Password;
-        this.RegistrationDate = RegistrationDate ?? DateTime.Now;
+        CustomerId = customerId;
+        Name = name;
+        Email = email;
+        Password = password;
+        RegistrationDate = registrationDate ?? DateTime.Now;
 
         this.Validate();
     }
@@ -43,10 +44,29 @@ public class Customer
         CustomerId = id;
         Name = name;
         Email = email;
-        Password = Encoding.ASCII.GetBytes(password);
+        Password = Encoding.UTF8.GetBytes(password);
         RegistrationDate = registrationDate ?? DateTime.Now;
-
+    
         this.Validate();
+    }
+
+    public Customer(CustomerRecord record)
+    {
+        CustomerId = record.CustomerId;
+        Name = record.Name;
+        Email = record.Email;
+        Password = record.Password;
+        RegistrationDate = record.RegistrationDate;
+    }
+
+    public bool Equals(Customer? other)
+    {
+        return other != null &&
+               CustomerId == other.CustomerId &&
+               Name == other.Name &&
+               Email == other.Email &&
+               Password.SequenceEqual(other.Password) &&
+               RegistrationDate == other.RegistrationDate;
     }
 }
 

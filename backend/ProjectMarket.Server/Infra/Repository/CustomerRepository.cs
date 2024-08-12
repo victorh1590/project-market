@@ -24,7 +24,9 @@ public class CustomerRepository(IUnitOfWork unitOfWork, Compiler compiler)
                              "WHERE \"CustomerId\" = @CustomerId";
         try
         {
-            return UnitOfWork.Connection.QuerySingle<Customer>(query, new { CustomerId = id });
+            var record = UnitOfWork.Connection.QuerySingle<CustomerRecord>(query, new { CustomerId = id });
+            Customer customer = new(record);
+            return customer;
         }
         catch (Exception)
         {
