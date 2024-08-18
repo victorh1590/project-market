@@ -61,20 +61,16 @@ public class KnowledgeAreaRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var expectedObj = new List<KnowledgeAreaVo>
+        var expectedAllObj = new List<KnowledgeAreaVo>
         {
             new() { KnowledgeAreaName = "Web Development" },
             new() { KnowledgeAreaName = "Data Analysis" },
             new() { KnowledgeAreaName = "AI" },
             new() { KnowledgeAreaName = "System Development" }
         };
-        var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
-        
-        var resultObj = _repository.GetAll();
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
+        var resultAllObj = _repository.GetAll();
 
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
+        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
     }
     
     [Order(2)]
@@ -82,7 +78,6 @@ public class KnowledgeAreaRepositoryTests
     public void InsertTest()
     {
         KnowledgeAreaVo toInsert = new() { KnowledgeAreaName = "Mobile Development" };
-        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
         var expectedAllObj = new List<KnowledgeAreaVo>
         {
             new() { KnowledgeAreaName = "Web Development" },
@@ -91,20 +86,15 @@ public class KnowledgeAreaRepositoryTests
             new() { KnowledgeAreaName = "System Development" },
             new() { KnowledgeAreaName = "Mobile Development" }
         };
-        var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
-
         var resultObj = _repository.Insert(toInsert);
         _repository.UnitOfWork.Commit();
-        
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
-
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
-
         var resultAllObj = _repository.GetAll();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
 
-        Assert.That(resultAllJson, Is.EqualTo(expectedAllJson));
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(toInsert));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(3)]
@@ -112,7 +102,6 @@ public class KnowledgeAreaRepositoryTests
     public void DeleteTest()
     {
         KnowledgeAreaVo toRemove = new() { KnowledgeAreaName = "AI" };
-
         var expectedAllObj = new List<KnowledgeAreaVo>
         {
             new() { KnowledgeAreaName = "Web Development" },
@@ -122,12 +111,14 @@ public class KnowledgeAreaRepositoryTests
         };
         var resultObj = _repository.Delete(toRemove.KnowledgeAreaName);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Delete returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-
         var resultAllObj = _repository.GetAll().AsList();
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(4)]
@@ -136,11 +127,10 @@ public class KnowledgeAreaRepositoryTests
     {
         const string toSearch = "Data Analysis";
         var expectedObj = new KnowledgeAreaVo() { KnowledgeAreaName = "Data Analysis" };
-
         var resultObj = _repository.GetKnowledgeAreaByName(toSearch);
-
         var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
         TestContext.WriteLine($"Get By Name Returned: {resultJson}");
+        
         Assert.That(resultObj, Is.EqualTo(expectedObj));
     }
     
@@ -150,7 +140,6 @@ public class KnowledgeAreaRepositoryTests
     {
         const string toUpdate = "System Development";
         var update = new KnowledgeAreaVo() { KnowledgeAreaName = "Microcontrollers" };
-        
         var expectedAllObj = new List<KnowledgeAreaVo>
         {
             new() { KnowledgeAreaName = "Web Development" },
@@ -158,17 +147,16 @@ public class KnowledgeAreaRepositoryTests
             new() { KnowledgeAreaName = "Mobile Development" },
             new() { KnowledgeAreaName = "Microcontrollers" }
         };
-
         var resultObj = _repository.Update(toUpdate, update);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Update Returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-        
         var resultAllObj = _repository.GetAll().AsList();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
-        TestContext.WriteLine(resultAllJson);
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(6)]

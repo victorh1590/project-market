@@ -61,20 +61,16 @@ public class JobRequirementRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var expectedObj = new List<JobRequirementVo>
+        var expectedAllObj = new List<JobRequirementVo>
         {
             new() { JobRequirementName = "Python"},
             new() { JobRequirementName = "C#"},
             new() { JobRequirementName = "Go"},
             new() { JobRequirementName = "Power BI"}
         };
-        var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
-        
-        var resultObj = _repository.GetAll();
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
+        var resultAllObj = _repository.GetAll();
 
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
+        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
     }
     
     [Order(2)]
@@ -82,7 +78,6 @@ public class JobRequirementRepositoryTests
     public void InsertTest()
     {
         JobRequirementVo toInsert = new() { JobRequirementName = "Excel" };
-        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
         var expectedAllObj = new List<JobRequirementVo>
         {
             new() { JobRequirementName = "Python"},
@@ -91,20 +86,15 @@ public class JobRequirementRepositoryTests
             new() { JobRequirementName = "Power BI"},
             new() { JobRequirementName = "Excel"}
         };
-        var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
-
         var resultObj = _repository.Insert(toInsert);
         _repository.UnitOfWork.Commit();
-        
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
-
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
-
         var resultAllObj = _repository.GetAll();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
 
-        Assert.That(resultAllJson, Is.EqualTo(expectedAllJson));
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(toInsert));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(3)]
@@ -112,7 +102,6 @@ public class JobRequirementRepositoryTests
     public void DeleteTest()
     {
         JobRequirementVo toRemove = new() { JobRequirementName = "Go" };
-
         var expectedAllObj = new List<JobRequirementVo>
         {
             new() { JobRequirementName = "Python"},
@@ -122,12 +111,14 @@ public class JobRequirementRepositoryTests
         };
         var resultObj = _repository.Delete(toRemove.JobRequirementName);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Delete returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-
         var resultAllObj = _repository.GetAll().AsList();
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(4)]
@@ -136,11 +127,10 @@ public class JobRequirementRepositoryTests
     {
         const string toSearch = "C#";
         var expectedObj = new JobRequirementVo() { JobRequirementName = "C#" };
-
         var resultObj = _repository.GetJobRequirementByName(toSearch);
-
         var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
         TestContext.WriteLine($"Get By Name Returned: {resultJson}");
+
         Assert.That(resultObj, Is.EqualTo(expectedObj));
     }
     
@@ -150,7 +140,6 @@ public class JobRequirementRepositoryTests
     {
         const string toUpdate = "Power BI";
         var update = new JobRequirementVo() { JobRequirementName = "PowerBI"};
-        
         var expectedAllObj = new List<JobRequirementVo>
         {
             new() { JobRequirementName = "Python"},
@@ -158,17 +147,16 @@ public class JobRequirementRepositoryTests
             new() { JobRequirementName = "Excel"},
             new() { JobRequirementName = "PowerBI"}
         };
-
         var resultObj = _repository.Update(toUpdate, update);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Update Returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-        
         var resultAllObj = _repository.GetAll().AsList();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
-        TestContext.WriteLine(resultAllJson);
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(6)]

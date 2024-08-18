@@ -61,20 +61,16 @@ public class PaymentFrequencyRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var expectedObj = new List<PaymentFrequencyVo>
+        var expectedAllObj = new List<PaymentFrequencyVo>
         {
             new() { PaymentFrequencyName = "Monthly", Suffix = "a month" },
             new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
             new() { PaymentFrequencyName = "Daily", Suffix = "per day" },
             new() { PaymentFrequencyName = "Once", Suffix = "when project is done" }
         };
-        var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
-        
-        var resultObj = _repository.GetAll();
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
+        var resultAllObj = _repository.GetAll();
 
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
+        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj));
     }
     
     [Order(2)]
@@ -82,7 +78,6 @@ public class PaymentFrequencyRepositoryTests
     public void InsertTest()
     {
         PaymentFrequencyVo toInsert = new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" };
-        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
         var expectedAllObj = new List<PaymentFrequencyVo>
         {
             new() { PaymentFrequencyName = "Monthly", Suffix = "a month" },
@@ -91,20 +86,15 @@ public class PaymentFrequencyRepositoryTests
             new() { PaymentFrequencyName = "Once", Suffix = "when project is done" },
             new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" }
         };
-        var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
-
         var resultObj = _repository.Insert(toInsert);
         _repository.UnitOfWork.Commit();
-        
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
-
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
-
         var resultAllObj = _repository.GetAll();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
 
-        Assert.That(resultAllJson, Is.EqualTo(expectedAllJson));
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(toInsert));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(3)]
@@ -112,7 +102,6 @@ public class PaymentFrequencyRepositoryTests
     public void DeleteTest()
     {
         PaymentFrequencyVo toRemove = new() { PaymentFrequencyName = "Monthly", Suffix = "a month" };
-
         var expectedAllObj = new List<PaymentFrequencyVo>
         {
             new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
@@ -122,12 +111,14 @@ public class PaymentFrequencyRepositoryTests
         };
         var resultObj = _repository.Delete(toRemove.PaymentFrequencyName);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Delete returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-
         var resultAllObj = _repository.GetAll().AsList();
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
         
         [Order(4)]
@@ -136,11 +127,10 @@ public class PaymentFrequencyRepositoryTests
         {
             const string toSearch = "Once";
             var expectedObj = new PaymentFrequencyVo() { PaymentFrequencyName = "Once", Suffix = "when project is done" };
-            
             var resultObj = _repository.GetPaymentFrequencyByName(toSearch);
-            
             var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
             TestContext.WriteLine($"Get By Name Returned: {resultJson}");
+
             Assert.That(resultObj, Is.EqualTo(expectedObj));
         }
     
@@ -150,7 +140,6 @@ public class PaymentFrequencyRepositoryTests
     {
         const string toUpdate = "Daily";
         var update = new PaymentFrequencyVo() { PaymentFrequencyName = "Monthly", Suffix = "each month" };
-        
         var expectedAllObj = new List<PaymentFrequencyVo>
         {
             new() { PaymentFrequencyName = "Hourly", Suffix = "per hour" },
@@ -158,17 +147,16 @@ public class PaymentFrequencyRepositoryTests
             new() { PaymentFrequencyName = "Per Task", Suffix = "when task is completed" },
             new() { PaymentFrequencyName = "Monthly", Suffix = "each month" }
         };
-
         var resultObj = _repository.Update(toUpdate, update);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Update Returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-        
         var resultAllObj = _repository.GetAll().AsList();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
-        TestContext.WriteLine(resultAllJson);
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(6)]

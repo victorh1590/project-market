@@ -62,21 +62,15 @@ public class CurrencyRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        TestContext.WriteLine(GetType().Name);
-
-        var expectedObj = new List<CurrencyVo>
+        var expectedAllObj = new List<CurrencyVo>
         {
             new() { CurrencyName = "Dollar", Prefix = "$"},
             new() { CurrencyName = "Euro", Prefix = "€" },
             new() { CurrencyName = "Yen", Prefix = "¥" }
         };
-        var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
-        
-        var resultObj = _repository.GetAll();
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
+        var resultAllObj = _repository.GetAll();
 
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
+        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
     }
     
     [Order(2)]
@@ -84,7 +78,6 @@ public class CurrencyRepositoryTests
     public void InsertTest()
     {
         CurrencyVo toInsert = new() { CurrencyName = "Rupee", Prefix = "₹" };
-        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
         var expectedAllObj = new List<CurrencyVo>
         {
             new() { CurrencyName = "Dollar", Prefix = "$"},
@@ -92,20 +85,15 @@ public class CurrencyRepositoryTests
             new() { CurrencyName = "Yen", Prefix = "¥" },
             new() { CurrencyName = "Rupee", Prefix = "₹"}
         };
-        var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
-
         var resultObj = _repository.Insert(toInsert);
         _repository.UnitOfWork.Commit();
-        
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
-
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
-
         var resultAllObj = _repository.GetAll();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
 
-        Assert.That(resultAllJson, Is.EqualTo(expectedAllJson));
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(toInsert));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(3)]
@@ -113,7 +101,6 @@ public class CurrencyRepositoryTests
     public void DeleteTest()
     {
         CurrencyVo toRemove = new() { CurrencyName = "Euro", Prefix = "€" };
-
         var expectedAllObj = new List<CurrencyVo>
         {
             new() { CurrencyName = "Dollar", Prefix = "$"},
@@ -122,12 +109,14 @@ public class CurrencyRepositoryTests
         };
         var resultObj = _repository.Delete(toRemove.CurrencyName);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Delete returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-
         var resultAllObj = _repository.GetAll().AsList();
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(4)]
@@ -136,11 +125,10 @@ public class CurrencyRepositoryTests
     {
         const string toSearch = "Rupee";
         var expectedObj = new CurrencyVo() { CurrencyName = "Rupee", Prefix = "₹" };
-
         var resultObj = _repository.GetCurrencyByName(toSearch);
-
         var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
         TestContext.WriteLine($"Get By Name Returned: {resultJson}");
+        
         Assert.That(resultObj, Is.EqualTo(expectedObj));
     }
     
@@ -150,24 +138,22 @@ public class CurrencyRepositoryTests
     {
         const string toUpdate = "Rupee";
         var update = new CurrencyVo() { CurrencyName = "Yuan", Prefix = "\u00a5" };
-        
         var expectedAllObj = new List<CurrencyVo>
         {
             new() { CurrencyName = "Dollar", Prefix = "$"},
             new() { CurrencyName = "Yen", Prefix = "¥" },
             new() { CurrencyName = "Yuan", Prefix = "\u00a5" }
         };
-
         var resultObj = _repository.Update(toUpdate, update);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Update Returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-        
         var resultAllObj = _repository.GetAll().AsList();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
-        TestContext.WriteLine(resultAllJson);
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(6)]
