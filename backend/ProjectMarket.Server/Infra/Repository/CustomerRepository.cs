@@ -28,7 +28,7 @@ public class CustomerRepository(IUnitOfWork unitOfWork, Compiler compiler)
         }
         catch (Exception)
         {
-            throw new ArgumentException($"{nameof(Customer.Name)} \'{id}\' not found");
+            throw new ArgumentException($"{nameof(Customer.CustomerId)} \'{id}\' not found");
         }
     }
 
@@ -49,11 +49,11 @@ public class CustomerRepository(IUnitOfWork unitOfWork, Compiler compiler)
                              "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new
         {
-            CustomerId = customer.CustomerId,
-            Name = customer.Name,
-            Email = customer.Email,
-            Password = customer.Password,
-            RegistrationDate = customer.RegistrationDate
+            customer.CustomerId,
+            customer.Name,
+            customer.Email,
+            customer.Password,
+            customer.RegistrationDate
         });
     }
 

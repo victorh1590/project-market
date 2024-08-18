@@ -33,6 +33,7 @@ public class Customer : IEquatable<Customer>
         this.Validate();
     }
     
+    // This constructor receives a string for password instead of byte[].
     public Customer(
         int? customerId, 
         string name, 
@@ -49,15 +50,18 @@ public class Customer : IEquatable<Customer>
         this.Validate();
     }
     
-    public override bool Equals(object? obj) => obj is Customer other && Equals(other);
-    public override int GetHashCode() => HashCode.Combine(CustomerId, Name, Email, Password, RegistrationDate);
+    public override bool Equals(object? obj) 
+        => ReferenceEquals(this, obj) || (obj is Customer other && Equals(other));
+    public override int GetHashCode() 
+        => HashCode.Combine(CustomerId, Name, Email, Password, RegistrationDate);
     public bool Equals(Customer? other) 
-        => other != null &&
+        => ReferenceEquals(this, other) || (
+           other != null &&
            CustomerId == other.CustomerId &&
            Name == other.Name &&
            Email == other.Email &&
            Password.SequenceEqual(other.Password) &&
-           RegistrationDate == other.RegistrationDate;
+           RegistrationDate == other.RegistrationDate);
 }
 
 public static class CustomerExtension {

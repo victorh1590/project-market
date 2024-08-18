@@ -4,7 +4,7 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class PaymentOffer
+public class PaymentOffer : IEquatable<PaymentOffer>
 {
     public int? PaymentOfferId { get; init; }
     public decimal Value { get; set; }
@@ -12,18 +12,30 @@ public class PaymentOffer
     public CurrencyVo Currency { get; set; }
 
     public PaymentOffer(
-        int? id,
+        int? paymentOfferId,
         decimal value,
         PaymentFrequencyVo paymentFrequency,
         CurrencyVo currency)
     {
-        PaymentOfferId = id;
+        PaymentOfferId = paymentOfferId;
         Value = value;
         PaymentFrequency = paymentFrequency;
         Currency = currency;
 
         this.Validate();
     }
+
+    public override bool Equals(object? obj) 
+        => ReferenceEquals(this, obj) || (obj is PaymentOffer other && Equals(other));
+    public override int GetHashCode() 
+        => HashCode.Combine(PaymentOfferId, Value, PaymentFrequency, Currency);
+    public bool Equals(PaymentOffer? other) 
+        => ReferenceEquals(this, other) || ( 
+           other != null &&
+           PaymentOfferId == other.PaymentOfferId &&
+           Value == other.Value &&
+           PaymentFrequency.Equals(other.PaymentFrequency) &&
+           Currency.Equals(other.Currency));
 }
 
 public static class PaymentOfferExtensions {

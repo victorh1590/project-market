@@ -28,7 +28,7 @@ public class CustomerRepositoryTests
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
         _postgresService.Migration.ExecuteMigration(2);
         
-        string scriptSuffix = "_SeedData.sql";
+        const string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
             .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), 
@@ -82,14 +82,6 @@ public class CustomerRepositoryTests
     [Test(Description = "Repository should insert specified rows")]
     public void InsertTest()
     {
-        // Custom Comparer without considering the CustomerId, because it doesn't exist before the insert happens.
-        var comparer = new Func<Customer, Customer, bool>(
-            (expected, result) 
-            => expected.Name == result.Name &&
-               expected.Email == result.Email &&
-               expected.Password.SequenceEqual(result.Password) &&
-               expected.RegistrationDate == result.RegistrationDate);
-        
         Customer toInsert = new(
             null, 
             "Jack White", 
@@ -113,11 +105,13 @@ public class CustomerRepositoryTests
         _repository.UnitOfWork.Commit();
         var resultAllObj = _repository.GetAll();
 
-        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-
-        TestContext.WriteLine($"Expected: {expectedJson}");
-        TestContext.WriteLine($"Result: {resultJson}");
+        // Custom Comparer without considering the CustomerId, because it doesn't exist before the insert happens.
+        var comparer = new Func<Customer, Customer, bool>(
+            (expected, result) 
+                => expected.Name == result.Name &&
+                   expected.Email == result.Email &&
+                   expected.Password.SequenceEqual(result.Password) &&
+                   expected.RegistrationDate == result.RegistrationDate);
         
         Assert.Multiple(() =>
         {
