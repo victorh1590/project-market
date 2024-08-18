@@ -12,14 +12,14 @@ public class AdvertisementStatusRepository(IUnitOfWork unitOfWork, Compiler comp
     public IEnumerable<AdvertisementStatusVo> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT \"AdvertisementStatusName\" " +
-                       "FROM \"AdvertisementStatus\"";
+        const string query = "SELECT \"AdvertisementStatusName\" " + 
+                             "FROM \"AdvertisementStatus\"";
         return UnitOfWork.Connection.Query<AdvertisementStatusVo>(query);
     }
 
     public AdvertisementStatusVo GetAdvertisementStatusByName(string name)
     {
-        string query = "SELECT \"AdvertisementStatusName\" " +
+        const string query = "SELECT \"AdvertisementStatusName\" " +
                        "FROM \"AdvertisementStatus\" " +
                        "WHERE \"AdvertisementStatusName\" = @AdvertisementStatusName";
         try
@@ -36,7 +36,7 @@ public class AdvertisementStatusRepository(IUnitOfWork unitOfWork, Compiler comp
 
     public AdvertisementStatusVo Insert(AdvertisementStatusVo advertisementStatus)
     {
-        string query = "INSERT INTO \"AdvertisementStatus\" (\"AdvertisementStatusName\") " +
+        const string query = "INSERT INTO \"AdvertisementStatus\" (\"AdvertisementStatusName\") " +
                        "VALUES (@AdvertisementStatusName) " +
                        "RETURNING \"AdvertisementStatusName\"";
 
@@ -45,7 +45,7 @@ public class AdvertisementStatusRepository(IUnitOfWork unitOfWork, Compiler comp
 
     public bool Update(string name, AdvertisementStatusVo advertisementStatus)
     {
-        string query = "UPDATE \"AdvertisementStatus\" " + 
+        const string query = "UPDATE \"AdvertisementStatus\" " + 
                        "SET \"AdvertisementStatusName\" = @AdvertisementStatusName " +
                        "WHERE \"AdvertisementStatusName\" = @AdvertisementStatusNameToUpdate " +
                        "RETURNING true";
@@ -58,7 +58,7 @@ public class AdvertisementStatusRepository(IUnitOfWork unitOfWork, Compiler comp
 
     public bool Delete(string name)
     {
-        string query = "DELETE FROM \"AdvertisementStatus\" CASCADE " +
+        const string query = "DELETE FROM \"AdvertisementStatus\" CASCADE " +
                        "WHERE \"AdvertisementStatusName\" = @AdvertisementStatusName " +
                        "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new { AdvertisementStatusName = name });

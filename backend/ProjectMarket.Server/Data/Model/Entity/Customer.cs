@@ -43,7 +43,7 @@ public class Customer : IEquatable<Customer>
         CustomerId = customerId;
         Name = name;
         Email = email;
-        Password = Encoding.UTF8.GetBytes(password);
+        Password = Encoding.ASCII.GetBytes(password);
         RegistrationDate = registrationDate ?? DateTime.Now;
     
         this.Validate();

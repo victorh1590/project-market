@@ -12,14 +12,14 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<CurrencyVo> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT \"CurrencyName\", \"Prefix\" " +
+        const string query = "SELECT \"CurrencyName\", \"Prefix\" " +
                        "FROM \"Currency\"";
         return UnitOfWork.Connection.Query<CurrencyVo>(query);
     }
 
     public CurrencyVo GetCurrencyByName(string name)
     {
-        string query = "SELECT \"CurrencyName\", \"Prefix\" " +
+        const string query = "SELECT \"CurrencyName\", \"Prefix\" " +
                        "FROM \"Currency\" " +
                        "WHERE \"CurrencyName\" = @CurrencyName";
         try
@@ -36,7 +36,7 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public CurrencyVo Insert(CurrencyVo currency)
     {
-        string query = "INSERT INTO \"Currency\" (\"CurrencyName\", \"Prefix\") " +
+        const string query = "INSERT INTO \"Currency\" (\"CurrencyName\", \"Prefix\") " +
                        "VALUES (@CurrencyName, @Prefix) " +
                        "RETURNING \"CurrencyName\", \"Prefix\"";
         
@@ -45,7 +45,7 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Update(string name, CurrencyVo currency)
     {
-        string query = "UPDATE \"Currency\" " +
+        const string query = "UPDATE \"Currency\" " +
                        "SET \"CurrencyName\" = @CurrencyName, \"Prefix\" = @Prefix " +
                        "WHERE \"CurrencyName\" = @CurrencyNameToUpdate " +
                        "RETURNING true";
@@ -59,7 +59,7 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Delete(string name)
     {
-        string query = "DELETE FROM \"Currency\" CASCADE " +
+        const string query = "DELETE FROM \"Currency\" CASCADE " +
                        "WHERE \"CurrencyName\" = @CurrencyName " +
                        "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new { CurrencyName = name });

@@ -12,14 +12,14 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
     public IEnumerable<PaymentFrequencyVo> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
+        const string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
                        "FROM \"PaymentFrequency\"";
         return UnitOfWork.Connection.Query<PaymentFrequencyVo>(query);
     }
 
     public PaymentFrequencyVo GetPaymentFrequencyByName(string name)
     {
-        string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
+        const string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
                        "FROM \"PaymentFrequency\" " +
                        "WHERE \"PaymentFrequencyName\" = @PaymentFrequencyName";
         try
@@ -36,7 +36,7 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
 
     public PaymentFrequencyVo Insert(PaymentFrequencyVo paymentFrequency)
     {
-        string query = "INSERT INTO \"PaymentFrequency\" (\"PaymentFrequencyName\", \"Suffix\") " +
+        const string query = "INSERT INTO \"PaymentFrequency\" (\"PaymentFrequencyName\", \"Suffix\") " +
                        "VALUES (@PaymentFrequencyName, @Suffix) " +
                        "RETURNING \"PaymentFrequencyName\", \"Suffix\"";
         return UnitOfWork.Connection.QuerySingle<PaymentFrequencyVo>(query, paymentFrequency);
@@ -44,7 +44,7 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
 
     public bool Update(string name, PaymentFrequencyVo paymentFrequency)
     {
-        string query = "UPDATE \"PaymentFrequency\" " +
+        const string query = "UPDATE \"PaymentFrequency\" " +
                        "SET  \"PaymentFrequencyName\" = @PaymentFrequencyName, \"Suffix\" = @Suffix " +
                        "WHERE  \"PaymentFrequencyName\" = @PaymentFrequencyNameToUpdate " +
                        "RETURNING true";
@@ -58,7 +58,7 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
 
     public bool Delete(string name)
     {
-        string query = "DELETE FROM \"PaymentFrequency\" CASCADE " +
+        const string query = "DELETE FROM \"PaymentFrequency\" CASCADE " +
                        "WHERE  \"PaymentFrequencyName\" = @PaymentFrequencyName " +
                        "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new { PaymentFrequencyName = name });

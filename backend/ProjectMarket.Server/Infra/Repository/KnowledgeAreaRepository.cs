@@ -12,14 +12,14 @@ public class KnowledgeAreaRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<KnowledgeAreaVo> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT \"KnowledgeAreaName\" " +
+        const string query = "SELECT \"KnowledgeAreaName\" " +
                        "FROM \"KnowledgeArea\"";
         return UnitOfWork.Connection.Query<KnowledgeAreaVo>(query);
     }
 
     public KnowledgeAreaVo GetKnowledgeAreaByName(string name)
     {
-        string query = "SELECT \"KnowledgeAreaName\" " +
+        const string query = "SELECT \"KnowledgeAreaName\" " +
                        "FROM \"KnowledgeArea\" " +
                        "WHERE \"KnowledgeAreaName\" = @KnowledgeAreaName";
         try
@@ -36,7 +36,7 @@ public class KnowledgeAreaRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public KnowledgeAreaVo Insert(KnowledgeAreaVo knowledgeArea)
     {
-        string query = "INSERT INTO \"KnowledgeArea\" (\"KnowledgeAreaName\") " +
+        const string query = "INSERT INTO \"KnowledgeArea\" (\"KnowledgeAreaName\") " +
                        "VALUES (@KnowledgeAreaName) " +
                        "RETURNING \"KnowledgeAreaName\"";
         return UnitOfWork.Connection.QuerySingle<KnowledgeAreaVo>(query, knowledgeArea);
@@ -44,7 +44,7 @@ public class KnowledgeAreaRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Update(string name, KnowledgeAreaVo knowledgeArea)
     {
-        string query = "UPDATE \"KnowledgeArea\" " +
+        const string query = "UPDATE \"KnowledgeArea\" " +
                        "SET \"KnowledgeAreaName\" = @KnowledgeAreaName " +
                        "WHERE \"KnowledgeAreaName\" = @KnowledgeAreaNameToUpdate " +
                        "RETURNING true";
@@ -57,7 +57,7 @@ public class KnowledgeAreaRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Delete(string name)
     {
-        string query = "DELETE FROM \"KnowledgeArea\" CASCADE " +
+        const string query = "DELETE FROM \"KnowledgeArea\" CASCADE " +
                        "WHERE \"KnowledgeAreaName\" = @KnowledgeAreaName " +
                        "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new { KnowledgeAreaName = name });

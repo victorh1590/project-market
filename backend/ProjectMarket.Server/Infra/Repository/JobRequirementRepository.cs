@@ -12,14 +12,14 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<JobRequirementVo> GetAll()
     {
         // TODO Use pagination instead.
-        string query = "SELECT \"JobRequirementName\" " +
+        const string query = "SELECT \"JobRequirementName\" " +
                        "FROM \"JobRequirement\"";
         return UnitOfWork.Connection.Query<JobRequirementVo>(query);
     }
 
     public JobRequirementVo GetJobRequirementByName(string name)
     {
-        string query = "SELECT \"JobRequirementName\" " +
+        const string query = "SELECT \"JobRequirementName\" " +
                        "FROM \"JobRequirement\" " +
                        "WHERE \"JobRequirementName\" = @JobRequirementName";
         try
@@ -36,7 +36,7 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public JobRequirementVo Insert(JobRequirementVo jobRequirement)
     {
-        string query = "INSERT INTO \"JobRequirement\" (\"JobRequirementName\") " +
+        const string query = "INSERT INTO \"JobRequirement\" (\"JobRequirementName\") " +
                        "VALUES (@JobRequirementName) " +
                        "RETURNING \"JobRequirementName\"";
        return UnitOfWork.Connection.QuerySingle<JobRequirementVo>(query, jobRequirement);
@@ -44,7 +44,7 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Update(string name, JobRequirementVo jobRequirement)
     {
-        string query = "UPDATE \"JobRequirement\" " +
+        const string query = "UPDATE \"JobRequirement\" " +
                        "SET \"JobRequirementName\" = @JobRequirementName " +
                        "WHERE \"JobRequirementName\" = @JobRequirementNameToUpdate " +
                        "RETURNING true";
@@ -57,7 +57,7 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Delete(string name)
     {
-        string query = "DELETE FROM \"JobRequirement\" CASCADE " +
+        const string query = "DELETE FROM \"JobRequirement\" CASCADE " +
                        "WHERE \"JobRequirementName\" = @JobRequirementName " +
                        "RETURNING true";
         return UnitOfWork.Connection.QuerySingle<bool>(query, new { JobRequirementName = name });

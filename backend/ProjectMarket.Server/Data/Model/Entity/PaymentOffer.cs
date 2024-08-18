@@ -4,11 +4,6 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public record PaymentOfferRecord(
-    int PaymentOfferId,
-    decimal Value,
-    PaymentFrequencyVo PaymentFrequency,
-    CurrencyVo Currency);
 public class PaymentOffer
 {
     public int? PaymentOfferId { get; init; }
