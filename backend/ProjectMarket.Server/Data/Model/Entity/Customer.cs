@@ -51,7 +51,13 @@ public class Customer : IEquatable<Customer>
     }
     
     public override bool Equals(object? obj) 
-        => ReferenceEquals(this, obj) || (obj is Customer other && Equals(other));
+        => ReferenceEquals(this, obj) || 
+           (obj is Customer other &&
+           CustomerId == other.CustomerId &&
+           Name == other.Name &&
+           Email == other.Email &&
+           Password.SequenceEqual(other.Password) &&
+           RegistrationDate == other.RegistrationDate);
     public override int GetHashCode() 
         => HashCode.Combine(CustomerId, Name, Email, Password, RegistrationDate);
     public bool Equals(Customer? other) 

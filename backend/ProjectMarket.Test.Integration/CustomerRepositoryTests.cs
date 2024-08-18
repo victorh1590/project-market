@@ -185,9 +185,9 @@ public class CustomerRepositoryTests
             new(5, "David Wilson", "david.wilson@example.com", "$2a$04$7Tch3wNL3rDZqbZo7tO9/u7iNZmz1Pqb52nmNcm4grzyz.7kvHQiS"u8.ToArray(), new DateTime(2024, 6, 18, 8, 12, 34)),
             new(6, "Emma Davis", "emma.davis@example.com", "$2a$04$ChRprKplMqJAKRD15N0vUuw.HK0LkxNLcrIMv88967J9N8tgDszba"u8.ToArray(), new DateTime(2024, 7, 10, 13, 46, 51)),
             new(7, "Frank Miller", "frank.miller@example.com", "$2a$04$Rb9XEaVTLhNlY75mpaVPaetbhY/UwcTUN.Jt/5FN6BNCex0RSOb9G"u8.ToArray(), new DateTime(2024, 1, 25, 16, 23, 18)),
-            new(8, "Ivy Martinez", "ivy.martinez@example.com", "$2a$04$.a6d2TTE121rHPju9A16fumBMfjSqoMXsdRL7PL3Ye5IeWr2pR0x."u8.ToArray(), new DateTime(2024, 7, 22, 15, 29, 7)),
             new(9, "Henry Thompson", "henry.thompson@example.com", "$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS"u8.ToArray(), new DateTime(2024, 2, 27, 11, 54, 48)),
-            new(10, "Jack White", "jack.white@example.com", "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW"u8.ToArray(), new DateTime(2024,05,14,7,38,56))
+            new(10, "Jack White", "jack.white@example.com", "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW"u8.ToArray(), new DateTime(2024,05,14,7,38,56)),
+            new(8, "Ivy Martinez", "ivy.martinez@example.com", "$2a$04$.a6d2TTE121rHPju9A16fumBMfjSqoMXsdRL7PL3Ye5IeWr2pR0x."u8.ToArray(), new DateTime(2024, 7, 22, 15, 29, 7))
         };
         var resultObj = _repository.Update(toUpdate);
         _repository.UnitOfWork.Commit();
