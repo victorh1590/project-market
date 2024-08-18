@@ -78,10 +78,10 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
                              "RETURNING true";
 
         return UnitOfWork.Connection.QuerySingle<bool>(query,  new {
-            PaymentOfferId = paymentOffer.PaymentOfferId,
-            Value = paymentOffer.Value,
-            PaymentFrequencyName = paymentOffer.PaymentFrequency.PaymentFrequencyName,
-            CurrencyName = paymentOffer.Currency.CurrencyName
+            paymentOffer.PaymentOfferId,
+            paymentOffer.Value,
+            paymentOffer.PaymentFrequency.PaymentFrequencyName,
+            paymentOffer.Currency.CurrencyName
         });
     }
 
