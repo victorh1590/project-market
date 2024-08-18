@@ -149,7 +149,6 @@ public class CustomerRepositoryTests
         });
     }
     
-    [Ignore("fixing other tests")]
     [Order(4)]
     [Test(Description = "Repository should return specified row")]
     public void GetCustomerByIdTest()
@@ -168,7 +167,6 @@ public class CustomerRepositoryTests
         Assert.That(resultObj, Is.EqualTo(expectedObj));
     }
     
-    [Ignore("fixing other tests")]
     [Order(5)]
     [Test(Description = "Repository should update specified row")]
     public void UpdateTest()
@@ -203,7 +201,6 @@ public class CustomerRepositoryTests
         });
     }
     
-    [Ignore("fixing other tests")]
     [Order(6)]
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
     public void GetCustomerByIdFailWithExceptionTest()

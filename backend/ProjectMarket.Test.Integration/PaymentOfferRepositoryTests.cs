@@ -27,13 +27,16 @@ public class PaymentOfferRepositoryTests
         _postgresService = await PostgresServiceFactory.CreateServiceAsync() ?? throw new InvalidOperationException();
         _unitOfWorkFactory = new UnitOfWorkFactory(_postgresService.Configuration, _postgresService.DbmsName);
         _postgresService.Migration.RebuildMigrationProvider( typeof(_1_CreateVOTables).Assembly );
-        _postgresService.Migration.ExecuteMigration(2);
+        _postgresService.Migration.ExecuteMigration(3);
         
         const string scriptSuffix = "_SeedData.sql";
         DeployChanges.To
             .PostgresqlDatabase(_postgresService.ConnectionString)
             .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), 
-                s => s.Contains(GetType().Name + scriptSuffix, StringComparison.OrdinalIgnoreCase))
+                s => 
+                    s.Contains(nameof(CurrencyRepositoryTests) + scriptSuffix, StringComparison.OrdinalIgnoreCase) ||
+                    s.Contains(nameof(PaymentFrequencyRepositoryTests) + scriptSuffix, StringComparison.OrdinalIgnoreCase) ||
+                    s.Contains(GetType().Name + scriptSuffix, StringComparison.OrdinalIgnoreCase))
             .Build()
             .PerformUpgrade();
     }
@@ -141,7 +144,6 @@ public class PaymentOfferRepositoryTests
         });
     }
     
-    [Ignore("fixing other tests")]
     [Order(4)]
     [Test(Description = "Repository should return specified row")]
     public void GetPaymentOfferByIdTest()
@@ -155,7 +157,6 @@ public class PaymentOfferRepositoryTests
         Assert.That(resultObj, Is.EqualTo(expectedObj));
     }
     
-    [Ignore("fixing other tests")]
     [Order(5)]
     [Test(Description = "Repository should update specified row")]
     public void UpdateTest()
@@ -181,7 +182,6 @@ public class PaymentOfferRepositoryTests
         });
     }
     
-    [Ignore("fixing other tests")]
     [Order(6)]
     [Test(Description = "Repository should throw Exception when row doesn't exist")]
     public void GetPaymentOfferByIdFailWithExceptionTest()

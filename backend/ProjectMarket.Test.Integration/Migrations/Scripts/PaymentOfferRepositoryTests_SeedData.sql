@@ -4,6 +4,4 @@ VALUES
     (25, 'Hourly', 'Euro'),
     (30000, 'Daily', 'Yen'),
     (15000, 'Once', 'Dollar'),
-    (3000, 'Monthly', 'Euro'),
-    (4000, 'Hourly', 'Yen'),
-    (250, 'Daily', 'Dollar')
+    (3000, 'Monthly', 'Euro')

@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Collections;
+using Dapper;
 using ProjectMarket.Server.Data.Model.Entity;
 using ProjectMarket.Server.Data.Model.ValueObjects;
 using ProjectMarket.Server.Infra.Db;
@@ -13,18 +14,31 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<PaymentOffer> GetAll()
     {
         // TODO Use pagination instead.
-        const string query = "SELECT \"PaymentOfferId\", \"Value\", \"PaymentFrequencyName\", \"CurrencyName\" " +
-                             "FROM \"PaymentOffer\"";
-        return UnitOfWork.Connection.Query<PaymentOffer>(query);
+        const string query = "SELECT " +
+                             "\"PaymentOfferId\", \"Value\", " +
+                             "\"PaymentFrequencyName\", \"Suffix\", " + // from PaymentFrequencyVo
+                             "\"CurrencyName\", \"Prefix\" " + // from CurrencyVo
+                             "FROM \"PaymentOffer\" " +
+                             "JOIN \"PaymentFrequency\" USING (\"PaymentFrequencyName\") " +
+                             "JOIN \"Currency\" USING (\"CurrencyName\")";
+        var results = (UnitOfWork.Connection.Query<dynamic>(query)).ToList();
+        List<PaymentOffer> paymentOffers = [];
+        foreach (var obj in results)
+        {
+            PaymentFrequencyVo paymentFrequency = new(obj.PaymentFrequencyName, obj.Suffix);
+            CurrencyVo currency = new(obj.CurrencyName, obj.Prefix);
+            paymentOffers.Add(new(obj.PaymentOfferId, obj.Value, paymentFrequency, currency));
+        }
+
+        return paymentOffers;
     }
 
     public PaymentOffer GetPaymentOfferById(int id)
     {
-        const string query = "SELECT " +
-                             "\"PaymentOfferId\", \"Value\", " +
-                             "\"PaymentFrequencyName\", \"Suffix\", " + // from PaymentFrequencyVo
-                             "\"CurrencyName\", \"Prefix\", " + // from CurrencyVo
-                             "FROM \"PaymentOffer\" " + 
+        const string query = "SELECT \"PaymentOfferId\", \"Value\", " +
+                             "\"PaymentFrequencyName\", \"Suffix\", " +
+                             "\"CurrencyName\", \"Prefix\" " +
+                             "FROM \"PaymentOffer\" " +
                              "JOIN \"PaymentFrequency\" USING (\"PaymentFrequencyName\") " +
                              "JOIN \"Currency\" USING (\"CurrencyName\") " +
                              "WHERE \"PaymentOfferId\" = @PaymentOfferId";
@@ -41,13 +55,19 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
         }
     }
 
+    // TODO: Fix RETURNING.
     public PaymentOffer Insert(PaymentOffer paymentOffer)
     {
         const string query = "INSERT INTO \"PaymentOffer\" (\"Value\", \"PaymentFrequencyName\", \"CurrencyName\") " + 
                              "VALUES (@Value, @PaymentFrequencyName, @CurrencyName) " +
                              "RETURNING \"PaymentOfferId\", \"Value\", \"PaymentFrequencyName\", \"CurrencyName\"";
 
-        return UnitOfWork.Connection.QuerySingle<PaymentOffer>(query, paymentOffer);
+        return UnitOfWork.Connection.QuerySingle<PaymentOffer>(query, new
+        {
+            paymentOffer.Value,
+            paymentOffer.PaymentFrequency.PaymentFrequencyName,
+            paymentOffer.Currency.CurrencyName
+        });
     }
 
     public bool Update(PaymentOffer paymentOffer)
@@ -58,10 +78,10 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
                              "RETURNING true";
 
         return UnitOfWork.Connection.QuerySingle<bool>(query,  new {
-            paymentOffer.PaymentOfferId,
-            paymentOffer.Value,
-            paymentOffer.PaymentFrequency.PaymentFrequencyName,
-            paymentOffer.Currency.CurrencyName
+            PaymentOfferId = paymentOffer.PaymentOfferId,
+            Value = paymentOffer.Value,
+            PaymentFrequencyName = paymentOffer.PaymentFrequency.PaymentFrequencyName,
+            CurrencyName = paymentOffer.Currency.CurrencyName
         });
     }
 

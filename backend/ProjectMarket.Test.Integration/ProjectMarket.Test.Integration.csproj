@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectMarket.Server\ProjectMarket.Server.csproj" />
+    <ProjectReference Include="../ProjectMarket.Server/ProjectMarket.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>
