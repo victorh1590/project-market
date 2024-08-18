@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using System.Text;
 using Dapper;
 using DbUp;
-using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using ProjectMarket.Server.Data.Model.Entity;
@@ -63,7 +61,7 @@ public class CustomerRepositoryTests
     [Test(Description = "Repository should return all rows")]
     public void GetAllTest()
     {        
-        var expectedObj = new List<Customer>
+        var expectedAllObj = new List<Customer>
         {
             new(1, "Adam Adam", "adam.adam@example.com", "$2a$04$vo0GaDyEPfOb9f6gqviWh.UZLnabjN/cUEeBV5j21mLXSlngv4LyS"u8.ToArray(), new DateTime(2024, 2, 14, 10, 32, 45)),
             new(2, "Alice Johnson", "alice.johnson@example.com", "$2a$04$ythI9xOhEmXaHsCiJ.Jh0ugqBohSpFlkjJJlozkiBcoDqC1SmQS1."u8.ToArray(), new DateTime(2024, 3, 5, 14, 21, 12)),
@@ -75,14 +73,9 @@ public class CustomerRepositoryTests
             new(8, "Grace Lee", "grace.lee@example.com", "$2a$04$UNXL4rXerkg7YQnDJRJYPuPWVYDmyiSVifRnb8LvOaCMujhYn1naC"u8.ToArray(), new DateTime(2024, 8, 3, 19, 37, 29)),
             new(9, "Henry Thompson", "henry.thompson@example.com", "$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS"u8.ToArray(), new DateTime(2024, 2, 27, 11, 54, 48)),
         };
+        var resultAllObj = _repository.GetAll();
         
-        var expectedJson = JsonConvert.SerializeObject(expectedObj, Formatting.Indented);
-        
-        var resultObj = _repository.GetAll();
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
-
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
+        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
     }
     
     [Order(2)]
@@ -95,14 +88,6 @@ public class CustomerRepositoryTests
             "jack.white@example.com", 
             "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW"u8.ToArray(), 
             new DateTime(2024,05,14,7,38,56));
-        var expectedJson = JsonConvert.SerializeObject(
-            new Customer(
-            10, 
-            "Jack White", 
-            "jack.white@example.com", 
-            "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW"u8.ToArray(), 
-            new DateTime(2024,05,14,7,38,56)
-            ), Formatting.Indented);
         var expectedAllObj = new List<Customer>
         {
             new(1, "Adam Adam", "adam.adam@example.com", "$2a$04$vo0GaDyEPfOb9f6gqviWh.UZLnabjN/cUEeBV5j21mLXSlngv4LyS"u8.ToArray(), new DateTime(2024, 2, 14, 10, 32, 45)),
@@ -116,21 +101,15 @@ public class CustomerRepositoryTests
             new(9, "Henry Thompson", "henry.thompson@example.com", "$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS"u8.ToArray(), new DateTime(2024, 2, 27, 11, 54, 48)),
             new(10, "Jack White", "jack.white@example.com", "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW"u8.ToArray(), new DateTime(2024,05,14,7,38,56))
         };
-
-        var expectedAllJson = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
-
         var resultObj = _repository.Insert(toInsert);
         _repository.UnitOfWork.Commit();
-        
-        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
-        TestContext.WriteLine(resultJson);
-
-        Assert.That(resultJson, Is.EqualTo(expectedJson));
-
         var resultAllObj = _repository.GetAll();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
 
-        Assert.That(resultAllJson, Is.EqualTo(expectedAllJson));
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(toInsert));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Order(3)]
@@ -150,57 +129,16 @@ public class CustomerRepositoryTests
             new(9, "Henry Thompson", "henry.thompson@example.com", "$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS"u8.ToArray(), new DateTime(2024, 2, 27, 11, 54, 48)),
             new(10, "Jack White", "jack.white@example.com", "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW"u8.ToArray(), new DateTime(2024,05,14,7,38,56))
         };
-        
         var resultObj = _repository.Delete(toRemove);
         _repository.UnitOfWork.Commit();
-
-        TestContext.WriteLine($"Delete returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-
         var resultAllObj = _repository.GetAll().AsList();
-
-        resultAllObj.Should().BeEquivalentTo(expectedAllObj, options => options
-            .IncludingAllRuntimeProperties());
-
-        resultAllObj.Should().Equal(expectedAllObj);
-
-        // var currentJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
-        // var jsonExpected = JsonConvert.SerializeObject(expectedAllObj, Formatting.Indented);
-        // TestContext.WriteLine("delete expected " + jsonExpected);
-        // TestContext.WriteLine("after delete: " + currentJson);
-
-        // var customerResult = resultAllObj.OrderBy(c => c.CustomerId).ToList();
-        // var customerExpected = expectedAllObj.OrderBy(c => c.CustomerId).ToList();
-        //
-        // var customerResult = resultAllObj;
-        // var customerExpected = expectedAllObj;
-        // for (int i = 0; i < resultAllObj.Count; i++)
-        // {
-        //     var result = JsonConvert.SerializeObject(customerResult[i]);
-        //     var expected = JsonConvert.SerializeObject(customerExpected[i]);
-        //     
-        //     TestContext.WriteLine("Result: " + result);
-        //     TestContext.WriteLine("Expected: " + expected);
-        //     customerResult[i].Should().BeEquivalentTo(customerExpected[i]);
-        // }
-        //
-        //
-        // foreach (var customerResult in resultAllObj.OrderBy( c => c.CustomerId ).ToList())
-        // {
-        //     foreach (var customerExpected in expectedAllObj.OrderBy(c => c.CustomerId ).ToList())
-        //     {
-        //         var result = JsonConvert.SerializeObject(customerResult);
-        //         var expected = JsonConvert.SerializeObject(customerExpected);
-        //         
-        //         TestContext.WriteLine("Result: " + result);
-        //         TestContext.WriteLine("Expected: " + expected);
-        //         
-        //         customerResult.Should().BeEquivalentTo(customerExpected);
-        //     }
-        // }
-
-        // Assert.That(currentJson, Is.EqualTo(jsonExpected));
-        // Assert.That(resultAllObj, Is.EquivalentTo(expectedAllObj));
+        TestContext.WriteLine($"Delete returned: {resultObj}");
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Ignore("fixing other tests")]
@@ -215,11 +153,10 @@ public class CustomerRepositoryTests
             "emma.davis@example.com", 
             "$2a$04$ChRprKplMqJAKRD15N0vUuw.HK0LkxNLcrIMv88967J9N8tgDszba"u8.ToArray(), 
             new DateTime(2024, 7, 10, 13, 46, 51));
-
         var resultObj = _repository.GetCustomerById(toSearch);
-
         var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
         TestContext.WriteLine($"Get By Name Returned: {resultJson}");
+        
         Assert.That(resultObj, Is.EqualTo(expectedObj));
     }
     
@@ -234,7 +171,6 @@ public class CustomerRepositoryTests
             "ivy.martinez@example.com",
             "$2a$04$.a6d2TTE121rHPju9A16fumBMfjSqoMXsdRL7PL3Ye5IeWr2pR0x."u8.ToArray(),
             new DateTime(2024, 7, 22, 15, 29, 7));
-
         var expectedAllObj = new List<Customer>
         {
             new(1, "Adam Adam", "adam.adam@example.com", "$2a$04$vo0GaDyEPfOb9f6gqviWh.UZLnabjN/cUEeBV5j21mLXSlngv4LyS"u8.ToArray(), new DateTime(2024, 2, 14, 10, 32, 45)),
@@ -247,17 +183,16 @@ public class CustomerRepositoryTests
             new(9, "Henry Thompson", "henry.thompson@example.com", "$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS"u8.ToArray(), new DateTime(2024, 2, 27, 11, 54, 48)),
             new(10, "Jack White", "jack.white@example.com", "$2a$04$WVPOSbzu6xBjz1dDvdTHEO8RvMJUsAPnHpHxT8i.Ud8Kvj12gAbjW"u8.ToArray(), new DateTime(2024,05,14,7,38,56))
         };
-
         var resultObj = _repository.Update(toUpdate);
         _repository.UnitOfWork.Commit();
-
         TestContext.WriteLine($"Update Returned: {resultObj}");
-        Assert.That(resultObj, Is.EqualTo(true));
-        
         var resultAllObj = _repository.GetAll().AsList();
-        var resultAllJson = JsonConvert.SerializeObject(resultAllObj, Formatting.Indented);
-        TestContext.WriteLine(resultAllJson);
-        Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultObj, Is.EqualTo(true));
+            Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
+        });
     }
     
     [Ignore("fixing other tests")]

@@ -58,6 +58,23 @@ public class Customer : IEquatable<Customer>
         Password = record.Password;
         RegistrationDate = record.RegistrationDate;
     }
+    
+    public override bool Equals(object? other)
+    {
+        if (other == null || other is not Customer) return false;
+        var otherCustomer = (Customer)other;
+        
+        return CustomerId == otherCustomer.CustomerId &&
+               Name == otherCustomer.Name &&
+               Email == otherCustomer.Email &&
+               Password.SequenceEqual(otherCustomer.Password) &&
+               RegistrationDate == otherCustomer.RegistrationDate;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(CustomerId, Name, Email, Password, RegistrationDate);
+    }
 
     public bool Equals(Customer? other)
     {
