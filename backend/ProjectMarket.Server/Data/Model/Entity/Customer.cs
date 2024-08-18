@@ -4,7 +4,6 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public record CustomerRecord(int CustomerId, string Name, string Email, byte[] Password, DateTime RegistrationDate);
 public class Customer : IEquatable<Customer>
 {
     public int? CustomerId { get; init; }
@@ -35,13 +34,13 @@ public class Customer : IEquatable<Customer>
     }
     
     public Customer(
-        int? id, 
+        int? customerId, 
         string name, 
         string email, 
         string password, 
         DateTime? registrationDate)
     {
-        CustomerId = id;
+        CustomerId = customerId;
         Name = name;
         Email = email;
         Password = Encoding.UTF8.GetBytes(password);
@@ -49,42 +48,16 @@ public class Customer : IEquatable<Customer>
     
         this.Validate();
     }
-
-    public Customer(CustomerRecord record)
-    {
-        CustomerId = record.CustomerId;
-        Name = record.Name;
-        Email = record.Email;
-        Password = record.Password;
-        RegistrationDate = record.RegistrationDate;
-    }
     
-    public override bool Equals(object? other)
-    {
-        if (other == null || other is not Customer) return false;
-        var otherCustomer = (Customer)other;
-        
-        return CustomerId == otherCustomer.CustomerId &&
-               Name == otherCustomer.Name &&
-               Email == otherCustomer.Email &&
-               Password.SequenceEqual(otherCustomer.Password) &&
-               RegistrationDate == otherCustomer.RegistrationDate;
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(CustomerId, Name, Email, Password, RegistrationDate);
-    }
-
-    public bool Equals(Customer? other)
-    {
-        return other != null &&
-               CustomerId == other.CustomerId &&
-               Name == other.Name &&
-               Email == other.Email &&
-               Password.SequenceEqual(other.Password) &&
-               RegistrationDate == other.RegistrationDate;
-    }
+    public override bool Equals(object? obj) => obj is Customer other && Equals(other);
+    public override int GetHashCode() => HashCode.Combine(CustomerId, Name, Email, Password, RegistrationDate);
+    public bool Equals(Customer? other) 
+        => other != null &&
+           CustomerId == other.CustomerId &&
+           Name == other.Name &&
+           Email == other.Email &&
+           Password.SequenceEqual(other.Password) &&
+           RegistrationDate == other.RegistrationDate;
 }
 
 public static class CustomerExtension {

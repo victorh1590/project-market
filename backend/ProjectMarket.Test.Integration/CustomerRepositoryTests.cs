@@ -82,6 +82,14 @@ public class CustomerRepositoryTests
     [Test(Description = "Repository should insert specified rows")]
     public void InsertTest()
     {
+        // Custom Comparer without considering the CustomerId, because it doesn't exist before the insert happens.
+        var comparer = new Func<Customer, Customer, bool>(
+            (expected, result) 
+            => expected.Name == result.Name &&
+               expected.Email == result.Email &&
+               expected.Password.SequenceEqual(result.Password) &&
+               expected.RegistrationDate == result.RegistrationDate);
+        
         Customer toInsert = new(
             null, 
             "Jack White", 
@@ -105,9 +113,15 @@ public class CustomerRepositoryTests
         _repository.UnitOfWork.Commit();
         var resultAllObj = _repository.GetAll();
 
+        var expectedJson = JsonConvert.SerializeObject(toInsert, Formatting.Indented);
+        var resultJson = JsonConvert.SerializeObject(resultObj, Formatting.Indented);
+
+        TestContext.WriteLine($"Expected: {expectedJson}");
+        TestContext.WriteLine($"Result: {resultJson}");
+        
         Assert.Multiple(() =>
         {
-            Assert.That(resultObj, Is.EqualTo(toInsert));
+            Assert.That(comparer(toInsert, resultObj), Is.True);
             Assert.That(resultAllObj, Is.EqualTo(expectedAllObj).AsCollection);
         });
     }

@@ -4,6 +4,11 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
+public record PaymentOfferRecord(
+    int PaymentOfferId,
+    decimal Value,
+    PaymentFrequencyVo PaymentFrequency,
+    CurrencyVo Currency);
 public class PaymentOffer
 {
     public int? PaymentOfferId { get; init; }
@@ -24,17 +29,6 @@ public class PaymentOffer
 
         this.Validate();
     }
-
-    // Let's use a factory instead.
-    // public static PaymentOffer CreatePaymentOffer(PaymentOfferDto dto)
-    // {
-    //     return new PaymentOffer(
-    //         dto.PaymentOfferId, 
-    //         dto.Value, 
-    //         new PaymentFrequencyVo(dto.PaymentFrequency), 
-    //         new CurrencyVo(CurrencyFactory) 
-    //     );
-    // }
 }
 
 public static class PaymentOfferExtensions {
