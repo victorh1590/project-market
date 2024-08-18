@@ -58,16 +58,20 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
     // TODO: Fix RETURNING.
     public PaymentOffer Insert(PaymentOffer paymentOffer)
     {
-        const string query = "INSERT INTO \"PaymentOffer\" (\"Value\", \"PaymentFrequencyName\", \"CurrencyName\") " + 
-                             "VALUES (@Value, @PaymentFrequencyName, @CurrencyName) " +
-                             "RETURNING \"PaymentOfferId\", \"Value\", \"PaymentFrequencyName\", \"CurrencyName\"";
-
-        return UnitOfWork.Connection.QuerySingle<PaymentOffer>(query, new
+        const string query = """
+                                 INSERT INTO "PaymentOffer" ("Value", "PaymentFrequencyName", "CurrencyName") 
+                                 VALUES (@Value, @PaymentFrequencyName, @CurrencyName) 
+                                 RETURNING "PaymentOfferId"
+                             """;
+        
+        var id = UnitOfWork.Connection.QuerySingle<int>(query, new
         {
             paymentOffer.Value,
             paymentOffer.PaymentFrequency.PaymentFrequencyName,
             paymentOffer.Currency.CurrencyName
         });
+        
+        return GetPaymentOfferById(id);
     }
 
     public bool Update(PaymentOffer paymentOffer)

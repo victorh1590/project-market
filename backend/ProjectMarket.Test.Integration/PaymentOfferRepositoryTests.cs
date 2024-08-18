@@ -162,15 +162,15 @@ public class PaymentOfferRepositoryTests
     public void UpdateTest()
     {
         var toUpdate = new PaymentOffer(3, 250, Daily, Dollar);
+        var resultObj = _repository.Update(toUpdate);
         var expectedAllObj = new List<PaymentOffer>
         {
             new(1, 2000, Monthly, Dollar),
             new(2, 25, Hourly, Euro),
-            new(3, 250, Daily, Dollar),
             new(5, 3000, Monthly, Euro),
-            new(6, 4000, Hourly, Yen)
+            new(6, 4000, Hourly, Yen),
+            new(3, 250, Daily, Dollar)
         };
-        var resultObj = _repository.Update(toUpdate);
         _repository.UnitOfWork.Commit();
         TestContext.WriteLine($"Update Returned: {resultObj}");
         var resultAllObj = _repository.GetAll().AsList();
