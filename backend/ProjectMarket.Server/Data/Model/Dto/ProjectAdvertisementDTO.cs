@@ -4,13 +4,13 @@ public class ProjectAdvertisementDto(
     int? id,
     string title,
     string? description,
+    DateTime openedOn,
     DateTime? deadline,
     int paymentOfferId,
     int customerId,
     string statusName,
     List<string> subjectNames,
-    List<string>? requirementNames,
-    DateTime openedOn)
+    List<string>? requirementNames)
 {
     public int? ProjectAdvertisementId { get; init; } = id;
     public string Title { get; set; } = title;

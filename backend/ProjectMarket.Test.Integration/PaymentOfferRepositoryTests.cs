@@ -107,10 +107,10 @@ public class PaymentOfferRepositoryTests
 
         // Custom Comparer without considering the PaymentOfferId, because it doesn't exist before the insert happens.
         var comparer = new Func<PaymentOffer, PaymentOffer, bool>(
-            (expected, result) 
-                => expected.Value == result.Value &&
-                   expected.PaymentFrequency == result.PaymentFrequency &&
-                   expected.Currency == result.Currency);
+            (expected, result) => 
+                expected.Value == result.Value &&
+                expected.PaymentFrequency == result.PaymentFrequency &&
+                expected.Currency == result.Currency);
         
         Assert.Multiple(() =>
         {

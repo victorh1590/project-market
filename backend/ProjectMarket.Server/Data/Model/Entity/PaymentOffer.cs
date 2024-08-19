@@ -28,10 +28,10 @@ public class PaymentOffer : IEquatable<PaymentOffer>
     public override bool Equals(object? obj)
         => ReferenceEquals(this, obj) ||
            (obj is PaymentOffer other &&
-            PaymentOfferId == other.PaymentOfferId &&
-            Value == other.Value &&
-            PaymentFrequency.Equals(other.PaymentFrequency) &&
-            Currency.Equals(other.Currency));
+           PaymentOfferId == other.PaymentOfferId &&
+           Value == other.Value &&
+           PaymentFrequency.Equals(other.PaymentFrequency) &&
+           Currency.Equals(other.Currency));
 
     public override int GetHashCode()
         => HashCode.Combine(PaymentOfferId, Value, PaymentFrequency, Currency);
@@ -39,10 +39,10 @@ public class PaymentOffer : IEquatable<PaymentOffer>
     public bool Equals(PaymentOffer? obj)
         => ReferenceEquals(this, obj) ||
            (obj != null &&
-            PaymentOfferId == obj.PaymentOfferId &&
-            Value == obj.Value &&
-            PaymentFrequency.Equals(obj.PaymentFrequency) &&
-            Currency.Equals(obj.Currency));
+           PaymentOfferId == obj.PaymentOfferId &&
+           Value == obj.Value &&
+           PaymentFrequency.Equals(obj.PaymentFrequency) &&
+           Currency.Equals(obj.Currency));
 }
 
 public static class PaymentOfferExtensions {

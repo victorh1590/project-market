@@ -37,6 +37,7 @@ public class ProjectAdvertisementFactory(
             dto.ProjectAdvertisementId, 
             dto.Title,
             dto.Description,
+            dto.OpenedOn,
             dto.Deadline,
             paymentOffer,
             customer,

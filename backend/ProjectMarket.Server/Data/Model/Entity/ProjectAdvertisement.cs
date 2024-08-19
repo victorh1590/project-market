@@ -4,7 +4,7 @@ using ProjectMarket.Server.Data.Validators;
 
 namespace ProjectMarket.Server.Data.Model.Entity;
 
-public class ProjectAdvertisement
+public class ProjectAdvertisement : IEquatable<ProjectAdvertisement>
 {
     public int? ProjectAdvertisementId { get; init; }
     public string Title { get; set; }
@@ -18,9 +18,10 @@ public class ProjectAdvertisement
     public List<JobRequirementVo>? Requirements { get; set; }
 
     public ProjectAdvertisement(
-        int? id, 
+        int? projectAdvertisementId, 
         string title, 
         string? description, 
+        DateTime? openedOn,
         DateTime? deadline,
         PaymentOffer paymentOffer, 
         Customer customer, 
@@ -28,9 +29,10 @@ public class ProjectAdvertisement
         List<KnowledgeAreaVo> subjects,
         List<JobRequirementVo>? requirements) 
     {
-        ProjectAdvertisementId = id;
+        ProjectAdvertisementId = projectAdvertisementId;
         Title = title;
         Description = description;
+        OpenedOn = openedOn ?? DateTime.Now;
         Deadline = deadline;
         PaymentOffer = paymentOffer;
         Customer = customer;
@@ -40,6 +42,48 @@ public class ProjectAdvertisement
 
         this.Validate();
     }
+    
+    public override bool Equals(object? obj)
+        => ReferenceEquals(this, obj) || (
+            obj is ProjectAdvertisement other &&
+            ProjectAdvertisementId == other.ProjectAdvertisementId && 
+            Title == other.Title && 
+            Description == other.Description && 
+            OpenedOn == other.OpenedOn && 
+            Nullable.Equals(Deadline, other.Deadline) && 
+            PaymentOffer.Equals(other.PaymentOffer) && 
+            Customer.Equals(other.Customer) && 
+            Status == other.Status && 
+            Subjects.Equals(other.Subjects) && 
+            (Requirements?.Equals(other.Requirements) ?? other.Requirements == null));
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+        hashCode.Add(ProjectAdvertisementId);
+        hashCode.Add(Title);
+        hashCode.Add(Description);
+        hashCode.Add(OpenedOn);
+        hashCode.Add(Deadline);
+        hashCode.Add(PaymentOffer);
+        hashCode.Add(Customer);
+        hashCode.Add(Status);
+        hashCode.Add(Subjects);
+        hashCode.Add(Requirements);
+        return hashCode.ToHashCode();
+    }
+    public bool Equals(ProjectAdvertisement? other)
+        => ReferenceEquals(this, other) || (
+            other != null &&
+            ProjectAdvertisementId == other.ProjectAdvertisementId && 
+            Title == other.Title && 
+            Description == other.Description && 
+            OpenedOn == other.OpenedOn && 
+            Nullable.Equals(Deadline, other.Deadline) && 
+            PaymentOffer.Equals(other.PaymentOffer) && 
+            Customer.Equals(other.Customer) && 
+            Status == other.Status && 
+            Subjects.Equals(other.Subjects) && 
+            (Requirements?.Equals(other.Requirements) ?? other.Requirements == null));
 }
 
 public static class ProjectAdvertisementExtensions {
