@@ -12,19 +12,23 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
     public IEnumerable<PaymentFrequencyVo> GetAll()
     {
         // TODO Use pagination instead.
-        const string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
-                       "FROM \"PaymentFrequency\"";
-        return UnitOfWork.Connection.Query<PaymentFrequencyVo>(query);
+        const string sql = """
+                           SELECT "PaymentFrequencyName", "Suffix" 
+                           FROM "PaymentFrequency"
+                           """;
+        return UnitOfWork.Connection.Query<PaymentFrequencyVo>(sql);
     }
 
     public PaymentFrequencyVo GetPaymentFrequencyByName(string name)
     {
-        const string query = "SELECT \"PaymentFrequencyName\", \"Suffix\" " +
-                       "FROM \"PaymentFrequency\" " +
-                       "WHERE \"PaymentFrequencyName\" = @PaymentFrequencyName";
+        const string sql = """
+                           SELECT "PaymentFrequencyName", "Suffix" 
+                           FROM "PaymentFrequency" 
+                           WHERE "PaymentFrequencyName" = @PaymentFrequencyName
+                           """;
         try
         {
-            var record = UnitOfWork.Connection.QuerySingle<PaymentFrequencyRecord>(query, new { PaymentFrequencyName = name });
+            var record = UnitOfWork.Connection.QuerySingle<PaymentFrequencyRecord>(sql, new { PaymentFrequencyName = name });
             PaymentFrequencyVo result = new(record);
             return result;
         }
@@ -36,19 +40,23 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
 
     public PaymentFrequencyVo Insert(PaymentFrequencyVo paymentFrequency)
     {
-        const string query = "INSERT INTO \"PaymentFrequency\" (\"PaymentFrequencyName\", \"Suffix\") " +
-                       "VALUES (@PaymentFrequencyName, @Suffix) " +
-                       "RETURNING \"PaymentFrequencyName\", \"Suffix\"";
-        return UnitOfWork.Connection.QuerySingle<PaymentFrequencyVo>(query, paymentFrequency);
+        const string sql = """
+                           INSERT INTO "PaymentFrequency" ("PaymentFrequencyName", "Suffix") 
+                           VALUES (@PaymentFrequencyName, @Suffix) 
+                           RETURNING "PaymentFrequencyName", "Suffix"
+                           """;
+        return UnitOfWork.Connection.QuerySingle<PaymentFrequencyVo>(sql, paymentFrequency);
     }
 
     public bool Update(string name, PaymentFrequencyVo paymentFrequency)
     {
-        const string query = "UPDATE \"PaymentFrequency\" " +
-                       "SET  \"PaymentFrequencyName\" = @PaymentFrequencyName, \"Suffix\" = @Suffix " +
-                       "WHERE  \"PaymentFrequencyName\" = @PaymentFrequencyNameToUpdate " +
-                       "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new
+        const string sql = """
+                           UPDATE "PaymentFrequency" 
+                           SET "PaymentFrequencyName" = @PaymentFrequencyName, "Suffix" = @Suffix 
+                           WHERE "PaymentFrequencyName" = @PaymentFrequencyNameToUpdate 
+                           RETURNING true
+                           """;
+        return UnitOfWork.Connection.QuerySingle<bool>(sql, new
         {
             PaymentFrequencyNameToUpdate = name,
             PaymentFrequencyName = paymentFrequency.PaymentFrequencyName,
@@ -58,9 +66,11 @@ public class PaymentFrequencyRepository(IUnitOfWork unitOfWork, Compiler compile
 
     public bool Delete(string name)
     {
-        const string query = "DELETE FROM \"PaymentFrequency\" CASCADE " +
-                       "WHERE  \"PaymentFrequencyName\" = @PaymentFrequencyName " +
-                       "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new { PaymentFrequencyName = name });
+        const string sql = """
+                           DELETE FROM "PaymentFrequency" CASCADE 
+                           WHERE "PaymentFrequencyName" = @PaymentFrequencyName 
+                           RETURNING true
+                           """;
+        return UnitOfWork.Connection.QuerySingle<bool>(sql, new { PaymentFrequencyName = name });
     }
 }

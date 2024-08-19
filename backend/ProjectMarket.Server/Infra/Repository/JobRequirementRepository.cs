@@ -12,19 +12,23 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<JobRequirementVo> GetAll()
     {
         // TODO Use pagination instead.
-        const string query = "SELECT \"JobRequirementName\" " +
-                       "FROM \"JobRequirement\"";
-        return UnitOfWork.Connection.Query<JobRequirementVo>(query);
+        const string sql = """
+                           SELECT "JobRequirementName" 
+                           FROM "JobRequirement"
+                           """;
+        return UnitOfWork.Connection.Query<JobRequirementVo>(sql);
     }
 
     public JobRequirementVo GetJobRequirementByName(string name)
     {
-        const string query = "SELECT \"JobRequirementName\" " +
-                       "FROM \"JobRequirement\" " +
-                       "WHERE \"JobRequirementName\" = @JobRequirementName";
+        const string sql = """
+                           SELECT "JobRequirementName" 
+                           FROM "JobRequirement" 
+                           WHERE "JobRequirementName" = @JobRequirementName
+                           """;
         try
         {
-            var record = UnitOfWork.Connection.QuerySingle<JobRequirementRecord>(query, new { JobRequirementName = name });
+            var record = UnitOfWork.Connection.QuerySingle<JobRequirementRecord>(sql, new { JobRequirementName = name });
             JobRequirementVo result = new(record);
             return result;
         }
@@ -36,19 +40,23 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public JobRequirementVo Insert(JobRequirementVo jobRequirement)
     {
-        const string query = "INSERT INTO \"JobRequirement\" (\"JobRequirementName\") " +
-                       "VALUES (@JobRequirementName) " +
-                       "RETURNING \"JobRequirementName\"";
-       return UnitOfWork.Connection.QuerySingle<JobRequirementVo>(query, jobRequirement);
+        const string sql = """
+                           INSERT INTO "JobRequirement" ("JobRequirementName") 
+                           VALUES (@JobRequirementName) 
+                           RETURNING "JobRequirementName"
+                           """;
+       return UnitOfWork.Connection.QuerySingle<JobRequirementVo>(sql, jobRequirement);
     }
 
     public bool Update(string name, JobRequirementVo jobRequirement)
     {
-        const string query = "UPDATE \"JobRequirement\" " +
-                       "SET \"JobRequirementName\" = @JobRequirementName " +
-                       "WHERE \"JobRequirementName\" = @JobRequirementNameToUpdate " +
-                       "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new
+        const string sql = """
+                           UPDATE "JobRequirement" 
+                           SET "JobRequirementName" = @JobRequirementName 
+                           WHERE "JobRequirementName" = @JobRequirementNameToUpdate 
+                           RETURNING true
+                           """;
+        return UnitOfWork.Connection.QuerySingle<bool>(sql, new
         {
             JobRequirementNameToUpdate = name,
             JobRequirementName = jobRequirement.JobRequirementName
@@ -57,9 +65,11 @@ public class JobRequirementRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Delete(string name)
     {
-        const string query = "DELETE FROM \"JobRequirement\" CASCADE " +
-                       "WHERE \"JobRequirementName\" = @JobRequirementName " +
-                       "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new { JobRequirementName = name });
+        const string sql = """
+                           DELETE FROM "JobRequirement" CASCADE 
+                           WHERE "JobRequirementName" = @JobRequirementName 
+                           RETURNING true
+                           """;
+        return UnitOfWork.Connection.QuerySingle<bool>(sql, new { JobRequirementName = name });
     }
 }

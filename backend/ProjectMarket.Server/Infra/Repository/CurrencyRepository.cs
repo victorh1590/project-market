@@ -12,19 +12,23 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<CurrencyVo> GetAll()
     {
         // TODO Use pagination instead.
-        const string query = "SELECT \"CurrencyName\", \"Prefix\" " +
-                       "FROM \"Currency\"";
-        return UnitOfWork.Connection.Query<CurrencyVo>(query);
+        const string sql = """
+                           SELECT "CurrencyName", "Prefix" 
+                           FROM "Currency"
+                           """;
+        return UnitOfWork.Connection.Query<CurrencyVo>(sql);
     }
 
     public CurrencyVo GetCurrencyByName(string name)
     {
-        const string query = "SELECT \"CurrencyName\", \"Prefix\" " +
-                       "FROM \"Currency\" " +
-                       "WHERE \"CurrencyName\" = @CurrencyName";
+        const string sql = """
+                           SELECT "CurrencyName", "Prefix" 
+                           FROM "Currency" 
+                           WHERE "CurrencyName" = @CurrencyName
+                           """;
         try
         {
-            var record = UnitOfWork.Connection.QuerySingle<CurrencyRecord>(query, new { CurrencyName = name });
+            var record = UnitOfWork.Connection.QuerySingle<CurrencyRecord>(sql, new { CurrencyName = name });
             CurrencyVo result = new(record);
             return result;
         }
@@ -36,20 +40,24 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public CurrencyVo Insert(CurrencyVo currency)
     {
-        const string query = "INSERT INTO \"Currency\" (\"CurrencyName\", \"Prefix\") " +
-                       "VALUES (@CurrencyName, @Prefix) " +
-                       "RETURNING \"CurrencyName\", \"Prefix\"";
+        const string sql = """
+                           INSERT INTO "Currency" ("CurrencyName", "Prefix") 
+                           VALUES (@CurrencyName, @Prefix) 
+                           RETURNING "CurrencyName", "Prefix"
+                           """;
         
-        return UnitOfWork.Connection.QuerySingle<CurrencyVo>(query, currency);
+        return UnitOfWork.Connection.QuerySingle<CurrencyVo>(sql, currency);
     }
 
     public bool Update(string name, CurrencyVo currency)
     {
-        const string query = "UPDATE \"Currency\" " +
-                       "SET \"CurrencyName\" = @CurrencyName, \"Prefix\" = @Prefix " +
-                       "WHERE \"CurrencyName\" = @CurrencyNameToUpdate " +
-                       "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new
+        const string sql = """
+                           UPDATE "Currency" 
+                           SET "CurrencyName" = @CurrencyName, "Prefix" = @Prefix 
+                           WHERE "CurrencyName" = @CurrencyNameToUpdate 
+                           RETURNING true
+                           """;
+        return UnitOfWork.Connection.QuerySingle<bool>(sql, new
         {
             CurrencyNameToUpdate = name,
             CurrencyName = currency.CurrencyName,
@@ -59,9 +67,11 @@ public class CurrencyRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Delete(string name)
     {
-        const string query = "DELETE FROM \"Currency\" CASCADE " +
-                       "WHERE \"CurrencyName\" = @CurrencyName " +
-                       "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new { CurrencyName = name });
+        const string sql = """
+                           DELETE FROM "Currency" CASCADE 
+                           WHERE "CurrencyName" = @CurrencyName 
+                           RETURNING true
+                           """;
+        return UnitOfWork.Connection.QuerySingle<bool>(sql, new { CurrencyName = name });
     }
 }

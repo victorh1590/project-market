@@ -51,19 +51,16 @@ public class ProjectAdvertisementRepositoryTests
     private Customer Customer8 { get; } = new(8, "Grace Lee", "grace.lee@example.com", "$2a$04$UNXL4rXerkg7YQnDJRJYPuPWVYDmyiSVifRnb8LvOaCMujhYn1naC"u8.ToArray(), new DateTime(2024, 8, 3, 19, 37, 29));
     private Customer Customer9 { get; } = new(9, "Henry Thompson", "henry.thompson@example.com", "$2a$04$QBBN1Wo8U46A/7OJIASFCutH64iE3s42nEE411qRXicxa8jYQllYS"u8.ToArray(), new DateTime(2024, 2, 27, 11, 54, 48));
 
-    // JobRequirementVo objects
     private JobRequirementVo Python { get; } = new ("Python");
     private JobRequirementVo CSharp { get; } = new ("C#");
     private JobRequirementVo Go { get; } = new ("Go");
     private JobRequirementVo PowerBI { get; } = new ("Power BI");
 
-    // KnowledgeAreaVo objects
     private KnowledgeAreaVo WebDevelopment { get; } = new ("Web Development");
     private KnowledgeAreaVo DataAnalysis { get; } = new ("Data Analysis");
     private KnowledgeAreaVo AI { get; } = new ("AI");
     private KnowledgeAreaVo SystemDevelopment { get; } = new ("System Development");
 
-    // Lists of KnowledgeAreaVo
     private List<KnowledgeAreaVo> Subjects1 { get; init; }
     private List<KnowledgeAreaVo> Subjects2 { get; init; }
     private List<KnowledgeAreaVo> Subjects3 { get; init; }
@@ -72,7 +69,6 @@ public class ProjectAdvertisementRepositoryTests
     private List<KnowledgeAreaVo> Subjects6 { get; init; }
     private List<KnowledgeAreaVo> Subjects7 { get; init; }
 
-    // Lists of JobRequirementVo
     private List<JobRequirementVo> Requirements1 { get; init; }
     private List<JobRequirementVo> Requirements2 { get; init; }
     private List<JobRequirementVo> Requirements3 { get; init; }

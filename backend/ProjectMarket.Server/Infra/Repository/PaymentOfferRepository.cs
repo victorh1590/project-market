@@ -14,14 +14,15 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
     public IEnumerable<PaymentOffer> GetAll()
     {
         // TODO Use pagination instead.
-        const string query = "SELECT " +
-                             "\"PaymentOfferId\", \"Value\", " +
-                             "\"PaymentFrequencyName\", \"Suffix\", " + // from PaymentFrequencyVo
-                             "\"CurrencyName\", \"Prefix\" " + // from CurrencyVo
-                             "FROM \"PaymentOffer\" " +
-                             "JOIN \"PaymentFrequency\" USING (\"PaymentFrequencyName\") " +
-                             "JOIN \"Currency\" USING (\"CurrencyName\")";
-        var results = (UnitOfWork.Connection.Query<dynamic>(query)).ToList();
+        const string sql = """
+                           SELECT "PaymentOfferId", "Value", 
+                                  "PaymentFrequencyName", "Suffix", 
+                                  "CurrencyName", "Prefix" 
+                           FROM "PaymentOffer" 
+                           JOIN "PaymentFrequency" USING ("PaymentFrequencyName") 
+                           JOIN "Currency" USING ("CurrencyName")
+                           """;
+        var results = (UnitOfWork.Connection.Query<dynamic>(sql)).ToList();
         List<PaymentOffer> paymentOffers = [];
         foreach (var obj in results)
         {
@@ -35,16 +36,18 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public PaymentOffer GetPaymentOfferById(int id)
     {
-        const string query = "SELECT \"PaymentOfferId\", \"Value\", " +
-                             "\"PaymentFrequencyName\", \"Suffix\", " +
-                             "\"CurrencyName\", \"Prefix\" " +
-                             "FROM \"PaymentOffer\" " +
-                             "JOIN \"PaymentFrequency\" USING (\"PaymentFrequencyName\") " +
-                             "JOIN \"Currency\" USING (\"CurrencyName\") " +
-                             "WHERE \"PaymentOfferId\" = @PaymentOfferId";
+        const string sql = """
+                           SELECT "PaymentOfferId", "Value", 
+                                  "PaymentFrequencyName", "Suffix", 
+                                  "CurrencyName", "Prefix" 
+                           FROM "PaymentOffer" 
+                           JOIN "PaymentFrequency" USING ("PaymentFrequencyName") 
+                           JOIN "Currency" USING ("CurrencyName") 
+                           WHERE "PaymentOfferId" = @PaymentOfferId
+                           """;
         try
         {
-            var result = UnitOfWork.Connection.QuerySingle<dynamic>(query, new { PaymentOfferId = id });
+            var result = UnitOfWork.Connection.QuerySingle<dynamic>(sql, new { PaymentOfferId = id });
             PaymentFrequencyVo paymentFrequency = new(result.PaymentFrequencyName, result.Suffix);
             CurrencyVo currency = new(result.CurrencyName, result.Prefix);
             return new(result.PaymentOfferId, result.Value, paymentFrequency, currency);
@@ -55,16 +58,15 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
         }
     }
 
-    // TODO: Fix RETURNING.
     public PaymentOffer Insert(PaymentOffer paymentOffer)
     {
-        const string query = """
-                                 INSERT INTO "PaymentOffer" ("Value", "PaymentFrequencyName", "CurrencyName") 
-                                 VALUES (@Value, @PaymentFrequencyName, @CurrencyName) 
-                                 RETURNING "PaymentOfferId"
-                             """;
+        const string sql = """
+                           INSERT INTO "PaymentOffer" ("Value", "PaymentFrequencyName", "CurrencyName") 
+                           VALUES (@Value, @PaymentFrequencyName, @CurrencyName) 
+                           RETURNING "PaymentOfferId"
+                           """;
         
-        var id = UnitOfWork.Connection.QuerySingle<int>(query, new
+        var id = UnitOfWork.Connection.QuerySingle<int>(sql, new
         {
             paymentOffer.Value,
             paymentOffer.PaymentFrequency.PaymentFrequencyName,
@@ -76,12 +78,14 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Update(PaymentOffer paymentOffer)
     {
-        const string query = "UPDATE \"PaymentOffer\" " +
-                             "SET \"Value\" = @Value, \"PaymentFrequencyName\" = @PaymentFrequencyName, \"CurrencyName\" = @CurrencyName " +
-                             "WHERE \"PaymentOfferId\" = @PaymentOfferId " +
-                             "RETURNING true";
+        const string sql = """
+                           UPDATE "PaymentOffer" 
+                           SET "Value" = @Value, "PaymentFrequencyName" = @PaymentFrequencyName, "CurrencyName" = @CurrencyName 
+                           WHERE "PaymentOfferId" = @PaymentOfferId 
+                           RETURNING true
+                           """;
 
-        return UnitOfWork.Connection.QuerySingle<bool>(query,  new {
+        return UnitOfWork.Connection.QuerySingle<bool>(sql,  new {
             paymentOffer.PaymentOfferId,
             paymentOffer.Value,
             paymentOffer.PaymentFrequency.PaymentFrequencyName,
@@ -91,9 +95,11 @@ public class PaymentOfferRepository(IUnitOfWork unitOfWork, Compiler compiler)
 
     public bool Delete(int id)
     {
-        const string query = "DELETE FROM \"PaymentOffer\" CASCADE " +
-                             "WHERE \"PaymentOfferId\" = @PaymentOfferId " +
-                             "RETURNING true";
-        return UnitOfWork.Connection.QuerySingle<bool>(query, new { PaymentOfferId = id });
+        const string sql = """
+                           DELETE FROM "PaymentOffer" CASCADE 
+                           WHERE "PaymentOfferId" = @PaymentOfferId 
+                           RETURNING true
+                           """;
+        return UnitOfWork.Connection.QuerySingle<bool>(sql, new { PaymentOfferId = id });
     }
 }
